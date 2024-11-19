@@ -1,0 +1,107 @@
+syntax = "proto3";
+option  java_package = "org.cse535.proto";
+option java_multiple_files = true;
+
+import "google/protobuf/timestamp.proto";
+
+
+
+service Paxos {
+
+  rpc Request(TransactionInputConfig) returns (TxnResponse) {}
+
+
+}
+
+
+service ActivateServers{
+  rpc activateServer(ActivateServerRequest) returns (ActivateServerResponse) {}
+  rpc deactivateServer(DeactivateServerRequest) returns (DeactivateServerResponse) {}
+
+}
+
+service Commands{
+  rpc printBalance(CommandInput) returns (CommandOutput) {}
+  rpc printLog(CommandInput) returns (CommandOutput) {}
+  rpc printDB(CommandInput) returns (CommandOutput) {}
+  rpc Performance(CommandInput) returns (CommandOutput) {}
+}
+
+
+
+message TransactionInputConfig{
+
+  int32 setNumber = 1;
+  Transaction transaction = 2;
+  int32 view = 3;
+  repeated string serverNames = 5;
+
+}
+
+message Transaction {
+
+  string sender = 1;
+  string receiver = 2;
+  int32 amount = 3;
+  google.protobuf.Timestamp timestamp = 4;
+
+  string transactionHash = 5;
+  int32 transactionNum = 6;
+
+  bool isCrossShard = 7;
+}
+
+message TxnResponse{
+
+  bool success = 1;
+  string serverName = 2;
+
+}
+
+
+
+
+
+
+
+
+
+
+message ActivateServerRequest{
+  string serverName = 1;
+}
+
+message ActivateServerResponse{
+  bool success = 1;
+  string serverName = 2;
+}
+
+message DeactivateServerRequest{
+  string serverName = 1;
+}
+
+message DeactivateServerResponse{
+  bool success = 1;
+  string serverName = 2;
+}
+
+
+
+
+
+
+
+
+
+
+message CommandInput{
+  string input = 1;
+}
+
+message CommandOutput{
+  string output = 1;
+}
+
+
+
+

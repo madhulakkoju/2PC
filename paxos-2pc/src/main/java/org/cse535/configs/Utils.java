@@ -42,10 +42,15 @@ public class Utils {
 
 
     public static boolean CheckTransactionBelongToMyCluster(Transaction transaction, int serverNum){
-        boolean isIntraCluster = IsTransactionIntraCluster(transaction);
-        if(isIntraCluster) {
-            return FindClusterOfDataItem(transaction.getSender()) == FindMyCluster(serverNum);
+
+        int myCluster = FindMyCluster(serverNum);
+        int senderCluster = FindClusterOfDataItem(transaction.getSender());
+        int receiverCluster = FindClusterOfDataItem(transaction.getReceiver());
+
+        if(myCluster == senderCluster && myCluster == receiverCluster){
+            return true;
         }
+
         return false;
     }
 

@@ -20,6 +20,8 @@ public class GlobalConfigs {
 
     public static int TotalDataItems;
 
+    public static int InitialBalance = 10;
+
 
 
     // Cluster Number: Max Data Item Number
@@ -31,6 +33,7 @@ public class GlobalConfigs {
 
         numClusters = GlobalConfigs.TotalServers / GlobalConfigs.numServersPerCluster;
         clusterShardMap = new HashMap<Integer, Integer>();
+        clusterToServersMap = new HashMap<Integer, List<Integer>>();
         clusterShardMap.put(0, 0);
 
 

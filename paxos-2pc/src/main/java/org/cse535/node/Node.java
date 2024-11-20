@@ -95,6 +95,8 @@ public class Node extends NodeServer {
                     processIntraShardTransaction(transaction);
                 }
 
+                this.database.incomingTransactionsQueue.remove();
+
             } catch (InterruptedException e) {
                 this.commandLogger.log("Line 143 ::: " + e.getMessage());
                 e.printStackTrace();
@@ -117,12 +119,15 @@ public class Node extends NodeServer {
         if(Utils.CheckTransactionBelongToMyCluster(transaction, this.serverNumber)){
             this.logger.log("Processing Transaction: " + transaction.getTransactionNum());
 
-            IntraShardTnxProcessingThread intraShardTnxProcessingThread = new IntraShardTnxProcessingThread(this, transaction);
+            try {
 
+                IntraShardTnxProcessingThread intraShardTnxProcessingThread = new IntraShardTnxProcessingThread(this, transaction);
+                intraShardTnxProcessingThread.start();
+                intraShardTnxProcessingThread.join();
 
-
-
-            intraShardTnxProcessingThread.start();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
 
             return true;
         }

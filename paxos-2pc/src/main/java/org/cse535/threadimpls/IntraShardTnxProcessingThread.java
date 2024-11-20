@@ -16,26 +16,56 @@ public class IntraShardTnxProcessingThread extends Thread {
 
 
     public void run() {
-
+        try {
         //Wait until locks released if locked.
-//        while( this.node.lockedDataItemsWithTransactionNum.containsKey(this.tnx.getSender())
-//                || this.node.lockedDataItemsWithTransactionNum.containsKey(this.tnx.getReceiver())) {
-//            //Thread.sleep(5);
-//        }
+        if( this.node.lockedDataItemsWithTransactionNum.containsKey(this.tnx.getSender())
+                || this.node.lockedDataItemsWithTransactionNum.containsKey(this.tnx.getReceiver())) {
+
+                Thread.sleep(10);
+        }
+
+
+            System.out.println("Processing transaction " + this.tnx.getTransactionNum() + " "
+                    + this.tnx.getSender() + " -> "
+                    + this.tnx.getReceiver() + " = "
+                    + this.tnx.getAmount());
 
         //Acquire the locks
+        this.node.lockedDataItemsWithTransactionNum.put(this.tnx.getSender(), this.tnx.getTransactionNum());
+        this.node.lockedDataItemsWithTransactionNum.put(this.tnx.getReceiver(), this.tnx.getTransactionNum());
 
         //Check if the transaction is valid
+        if(this.node.database.isValidTransaction(this.tnx)) {
+            // Valid transaction
 
-        //If valid, update the data items
+            // Initiate Prepare phase
 
-        //If valid, Initiate Prepare phase
+            // If f+1 Prepare responses received, Initiate Commit phase
 
-        //If f+1 Prepare responses received, Initiate Commit phase
 
-        //If f+1 Commit responses received, Commit the transaction
+            // Commit the transaction
+            this.node.database.executeTransaction(this.tnx);
 
-        //Release the locks
+            // If f+1 Commit responses received, Commit the transaction
+
+
+
+            //Release the locks
+            this.node.lockedDataItemsWithTransactionNum.remove(this.tnx.getSender());
+            this.node.lockedDataItemsWithTransactionNum.remove(this.tnx.getReceiver());
+
+            //Send reply to Client
+            System.out.println("Transaction processed successfully");
+
+        }
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        finally {
+            this.node.lockedDataItemsWithTransactionNum.remove(this.tnx.getSender());
+            this.node.lockedDataItemsWithTransactionNum.remove(this.tnx.getReceiver());
+        }
 
     }
 

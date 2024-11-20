@@ -16,8 +16,8 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private Transaction() {
-    sender_ = "";
-    receiver_ = "";
+    sender_ = 0;
+    receiver_ = 0;
     amount_ = 0;
     transactionHash_ = "";
     transactionNum_ = 0;
@@ -48,16 +48,14 @@ private static final long serialVersionUID = 0L;
           case 0:
             done = true;
             break;
-          case 10: {
-            java.lang.String s = input.readStringRequireUtf8();
+          case 8: {
 
-            sender_ = s;
+            sender_ = input.readInt32();
             break;
           }
-          case 18: {
-            java.lang.String s = input.readStringRequireUtf8();
+          case 16: {
 
-            receiver_ = s;
+            receiver_ = input.readInt32();
             break;
           }
           case 24: {
@@ -127,71 +125,21 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int SENDER_FIELD_NUMBER = 1;
-  private volatile java.lang.Object sender_;
+  private int sender_;
   /**
-   * <code>string sender = 1;</code>
+   * <code>int32 sender = 1;</code>
    */
-  public java.lang.String getSender() {
-    java.lang.Object ref = sender_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      sender_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string sender = 1;</code>
-   */
-  public com.google.protobuf.ByteString
-      getSenderBytes() {
-    java.lang.Object ref = sender_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      sender_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+  public int getSender() {
+    return sender_;
   }
 
   public static final int RECEIVER_FIELD_NUMBER = 2;
-  private volatile java.lang.Object receiver_;
+  private int receiver_;
   /**
-   * <code>string receiver = 2;</code>
+   * <code>int32 receiver = 2;</code>
    */
-  public java.lang.String getReceiver() {
-    java.lang.Object ref = receiver_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      receiver_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string receiver = 2;</code>
-   */
-  public com.google.protobuf.ByteString
-      getReceiverBytes() {
-    java.lang.Object ref = receiver_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      receiver_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+  public int getReceiver() {
+    return receiver_;
   }
 
   public static final int AMOUNT_FIELD_NUMBER = 3;
@@ -290,11 +238,11 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (!getSenderBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, sender_);
+    if (sender_ != 0) {
+      output.writeInt32(1, sender_);
     }
-    if (!getReceiverBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, receiver_);
+    if (receiver_ != 0) {
+      output.writeInt32(2, receiver_);
     }
     if (amount_ != 0) {
       output.writeInt32(3, amount_);
@@ -320,11 +268,13 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (!getSenderBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, sender_);
+    if (sender_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(1, sender_);
     }
-    if (!getReceiverBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, receiver_);
+    if (receiver_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(2, receiver_);
     }
     if (amount_ != 0) {
       size += com.google.protobuf.CodedOutputStream
@@ -361,10 +311,10 @@ private static final long serialVersionUID = 0L;
     org.cse535.proto.Transaction other = (org.cse535.proto.Transaction) obj;
 
     boolean result = true;
-    result = result && getSender()
-        .equals(other.getSender());
-    result = result && getReceiver()
-        .equals(other.getReceiver());
+    result = result && (getSender()
+        == other.getSender());
+    result = result && (getReceiver()
+        == other.getReceiver());
     result = result && (getAmount()
         == other.getAmount());
     result = result && (hasTimestamp() == other.hasTimestamp());
@@ -390,9 +340,9 @@ private static final long serialVersionUID = 0L;
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + SENDER_FIELD_NUMBER;
-    hash = (53 * hash) + getSender().hashCode();
+    hash = (53 * hash) + getSender();
     hash = (37 * hash) + RECEIVER_FIELD_NUMBER;
-    hash = (53 * hash) + getReceiver().hashCode();
+    hash = (53 * hash) + getReceiver();
     hash = (37 * hash) + AMOUNT_FIELD_NUMBER;
     hash = (53 * hash) + getAmount();
     if (hasTimestamp()) {
@@ -539,9 +489,9 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      sender_ = "";
+      sender_ = 0;
 
-      receiver_ = "";
+      receiver_ = 0;
 
       amount_ = 0;
 
@@ -642,13 +592,11 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(org.cse535.proto.Transaction other) {
       if (other == org.cse535.proto.Transaction.getDefaultInstance()) return this;
-      if (!other.getSender().isEmpty()) {
-        sender_ = other.sender_;
-        onChanged();
+      if (other.getSender() != 0) {
+        setSender(other.getSender());
       }
-      if (!other.getReceiver().isEmpty()) {
-        receiver_ = other.receiver_;
-        onChanged();
+      if (other.getReceiver() != 0) {
+        setReceiver(other.getReceiver());
       }
       if (other.getAmount() != 0) {
         setAmount(other.getAmount());
@@ -695,140 +643,54 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private java.lang.Object sender_ = "";
+    private int sender_ ;
     /**
-     * <code>string sender = 1;</code>
+     * <code>int32 sender = 1;</code>
      */
-    public java.lang.String getSender() {
-      java.lang.Object ref = sender_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        sender_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+    public int getSender() {
+      return sender_;
     }
     /**
-     * <code>string sender = 1;</code>
+     * <code>int32 sender = 1;</code>
      */
-    public com.google.protobuf.ByteString
-        getSenderBytes() {
-      java.lang.Object ref = sender_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        sender_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string sender = 1;</code>
-     */
-    public Builder setSender(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
+    public Builder setSender(int value) {
+      
       sender_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>string sender = 1;</code>
+     * <code>int32 sender = 1;</code>
      */
     public Builder clearSender() {
       
-      sender_ = getDefaultInstance().getSender();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string sender = 1;</code>
-     */
-    public Builder setSenderBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      sender_ = value;
+      sender_ = 0;
       onChanged();
       return this;
     }
 
-    private java.lang.Object receiver_ = "";
+    private int receiver_ ;
     /**
-     * <code>string receiver = 2;</code>
+     * <code>int32 receiver = 2;</code>
      */
-    public java.lang.String getReceiver() {
-      java.lang.Object ref = receiver_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        receiver_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+    public int getReceiver() {
+      return receiver_;
     }
     /**
-     * <code>string receiver = 2;</code>
+     * <code>int32 receiver = 2;</code>
      */
-    public com.google.protobuf.ByteString
-        getReceiverBytes() {
-      java.lang.Object ref = receiver_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        receiver_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string receiver = 2;</code>
-     */
-    public Builder setReceiver(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
+    public Builder setReceiver(int value) {
+      
       receiver_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>string receiver = 2;</code>
+     * <code>int32 receiver = 2;</code>
      */
     public Builder clearReceiver() {
       
-      receiver_ = getDefaultInstance().getReceiver();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string receiver = 2;</code>
-     */
-    public Builder setReceiverBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      receiver_ = value;
+      receiver_ = 0;
       onChanged();
       return this;
     }

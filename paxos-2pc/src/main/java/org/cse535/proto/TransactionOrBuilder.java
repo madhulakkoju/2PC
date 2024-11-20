@@ -8,24 +8,14 @@ public interface TransactionOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>string sender = 1;</code>
+   * <code>int32 sender = 1;</code>
    */
-  java.lang.String getSender();
-  /**
-   * <code>string sender = 1;</code>
-   */
-  com.google.protobuf.ByteString
-      getSenderBytes();
+  int getSender();
 
   /**
-   * <code>string receiver = 2;</code>
+   * <code>int32 receiver = 2;</code>
    */
-  java.lang.String getReceiver();
-  /**
-   * <code>string receiver = 2;</code>
-   */
-  com.google.protobuf.ByteString
-      getReceiverBytes();
+  int getReceiver();
 
   /**
    * <code>int32 amount = 3;</code>

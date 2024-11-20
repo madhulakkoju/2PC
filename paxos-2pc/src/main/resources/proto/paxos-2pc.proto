@@ -40,8 +40,8 @@ message TransactionInputConfig{
 
 message Transaction {
 
-  string sender = 1;
-  string receiver = 2;
+  int32 sender = 1;
+  int32 receiver = 2;
   int32 amount = 3;
   google.protobuf.Timestamp timestamp = 4;
 

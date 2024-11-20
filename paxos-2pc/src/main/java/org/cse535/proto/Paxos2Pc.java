@@ -72,8 +72,8 @@ public final class Paxos2Pc {
       "tamp.proto\"q\n\026TransactionInputConfig\022\021\n\t" +
       "setNumber\030\001 \001(\005\022!\n\013transaction\030\002 \001(\0132\014.T" +
       "ransaction\022\014\n\004view\030\003 \001(\005\022\023\n\013serverNames\030" +
-      "\005 \003(\t\"\265\001\n\013Transaction\022\016\n\006sender\030\001 \001(\t\022\020\n" +
-      "\010receiver\030\002 \001(\t\022\016\n\006amount\030\003 \001(\005\022-\n\ttimes" +
+      "\005 \003(\t\"\265\001\n\013Transaction\022\016\n\006sender\030\001 \001(\005\022\020\n" +
+      "\010receiver\030\002 \001(\005\022\016\n\006amount\030\003 \001(\005\022-\n\ttimes" +
       "tamp\030\004 \001(\0132\032.google.protobuf.Timestamp\022\027" +
       "\n\017transactionHash\030\005 \001(\t\022\026\n\016transactionNu" +
       "m\030\006 \001(\005\022\024\n\014isCrossShard\030\007 \001(\010\"2\n\013TxnResp" +

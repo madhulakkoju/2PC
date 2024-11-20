@@ -2,6 +2,7 @@ package org.cse535.database;
 
 import org.cse535.proto.Transaction;
 import org.cse535.proto.TransactionInputConfig;
+import org.cse535.threadimpls.IntraShardTnxProcessingThread;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ public class DatabaseService {
     public Integer serverNumber;
 
     public PriorityBlockingQueue<TransactionInputConfig> incomingTransactionsQueue;
+
 
     public HashMap<Integer, Transaction> transactionMap;
 

@@ -22,12 +22,17 @@ public class ViewServer extends NodeServer {
 
     public static class TnxLine{
         public TransactionInputConfig transactionInputConfig;
-        public String contactServer;
+        public HashMap<Integer, String> clusterContactServermapping;
 
-        public TnxLine(TransactionInputConfig transactionInputConfig, String contactServer){
+        public TnxLine(TransactionInputConfig transactionInputConfig, List<String> contactServers){
             this.transactionInputConfig = transactionInputConfig;
-            this.contactServer = contactServer;
+            clusterContactServermapping = new HashMap<>();
+
+            for(String server : contactServers){
+                clusterContactServermapping.put( Utils.FindMyCluster( server ), server);
+            }
         }
+
     }
 
 
@@ -107,6 +112,7 @@ public class ViewServer extends NodeServer {
 
         List<String> activeServersList = new ArrayList<>();
 
+
         for(int i =0;i<activeServers.length;i++){
             if(activeServers[i].trim().length() > 0)
                 activeServersList.add( activeServers[i].trim());
@@ -124,56 +130,25 @@ public class ViewServer extends NodeServer {
 
         // Now you can create your transaction
         Transaction transaction = Transaction.newBuilder()
-                .setSender(sender)
-                .setReceiver(receiver)
+                .setSender(Integer.parseInt(sender))
+                .setReceiver(Integer.parseInt(receiver))
                 .setAmount(amount)
                 .setTransactionNum(tnxCount) // Assuming you want to set this as the transaction number
+                .setIsCrossShard( Utils.IsTransactionCrossCluster(Integer.parseInt(sender), Integer.parseInt(receiver)) )
                 .build();
-
-
-
 
         return new TnxLine(TransactionInputConfig.newBuilder()
                 .setSetNumber(testCaseCount)
                 .setTransaction(transaction)
                 .addAllServerNames(activeServersList)
-                .build(), contactServersList.get(0));
+                .build(), contactServersList);
     }
 
 
 
     public void sendCommandToServers(Command commandType) throws InterruptedException {
         CommandInput commandInput = CommandInput.newBuilder().build();
-
         Thread.sleep(10);
-
-
-        // For only Active Servers
-
-//        activeServersStatusMap.forEach((server, isActive) -> {
-//            if (!server.equals(this.serverName) && isActive) {
-//                CommandsGrpc.CommandsBlockingStub stub = this.serversToCommandsStub.get(server);
-//                CommandOutput op  = CommandOutput.newBuilder().setOutput("No Output").build() ;
-//
-//                switch (commandType) {
-//                    case PrintDB:
-//                        op = stub.printDB(commandInput);
-//                        break;
-//                    case PrintBalance:
-//                        op = stub.printBalance(commandInput);
-//                        break;
-//                    case PrintLog:
-//                        op = stub.printLog(commandInput);
-//                        break;
-//                    case Performance:
-//                        op = stub.performance(commandInput);
-//                        break;
-//                }
-//
-//                this.logger.log("Command: " + commandType + "\n server: " + server + "\n output: \n"+ op.getOutput());
-//                //System.out.println("Command: " + commandType + "\n server: " + server + "\n output: \n"+ op.getOutput());
-//            }
-//        });
 
         activeServersStatusMap.forEach((server, isActive) -> {
 
@@ -201,14 +176,26 @@ public class ViewServer extends NodeServer {
 
 
 
+    public void sendTransactionToServer(TransactionInputConfig transactionInputConfig, String server){
+
+        serversToPaxosStub.get( Integer.parseInt(server.replaceAll("S","")) ).request(transactionInputConfig);
+
+    }
+
+
+
+    public void sendCrossShardTransaction(TransactionInputConfig transactionInputConfig, String senderServer, String receiverServer){
+
+
+
+    }
 
 
 
 
+    public HashMap<Integer, Transaction> transactions = new HashMap<>();
 
-
-
-
+    public HashMap<Integer, Integer> transactionsStstusMap = new HashMap<>();
 
 
 
@@ -219,10 +206,12 @@ public class ViewServer extends NodeServer {
 //        int viewServerNum = Integer.parseInt(args[0]);
 //        GlobalConfigs.TotalServers = Integer.parseInt(args[1]);
 //        GlobalConfigs.numServersPerCluster = Integer.parseInt(args[2]);
+//        GlobalConfigs.TotalDataItems = Integer.parseInt(args[3]);
 
         int viewServerNum = 0;
         GlobalConfigs.TotalServers = 9;
         GlobalConfigs.numServersPerCluster = 3;
+        GlobalConfigs.TotalDataItems = 3000;
 
 
         GlobalConfigs.LoadConfigs();
@@ -302,33 +291,52 @@ public class ViewServer extends NodeServer {
                     System.out.print("Press Enter to run Commands ");
                     System.console().readLine();
 
-//                    viewServer.sendCommandToServers( Command.PrintDB );
-//                    viewServer.sendCommandToServers( Command.PrintLog );
+                    viewServer.sendCommandToServers( Command.PrintDB );
+                    viewServer.sendCommandToServers( Command.PrintLog );
 
                     System.out.print("Press Enter to continue to next Test set "+transactionInputConfig.getSetNumber());
                     System.console().readLine();
 
 
-//                    for( Integer server : GlobalConfigs.ServerToPortMap.keySet()) {
-//                        if( viewServer.activeServersStatusMap.get(server)) {
-//                            ActivateServerRequest request = ActivateServerRequest.newBuilder().setServerName("S"+ server).build();
-//                            viewServer.serversToActivateServersStub.get(server).activateServer(request);
-//                        }
-//                        else {
-//                            DeactivateServerRequest request = DeactivateServerRequest.newBuilder().setServerName("S"+ server).build();
-//                            viewServer.serversToActivateServersStub.get(server).deactivateServer(request);
-//                        }
-//                    }
+                    for( Integer server : GlobalConfigs.ServerToPortMap.keySet()) {
+                        if(server == viewServerNum) continue;
+                        if( viewServer.activeServersStatusMap.get(server)) {
+                            ActivateServerRequest request = ActivateServerRequest.newBuilder().setServerName("S"+ server).build();
+                            viewServer.serversToActivateServersStub.get(server).activateServer(request);
+                        }
+                        else {
+                            DeactivateServerRequest request = DeactivateServerRequest.newBuilder().setServerName("S"+ server).build();
+                            viewServer.serversToActivateServersStub.get(server).deactivateServer(request);
+                        }
+                    }
                 }
 
 
 
-                // System.out.println(Utils.toString(transactionInputConfig.getTransaction()) + " ContactServer: " + tnxLine.contactServer + " Active Servers: " + transactionInputConfig.getServerNamesList());
+                System.out.println(Utils.toString(transactionInputConfig.getTransaction()) + " ContactServers: "
+                        + tnxLine.clusterContactServermapping.values() + " Active Servers: " + transactionInputConfig.getServerNamesList()
+                        + " Is Cross Shard: " + transactionInputConfig.getTransaction().getIsCrossShard());
 
 
-
+                viewServer.transactions.put(transactionInputConfig.getTransaction().getTransactionNum(), transactionInputConfig.getTransaction());
 
                 // Check whether transaction is IntraShard or Cross Shard
+
+                if( !transactionInputConfig.getTransaction().getIsCrossShard() ){
+                    //Intra Shard.. can send to contact server from the shard.
+                    int cluster = Utils.FindClusterOfDataItem(transactionInputConfig.getTransaction().getSender());
+                    viewServer.sendTransactionToServer(transactionInputConfig, tnxLine.clusterContactServermapping.get(cluster));
+                }
+                else{
+                    //Cross Shard.. need to send to both servers && wait for the Prepare Responses from both leaders
+
+                    viewServer.sendCrossShardTransaction(transactionInputConfig,
+                            tnxLine.clusterContactServermapping.get(Utils.FindClusterOfDataItem(transactionInputConfig.getTransaction().getSender())),
+                            tnxLine.clusterContactServermapping.get(Utils.FindClusterOfDataItem(transactionInputConfig.getTransaction().getReceiver())));
+
+                    Thread.sleep(100);
+                }
+
 
 
 

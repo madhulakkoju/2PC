@@ -11,6 +11,7 @@ public class ActivateServersService extends ActivateServersGrpc.ActivateServersI
         Main.node.isServerActive.set(true);
         responseObserver.onNext(ActivateServerResponse.newBuilder().setSuccess(true).build());
         responseObserver.onCompleted();
+        System.out.println("Server activated");
     }
 
 
@@ -19,5 +20,6 @@ public class ActivateServersService extends ActivateServersGrpc.ActivateServersI
         Main.node.isServerActive.set(false);
         responseObserver.onNext(DeactivateServerResponse.newBuilder().setSuccess(true).build());
         responseObserver.onCompleted();
+        System.out.println("Server deactivated");
     }
 }

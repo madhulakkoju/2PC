@@ -16,9 +16,14 @@ public class Main {
 
     public static void main(String[] args) throws InterruptedException {
 
+        System.out.println("Arguments: ServerNum, TotalServers, ClustersCount, DataItemsCount :" + String.join(", ", args));
+
         serverNum = Integer.parseInt(args[0]);
         GlobalConfigs.TotalServers = Integer.parseInt(args[1]);
         GlobalConfigs.numServersPerCluster = Integer.parseInt(args[2]);
+        GlobalConfigs.TotalDataItems = Integer.parseInt(args[3]);
+
+        System.out.println("Server Number: " + serverNum);
 
 
         GlobalConfigs.LoadConfigs( );

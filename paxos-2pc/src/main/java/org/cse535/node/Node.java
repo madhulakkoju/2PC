@@ -4,6 +4,12 @@ import org.cse535.configs.GlobalConfigs;
 import org.cse535.configs.Utils;
 import org.cse535.proto.Transaction;
 import org.cse535.proto.TransactionInputConfig;
+import org.cse535.threadimpls.IntraShardTnxProcessingThread;
+
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.PriorityBlockingQueue;
 
 public class Node extends NodeServer {
 
@@ -14,7 +20,11 @@ public class Node extends NodeServer {
     public boolean pauseTnxServiceUntilCommit;
 
 
+    public ConcurrentHashMap<Integer, Integer> lockedDataItemsWithTransactionNum;
 
+
+
+    public PriorityBlockingQueue<IntraShardTnxProcessingThread> intraTransactionThreadQueue;
 
 
 
@@ -22,11 +32,18 @@ public class Node extends NodeServer {
     public Node(Integer serverNum, int port) {
         super(serverNum, port);
 
-
-
         this.transactionWorkerThread = new Thread(this::processTnxsInQueue);
+        this.lockedDataItemsWithTransactionNum = new ConcurrentHashMap<>();
 
 
+
+        try {
+            this.server.start();
+            this.transactionWorkerThread.start();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -58,11 +75,7 @@ public class Node extends NodeServer {
                     continue;
                 }
 
-                if( ! transactionInput.getTransaction().getSender().equals(this.serverName) ){
-                    this.logger.log("Transaction not for this client / server");
-                    this.database.incomingTransactionsQueue.remove();
-                    continue;
-                }
+
 
 
 
@@ -75,7 +88,12 @@ public class Node extends NodeServer {
 
                 // Process the Transaction now.
 
-
+                if(transaction.getIsCrossShard()){
+                    processCrossShardTransaction(transaction);
+                }
+                else {
+                    processIntraShardTransaction(transaction);
+                }
 
             } catch (InterruptedException e) {
                 this.commandLogger.log("Line 143 ::: " + e.getMessage());
@@ -86,6 +104,47 @@ public class Node extends NodeServer {
 
 
 
+
+
+
+
+
+
+
+
+    public boolean processIntraShardTransaction(Transaction transaction) {
+
+        if(Utils.CheckTransactionBelongToMyCluster(transaction, this.serverNumber)){
+            this.logger.log("Processing Transaction: " + transaction.getTransactionNum());
+
+            IntraShardTnxProcessingThread intraShardTnxProcessingThread = new IntraShardTnxProcessingThread(this, transaction);
+
+
+
+
+            intraShardTnxProcessingThread.start();
+
+            return true;
+        }
+        else {
+            this.logger.log("Transaction does not belong to my cluster: " + transaction.getTransactionNum());
+        }
+        return false;
+    }
+
+
+    public boolean processCrossShardTransaction(Transaction transaction) {
+
+
+
+
+
+
+
+
+
+        return false;
+    }
 
 
 }

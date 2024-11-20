@@ -85,10 +85,12 @@ public class NodeServer {
 
         database = new DatabaseService(this.serverNumber);
 
+        System.out.println("Current Server: " + serverName + " Port: " + port);
+
         GlobalConfigs.ServerToPortMap.forEach((serverNum, port) -> {
             ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", port).usePlaintext().build();
 
-            System.out.println("Channel created for server: " + serverName);
+            System.out.println("Channel created for server: " + serverNum);
 
             serversToChannel.put(serverNum, channel);
             serversToPaxosStub.put(serverNum, PaxosGrpc.newBlockingStub(channel));

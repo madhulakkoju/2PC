@@ -1,8 +1,8 @@
 package org.cse535.node;
 
-import com.google.common.util.concurrent.UncheckedTimeoutException;
 import org.cse535.configs.GlobalConfigs;
 import org.cse535.configs.Utils;
+
 import org.cse535.proto.*;
 
 import java.io.BufferedReader;
@@ -222,7 +222,7 @@ public class ViewServer extends NodeServer {
             viewServer.activeServersStatusMap.put(serverNum, true);
         }
 
-        String path = "src/main/resources/lab2_Test.csv";
+        String path = "src/main/resources/Test Cases - Lab3.csv";
 
         File file = new File(path);
         String line;

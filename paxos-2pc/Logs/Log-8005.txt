@@ -1,0 +1,24 @@
+ 
+Transaction Worker Thread Started
+Received prepare request from S4 with ballot number 1
+Prepare Request Received from S4
+Prepare Request Accepted from S4
+Received Commit request from S4 with ballot number 1
+Commit Request Received from S4
+Commit Request Accepted from S4
+Received prepare request from S4 with ballot number 2
+Prepare Request Received from S4
+Prepare Request Accepted from S4
+Received Commit request from S4 with ballot number 2
+Commit Request Received from S4
+Commit Request Accepted from S4
+Received prepare request from S4 with ballot number 3
+Received Commit request from S4 with ballot number 3
+Processing Transaction: 14
+Prepare response from 6 : false
+Prepare response from 4 : false
+Synced Transaction: 3
+Synced Transaction Status: 3
+Synced data ... Now Retrying Prepare phase
+Prepare response from 4 : false
+Prepare response from 6 : false

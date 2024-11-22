@@ -1,0 +1,19 @@
+ 
+Transaction Worker Thread Started
+Processing Transaction: 2
+Prepare response from 5 : true
+Prepare response from 6 : true
+Commit response from 6 : true
+Commit response from 5 : true
+Processing Transaction: 4
+Prepare response from 6 : true
+Prepare response from 5 : true
+Commit response from 6 : true
+Commit response from 5 : true
+Processing Transaction: 10
+Prepare response from 5 : false
+Prepare response from 6 : true
+Commit response from 5 : false
+Commit response from 6 : true
+Received prepare request from S5 with ballot number 3
+Received prepare request from S5 with ballot number 3

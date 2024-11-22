@@ -10,6 +10,9 @@ service Paxos {
 
   rpc Request(TransactionInputConfig) returns (TxnResponse) {}
 
+  rpc Prepare(PrepareRequest) returns (PrepareResponse) {}
+
+  rpc Commit(CommitRequest) returns (CommitResponse) {}
 
 }
 
@@ -59,6 +62,74 @@ message TxnResponse{
 }
 
 
+enum TransactionStatus{
+  PENDING = 0;
+  PREPARED = 1;
+  ACCEPTED = 2;
+  COMMITTED = 3;
+  EXECUTED = 4;
+  ABORTED = 5;
+}
+
+
+message PrepareRequest {
+  int32 ballotNumber = 1;
+  string processId = 2; // processId is Server Name
+
+  Transaction transaction = 3;
+
+  Transaction latestCommittedTransaction = 4;
+  int32 latestCommittedBallotNumber = 5;
+
+  int32 clusterId = 6;
+
+}
+
+message PrepareResponse {
+  int32 ballotNumber = 1;
+  string processId = 2;
+
+  bool success = 3;
+
+  Transaction lastAcceptedUncommittedTransaction = 4;
+  int32 lastAcceptedUncommittedBallotNumber = 5;
+
+  Transaction lastCommittedTransaction = 6;
+  int32 lastCommittedBallotNumber = 7;
+
+
+  map<int32, Transaction> syncTransactionsMap = 8;
+  map<int32, TransactionStatus> syncTransactionStatusMap = 9;
+  map<int32, int32> syncBalancesMap = 10;
+
+  string acceptedServerName = 11; //Current server name
+
+
+  bool needToSync = 12;
+  int32 latestBallotNumber = 13;
+
+}
+
+
+
+message CommitRequest {
+  int32 ballotNumber = 1;
+  string processId = 2; // processId is Server Name
+
+  Transaction transaction = 3;
+
+  int32 clusterId = 8;
+}
+
+
+message CommitResponse {
+  int32 ballotNumber = 1;
+  string processId = 2;
+
+  string acceptedServerName = 3; //Current server name
+
+  bool success = 4;
+}
 
 
 

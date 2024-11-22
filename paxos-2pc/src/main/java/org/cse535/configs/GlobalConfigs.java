@@ -23,6 +23,9 @@ public class GlobalConfigs {
     public static int InitialBalance = 10;
 
 
+    public static int f = 1;
+    public static int ShardConsesusThreshold = f + 1;
+
 
     // Cluster Number: Max Data Item Number
     public static HashMap<Integer, Integer> clusterShardMap;
@@ -48,7 +51,7 @@ public class GlobalConfigs {
         int starter = 0;
         int counter = 1;
 
-        for (int i = 1; i < numClusters; i++) {
+        for (int i = 1; i <= numClusters; i++) {
             starter += dataItemsPerCluster;
             clusterShardMap.put(i, starter);
             clusterToServersMap.put(i, new ArrayList<Integer>());
@@ -56,6 +59,7 @@ public class GlobalConfigs {
             for(int j = 0; j < numServersPerCluster; j++){
                 clusterToServersMap.get(i).add(counter++);
             }
+            System.out.println("Cluster " + i + " has servers: " + clusterToServersMap.get(i).toString());
 
         }
         clusterShardMap.put(numClusters, TotalDataItems);

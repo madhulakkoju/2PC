@@ -1,6 +1,6 @@
  
 -------------------------------------------------------------
-Line: 1 : 1,"(21, 700, 2)","[S1, S2, S4, S6, S8, S9]","[S1, S4, S8]"
+Line: 1 : 1,"(100, 501, 8)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
 Command: PrintDB
  server: 0
  output: 
@@ -82,15 +82,11 @@ Command: PrintLog
  output: 
 Log
 -------------------------------------------------------------
-Line: 2 : 1,"(100, 501, 8)","[S1, S2, S4, S6, S8, S9]","[S1, S4, S8]"
+Line: 2 : 1,"(1001, 1650, 2)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
 -------------------------------------------------------------
-Line: 3 : 1,"(1001, 1650, 2)","[S1, S2, S4, S6, S8, S9]","[S1, S4, S8]"
+Line: 3 : 1,"(2800, 2150, 7)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
 -------------------------------------------------------------
-Line: 4 : 1,"(2800, 2150, 7)","[S1, S2, S4, S6, S8, S9]","[S1, S4, S8]"
--------------------------------------------------------------
-Line: 5 : 1,"(1003, 1001, 5)","[S1, S2, S4, S6, S8, S9]","[S1, S4, S8]"
--------------------------------------------------------------
-Line: 6 : 2,"(702, 1301, 2)","[S1, S2, S3, S5, S6, S8, S9]","[S3, S6, S8]"
+Line: 4 : 2,"(1201, 1111, 5)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
 Command: PrintDB
  server: 0
  output: 
@@ -172,6 +168,184 @@ Command: PrintLog
  output: 
 Log
 -------------------------------------------------------------
-Line: 7 : 2,"(1301, 1302, 3)","[S1, S2, S3, S5, S6, S8, S9]","[S3, S6, S8]"
+Line: 5 : 2,"(501, 299, 13)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
 -------------------------------------------------------------
-Line: 8 : 2,"(600, 1502, 6)","[S1, S2, S3, S5, S6, S8, S9]","[S3, S6, S8]"
+Line: 6 : 2,"(101, 301, 9)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
+-------------------------------------------------------------
+Line: 7 : 2,"(299, 1, 4)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
+-------------------------------------------------------------
+Line: 8 : 3,"(2995, 2990, 5)","[S1, S2, S3, S4, S6, S7, S8, S9]","[S1, S4, S7]"
+Command: PrintDB
+ server: 0
+ output: 
+DB
+Command: PrintDB
+ server: 1
+ output: 
+DB
+Command: PrintDB
+ server: 2
+ output: 
+DB
+Command: PrintDB
+ server: 3
+ output: 
+DB
+Command: PrintDB
+ server: 4
+ output: 
+DB
+Command: PrintDB
+ server: 5
+ output: 
+DB
+Command: PrintDB
+ server: 6
+ output: 
+DB
+Command: PrintDB
+ server: 7
+ output: 
+DB
+Command: PrintDB
+ server: 8
+ output: 
+DB
+Command: PrintDB
+ server: 9
+ output: 
+DB
+Command: PrintLog
+ server: 0
+ output: 
+Log
+Command: PrintLog
+ server: 1
+ output: 
+Log
+Command: PrintLog
+ server: 2
+ output: 
+Log
+Command: PrintLog
+ server: 3
+ output: 
+Log
+Command: PrintLog
+ server: 4
+ output: 
+Log
+Command: PrintLog
+ server: 5
+ output: 
+Log
+Command: PrintLog
+ server: 6
+ output: 
+Log
+Command: PrintLog
+ server: 7
+ output: 
+Log
+Command: PrintLog
+ server: 8
+ output: 
+Log
+Command: PrintLog
+ server: 9
+ output: 
+Log
+-------------------------------------------------------------
+Line: 9 : 3,"(796, 997, 3)","[S1, S2, S3, S4, S6, S7, S8, S9]","[S1, S4, S7]"
+-------------------------------------------------------------
+Line: 10 : 3,"(1895, 1890, 5)","[S1, S2, S3, S4, S6, S7, S8, S9]","[S1, S4, S7]"
+-------------------------------------------------------------
+Line: 11 : 3,"(2995, 2994, 7)","[S1, S2, S3, S4, S6, S7, S8, S9]","[S1, S4, S7]"
+-------------------------------------------------------------
+Line: 12 : 4,"(2770, 2799, 1)","[S1, S2, S3, S5, S6, S7, S8, S9]","[S1, S5, S7]"
+Command: PrintDB
+ server: 0
+ output: 
+DB
+Command: PrintDB
+ server: 1
+ output: 
+DB
+Command: PrintDB
+ server: 2
+ output: 
+DB
+Command: PrintDB
+ server: 3
+ output: 
+DB
+Command: PrintDB
+ server: 4
+ output: 
+DB
+Command: PrintDB
+ server: 5
+ output: 
+DB
+Command: PrintDB
+ server: 6
+ output: 
+DB
+Command: PrintDB
+ server: 7
+ output: 
+DB
+Command: PrintDB
+ server: 8
+ output: 
+DB
+Command: PrintDB
+ server: 9
+ output: 
+DB
+Command: PrintLog
+ server: 0
+ output: 
+Log
+Command: PrintLog
+ server: 1
+ output: 
+Log
+Command: PrintLog
+ server: 2
+ output: 
+Log
+Command: PrintLog
+ server: 3
+ output: 
+Log
+Command: PrintLog
+ server: 4
+ output: 
+Log
+Command: PrintLog
+ server: 5
+ output: 
+Log
+Command: PrintLog
+ server: 6
+ output: 
+Log
+Command: PrintLog
+ server: 7
+ output: 
+Log
+Command: PrintLog
+ server: 8
+ output: 
+Log
+Command: PrintLog
+ server: 9
+ output: 
+Log
+-------------------------------------------------------------
+Line: 13 : 4,"(196, 197, 3)","[S1, S2, S3, S5, S6, S7, S8, S9]","[S1, S5, S7]"
+-------------------------------------------------------------
+Line: 14 : 4,"(1895, 1990, 7)","[S1, S2, S3, S5, S6, S7, S8, S9]","[S1, S5, S7]"
+-------------------------------------------------------------
+Line: 15 : 5,"(973, 707, 2)","[S1, S2, S3, S4, S5, S6, S7]","[S1, S4, S7]"

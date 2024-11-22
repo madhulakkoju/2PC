@@ -1,0 +1,38 @@
+ 
+Transaction Worker Thread Started
+Received prepare request from S1 with ballot number 1
+Prepare Request Received from S1
+Prepare Request Accepted from S1
+Received Commit request from S1 with ballot number 1
+Commit Request Received from S1
+Commit Request Accepted from S1
+Received prepare request from S1 with ballot number 2
+Prepare Request Received from S1
+Prepare Request Accepted from S1
+Received Commit request from S1 with ballot number 2
+Commit Request Received from S1
+Commit Request Accepted from S1
+Received prepare request from S1 with ballot number 3
+Prepare Request Received from S1
+Prepare Request Accepted from S1
+Received Commit request from S1 with ballot number 3
+Commit Request Received from S1
+Commit Request Accepted from S1
+Received prepare request from S1 with ballot number 4
+Prepare Request Received from S1
+Prepare Request Accepted from S1
+Received Commit request from S1 with ballot number 4
+Commit Request Received from S1
+Commit Request Accepted from S1
+Received prepare request from S1 with ballot number 5
+Prepare Request Received from S1
+Prepare Request Accepted from S1
+Received Commit request from S1 with ballot number 5
+Commit Request Received from S1
+Commit Request Accepted from S1
+Received prepare request from S1 with ballot number 6
+Prepare Request Received from S1
+Prepare Request Accepted from S1
+Received Commit request from S1 with ballot number 6
+Commit Request Received from S1
+Commit Request Accepted from S1

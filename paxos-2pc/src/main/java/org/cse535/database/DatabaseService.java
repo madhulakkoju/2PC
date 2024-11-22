@@ -4,6 +4,7 @@ import org.cse535.configs.GlobalConfigs;
 import org.cse535.configs.Utils;
 import org.cse535.proto.Transaction;
 import org.cse535.proto.TransactionInputConfig;
+import org.cse535.proto.TransactionStatus;
 import org.cse535.threadimpls.IntraShardTnxProcessingThread;
 
 import java.sql.Connection;
@@ -13,7 +14,9 @@ import java.sql.Statement;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 
 public class DatabaseService {
@@ -22,18 +25,33 @@ public class DatabaseService {
 
     public PriorityBlockingQueue<TransactionInputConfig> incomingTransactionsQueue;
 
-
+    //BallotNumber, Transaction
     public HashMap<Integer, Transaction> transactionMap;
+    public HashMap<Integer, TransactionStatus> transactionStatusMap;
 
     public HashSet<Integer> processedTransactionsSet;
 
     public Connection connection;
     public Statement statement;
 
-
     public Lock lock;
 
+    public AtomicInteger ballotNumber;
+
+    public int lastAcceptedUncommittedBallotNumber;
+    public Transaction lastAcceptedUncommittedTransaction;
+
+    public int lastCommittedBallotNumber;
+    public Transaction lastCommittedTransaction;
+
+
     public DatabaseService( Integer serverNum) {
+        this.ballotNumber = new AtomicInteger(0);
+        this.lastAcceptedUncommittedBallotNumber = -1;
+        this.lastAcceptedUncommittedTransaction = null;
+        this.lastCommittedTransaction = null;
+        this.lastCommittedBallotNumber = -1;
+
         this.serverNumber = serverNum;
 
         this.incomingTransactionsQueue = new PriorityBlockingQueue<>(100, new Comparator<TransactionInputConfig>() {
@@ -45,10 +63,9 @@ public class DatabaseService {
 
         this.transactionMap = new HashMap<>();
         this.processedTransactionsSet = new HashSet<>();
-
+        this.transactionStatusMap = new HashMap<>();
 
         initializeSQLiteDatabase();
-
     }
 
 
@@ -137,6 +154,40 @@ public class DatabaseService {
         }
         return -1;
     }
+
+    public synchronized HashMap<Integer, Integer> getAllBalances() {
+        HashMap<Integer, Integer> balances = new HashMap<>();
+        try {
+            String selectSQL = "SELECT * FROM accounts;";
+            while (statement.executeQuery(selectSQL).next()) {
+
+                balances.put(
+                        statement.executeQuery(selectSQL).getInt("id"),
+                        statement.executeQuery(selectSQL).getInt("amount")
+                );
+
+            }
+            return balances;
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return balances;
+
+    }
+
+    public synchronized void updateBalances(Map<Integer, Integer> balances){
+        try {
+            for (Integer account : balances.keySet()) {
+                String updateSQL = "UPDATE accounts SET amount = " + balances.get(account) + " WHERE id = " + account + ";";
+                statement.executeUpdate(updateSQL);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
 

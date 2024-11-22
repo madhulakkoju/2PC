@@ -2,8 +2,7 @@ package org.cse535.node;
 
 import org.cse535.configs.GlobalConfigs;
 import org.cse535.configs.Utils;
-import org.cse535.proto.Transaction;
-import org.cse535.proto.TransactionInputConfig;
+import org.cse535.proto.*;
 import org.cse535.threadimpls.IntraShardTnxProcessingThread;
 
 import java.io.IOException;
@@ -21,8 +20,6 @@ public class Node extends NodeServer {
 
 
     public ConcurrentHashMap<Integer, Integer> lockedDataItemsWithTransactionNum;
-
-
 
     public PriorityBlockingQueue<IntraShardTnxProcessingThread> intraTransactionThreadQueue;
 
@@ -55,14 +52,14 @@ public class Node extends NodeServer {
             try {
                 Thread.sleep(5);
                 if(pauseTnxServiceUntilCommit){
-                    logger.log("Pausing Transaction Service until Commit");
+                    //logger.log("Pausing Transaction Service until Commit");
                     Thread.sleep(10);
                     continue;
                 }
 
 
                 if( !this.isServerActive.get()){
-                    logger.log("Pausing Transaction Service until Server is Active");
+                    //logger.log("Pausing Transaction Service until Server is Active");
                     Thread.sleep(100);
                     continue;
                 }
@@ -89,10 +86,10 @@ public class Node extends NodeServer {
                 // Process the Transaction now.
 
                 if(transaction.getIsCrossShard()){
-                    processCrossShardTransaction(transaction);
+                    processCrossShardTransaction(transaction, this.database.ballotNumber.incrementAndGet());
                 }
                 else {
-                    processIntraShardTransaction(transaction);
+                    processIntraShardTransaction(transaction, this.database.ballotNumber.incrementAndGet());
                 }
 
                 this.database.incomingTransactionsQueue.remove();
@@ -114,14 +111,14 @@ public class Node extends NodeServer {
 
 
 
-    public boolean processIntraShardTransaction(Transaction transaction) {
+    public boolean processIntraShardTransaction(Transaction transaction, int ballotNumber) {
 
         if(Utils.CheckTransactionBelongToMyCluster(transaction, this.serverNumber)){
             this.logger.log("Processing Transaction: " + transaction.getTransactionNum());
 
             try {
 
-                IntraShardTnxProcessingThread intraShardTnxProcessingThread = new IntraShardTnxProcessingThread(this, transaction);
+                IntraShardTnxProcessingThread intraShardTnxProcessingThread = new IntraShardTnxProcessingThread(this, transaction, ballotNumber);
                 intraShardTnxProcessingThread.start();
                 intraShardTnxProcessingThread.join();
 
@@ -137,8 +134,7 @@ public class Node extends NodeServer {
         return false;
     }
 
-
-    public boolean processCrossShardTransaction(Transaction transaction) {
+    public boolean processCrossShardTransaction(Transaction transaction, int ballotNumber) {
 
 
 
@@ -152,4 +148,150 @@ public class Node extends NodeServer {
     }
 
 
+
+
+
+
+
+
+    public void addSyncDataToPrepareResponse( PrepareResponse.Builder prepareResponse, PrepareRequest request){
+        // add all Transactions & statuses after request's committed tnx
+        for (int i = request.getLatestCommittedBallotNumber()+1; i <= this.database.ballotNumber.get() ; i++) {
+            if(this.database.transactionMap.containsKey(i)){
+                prepareResponse.putSyncTransactionsMap(i, this.database.transactionMap.get(i));
+
+            }
+            if(this.database.transactionStatusMap.containsKey(i)){
+                prepareResponse.putSyncTransactionStatusMap(i, this.database.transactionStatusMap.get(i));
+            }
+        }
+
+        // add total balances map after request's committed tnx
+        //prepareResponse.putAllSyncBalancesMap(this.database.getAllBalances());
+        prepareResponse.setLatestBallotNumber(this.database.ballotNumber.get());
+
+        prepareResponse.setNeedToSync(true);
+    }
+
+    public void syncData(PrepareResponse syncPrepareResponse) {
+
+        this.database.ballotNumber.set( Math.max(syncPrepareResponse.getLatestBallotNumber() , this.database.ballotNumber.get()) );
+
+        // Sync Transactions
+        for (int i = syncPrepareResponse.getLastAcceptedUncommittedBallotNumber()+1; i <= syncPrepareResponse.getLatestBallotNumber() ; i++) {
+            if(syncPrepareResponse.getSyncTransactionsMapMap().containsKey(i)){
+                this.database.transactionMap.put(i, syncPrepareResponse.getSyncTransactionsMapMap().get(i));
+                this.logger.log("Synced Transaction: " + i);
+            }
+            if(syncPrepareResponse.getSyncTransactionStatusMapMap().containsKey(i)){
+                this.database.transactionStatusMap.put(i, syncPrepareResponse.getSyncTransactionStatusMapMap().get(i));
+                this.logger.log("Synced Transaction Status: " + i);
+            }
+        }
+
+        // RunUpdateBalancesWithTheseNewTransactions
+
+        // Sync Balances
+        //this.database.updateBalances(syncPrepareResponse.getSyncBalancesMapMap());
+    }
+
+    public PrepareResponse handlePreparePhase(PrepareRequest request) {
+        PrepareResponse.Builder prepareResponse = PrepareResponse.newBuilder();
+        prepareResponse.setProcessId(this.serverName);
+        prepareResponse.setBallotNumber(request.getBallotNumber());
+        prepareResponse.setSuccess(false);
+        addSyncDataToPrepareResponse(prepareResponse, request);
+        prepareResponse.setLastAcceptedUncommittedBallotNumber(this.database.lastAcceptedUncommittedBallotNumber);
+        if(this.database.lastAcceptedUncommittedTransaction != null)
+            prepareResponse.setLastAcceptedUncommittedTransaction(this.database.lastAcceptedUncommittedTransaction);
+
+        this.logger.log("Prepare Request Received from " + request.getProcessId() );
+
+        if(request.getLatestCommittedBallotNumber() < this.database.lastCommittedBallotNumber){
+
+            this.logger.log("Prepare Request Rejected from " + request.getProcessId() + " Because Current Server is ahead of Leader " );
+            return prepareResponse.build();
+        }
+
+        if(request.getBallotNumber() >= this.database.lastAcceptedUncommittedBallotNumber){
+            this.database.lastAcceptedUncommittedBallotNumber = request.getBallotNumber();
+            this.database.lastAcceptedUncommittedTransaction = request.getTransaction();
+            this.database.ballotNumber.set( Math.max(request.getBallotNumber() , this.database.ballotNumber.get()) );
+
+            this.database.transactionMap.put(request.getBallotNumber(), request.getTransaction());
+            this.database.transactionStatusMap.put(request.getBallotNumber(), TransactionStatus.PREPARED);
+
+            prepareResponse.setSuccess(true);
+            prepareResponse.setNeedToSync(false);
+        }
+
+        this.logger.log("Prepare Request Accepted from " + request.getProcessId() );
+
+        return prepareResponse.build();
+    }
+
+    public CommitResponse handleCommit(CommitRequest request) {
+        CommitResponse.Builder commitResponse = CommitResponse.newBuilder();
+        commitResponse.setProcessId(this.serverName);
+        commitResponse.setBallotNumber(request.getBallotNumber());
+        commitResponse.setSuccess(false);
+
+        this.logger.log("Commit Request Received from " + request.getProcessId() );
+
+        if(request.getBallotNumber() == this.database.lastAcceptedUncommittedBallotNumber){
+            this.database.lastCommittedBallotNumber = request.getBallotNumber();
+            this.database.lastCommittedTransaction = request.getTransaction();
+            this.database.lastAcceptedUncommittedBallotNumber = -1;
+            this.database.lastAcceptedUncommittedTransaction = null;
+            commitResponse.setSuccess(true);
+            this.database.transactionStatusMap.put(request.getBallotNumber(), TransactionStatus.COMMITTED);
+            this.logger.log("Commit Request Accepted from " + request.getProcessId() );
+        }
+
+        return commitResponse.build();
+    }
+
+
+
 }
+
+
+
+/*
+
+
+        if((this.database.transactionMap.containsKey(request.getBallotNumber()) &&
+                this.database.transactionMap.get(request.getBallotNumber()).getTransactionNum() != request.getTransaction().getTransactionNum() )) {
+            // This server is ahead of Leader
+            this.logger.log("Prepare Request Rejected from " + request.getProcessId() );
+            return prepareResponse.build();
+        }
+
+        if(request.getLatestCommittedBallotNumber() == this.database.lastCommittedBallotNumber){
+            //in sync -- perfect
+
+            this.database.transactionMap.put(request.getBallotNumber(), request.getTransaction());
+            this.database.lastAcceptedUncommittedBallotNumber = request.getBallotNumber();
+            this.database.lastAcceptedUncommittedTransaction = request.getTransaction();
+
+            this.logger.log("Prepare Request Accepted from " + request.getProcessId() );
+            prepareResponse.setSuccess(true);
+        }
+        else if (request.getLatestCommittedBallotNumber() > this.database.lastCommittedBallotNumber){
+            //Leader is ahead
+
+            //Sync from Leader
+
+
+
+            this.database.transactionMap.put(request.getBallotNumber(), request.getTransaction());
+            this.database.lastAcceptedUncommittedBallotNumber = request.getBallotNumber();
+            this.database.lastAcceptedUncommittedTransaction = request.getTransaction();
+
+            this.logger.log("Prepare Request Accepted from " + request.getProcessId() );
+            prepareResponse.setSuccess(true);
+        }
+
+
+
+ */

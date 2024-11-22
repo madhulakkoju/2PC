@@ -1,0 +1,18 @@
+ 
+Transaction Worker Thread Started
+Processing Transaction: 3
+Prepare response from 8 : true
+Prepare response from 9 : true
+Commit response from 8 : true
+Commit response from 9 : true
+Processing Transaction: 8
+Prepare response from 8 : true
+Prepare response from 9 : true
+Commit response from 9 : true
+Commit response from 8 : true
+Processing Transaction: 11
+Processing Transaction: 12
+Prepare response from 8 : true
+Prepare response from 9 : true
+Commit response from 8 : true
+Commit response from 9 : true

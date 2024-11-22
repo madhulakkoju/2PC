@@ -30,6 +30,41 @@ public final class Paxos2Pc {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_TxnResponse_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_PrepareRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_PrepareRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_PrepareResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_PrepareResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_PrepareResponse_SyncTransactionsMapEntry_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_PrepareResponse_SyncTransactionsMapEntry_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_PrepareResponse_SyncTransactionStatusMapEntry_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_PrepareResponse_SyncTransactionStatusMapEntry_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_PrepareResponse_SyncBalancesMapEntry_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_PrepareResponse_SyncBalancesMapEntry_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_CommitRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_CommitRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_CommitResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_CommitResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
     internal_static_ActivateServerRequest_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -78,25 +113,60 @@ public final class Paxos2Pc {
       "\n\017transactionHash\030\005 \001(\t\022\026\n\016transactionNu" +
       "m\030\006 \001(\005\022\024\n\014isCrossShard\030\007 \001(\010\"2\n\013TxnResp" +
       "onse\022\017\n\007success\030\001 \001(\010\022\022\n\nserverName\030\002 \001(" +
-      "\t\"+\n\025ActivateServerRequest\022\022\n\nserverName" +
-      "\030\001 \001(\t\"=\n\026ActivateServerResponse\022\017\n\007succ" +
-      "ess\030\001 \001(\010\022\022\n\nserverName\030\002 \001(\t\"-\n\027Deactiv" +
-      "ateServerRequest\022\022\n\nserverName\030\001 \001(\t\"?\n\030" +
-      "DeactivateServerResponse\022\017\n\007success\030\001 \001(" +
-      "\010\022\022\n\nserverName\030\002 \001(\t\"\035\n\014CommandInput\022\r\n" +
-      "\005input\030\001 \001(\t\"\037\n\rCommandOutput\022\016\n\006output\030" +
-      "\001 \001(\t2;\n\005Paxos\0222\n\007Request\022\027.TransactionI" +
-      "nputConfig\032\014.TxnResponse\"\0002\241\001\n\017ActivateS" +
-      "ervers\022C\n\016activateServer\022\026.ActivateServe" +
-      "rRequest\032\027.ActivateServerResponse\"\000\022I\n\020d" +
-      "eactivateServer\022\030.DeactivateServerReques" +
-      "t\032\031.DeactivateServerResponse\"\0002\304\001\n\010Comma" +
-      "nds\022/\n\014printBalance\022\r.CommandInput\032\016.Com" +
-      "mandOutput\"\000\022+\n\010printLog\022\r.CommandInput\032" +
-      "\016.CommandOutput\"\000\022*\n\007printDB\022\r.CommandIn" +
-      "put\032\016.CommandOutput\"\000\022.\n\013Performance\022\r.C" +
-      "ommandInput\032\016.CommandOutput\"\000B\024\n\020org.cse" +
-      "535.protoP\001b\006proto3"
+      "\t\"\306\001\n\016PrepareRequest\022\024\n\014ballotNumber\030\001 \001" +
+      "(\005\022\021\n\tprocessId\030\002 \001(\t\022!\n\013transaction\030\003 \001" +
+      "(\0132\014.Transaction\0220\n\032latestCommittedTrans" +
+      "action\030\004 \001(\0132\014.Transaction\022#\n\033latestComm" +
+      "ittedBallotNumber\030\005 \001(\005\022\021\n\tclusterId\030\006 \001" +
+      "(\005\"\202\006\n\017PrepareResponse\022\024\n\014ballotNumber\030\001" +
+      " \001(\005\022\021\n\tprocessId\030\002 \001(\t\022\017\n\007success\030\003 \001(\010" +
+      "\0228\n\"lastAcceptedUncommittedTransaction\030\004" +
+      " \001(\0132\014.Transaction\022+\n#lastAcceptedUncomm" +
+      "ittedBallotNumber\030\005 \001(\005\022.\n\030lastCommitted" +
+      "Transaction\030\006 \001(\0132\014.Transaction\022!\n\031lastC" +
+      "ommittedBallotNumber\030\007 \001(\005\022F\n\023syncTransa" +
+      "ctionsMap\030\010 \003(\0132).PrepareResponse.SyncTr" +
+      "ansactionsMapEntry\022P\n\030syncTransactionSta" +
+      "tusMap\030\t \003(\0132..PrepareResponse.SyncTrans" +
+      "actionStatusMapEntry\022>\n\017syncBalancesMap\030" +
+      "\n \003(\0132%.PrepareResponse.SyncBalancesMapE" +
+      "ntry\022\032\n\022acceptedServerName\030\013 \001(\t\022\022\n\nneed" +
+      "ToSync\030\014 \001(\010\022\032\n\022latestBallotNumber\030\r \001(\005" +
+      "\032H\n\030SyncTransactionsMapEntry\022\013\n\003key\030\001 \001(" +
+      "\005\022\033\n\005value\030\002 \001(\0132\014.Transaction:\0028\001\032S\n\035Sy" +
+      "ncTransactionStatusMapEntry\022\013\n\003key\030\001 \001(\005" +
+      "\022!\n\005value\030\002 \001(\0162\022.TransactionStatus:\0028\001\032" +
+      "6\n\024SyncBalancesMapEntry\022\013\n\003key\030\001 \001(\005\022\r\n\005" +
+      "value\030\002 \001(\005:\0028\001\"n\n\rCommitRequest\022\024\n\014ball" +
+      "otNumber\030\001 \001(\005\022\021\n\tprocessId\030\002 \001(\t\022!\n\013tra" +
+      "nsaction\030\003 \001(\0132\014.Transaction\022\021\n\tclusterI" +
+      "d\030\010 \001(\005\"f\n\016CommitResponse\022\024\n\014ballotNumbe" +
+      "r\030\001 \001(\005\022\021\n\tprocessId\030\002 \001(\t\022\032\n\022acceptedSe" +
+      "rverName\030\003 \001(\t\022\017\n\007success\030\004 \001(\010\"+\n\025Activ" +
+      "ateServerRequest\022\022\n\nserverName\030\001 \001(\t\"=\n\026" +
+      "ActivateServerResponse\022\017\n\007success\030\001 \001(\010\022" +
+      "\022\n\nserverName\030\002 \001(\t\"-\n\027DeactivateServerR" +
+      "equest\022\022\n\nserverName\030\001 \001(\t\"?\n\030Deactivate" +
+      "ServerResponse\022\017\n\007success\030\001 \001(\010\022\022\n\nserve" +
+      "rName\030\002 \001(\t\"\035\n\014CommandInput\022\r\n\005input\030\001 \001" +
+      "(\t\"\037\n\rCommandOutput\022\016\n\006output\030\001 \001(\t*f\n\021T" +
+      "ransactionStatus\022\013\n\007PENDING\020\000\022\014\n\010PREPARE" +
+      "D\020\001\022\014\n\010ACCEPTED\020\002\022\r\n\tCOMMITTED\020\003\022\014\n\010EXEC" +
+      "UTED\020\004\022\013\n\007ABORTED\020\0052\230\001\n\005Paxos\0222\n\007Request" +
+      "\022\027.TransactionInputConfig\032\014.TxnResponse\"" +
+      "\000\022.\n\007Prepare\022\017.PrepareRequest\032\020.PrepareR" +
+      "esponse\"\000\022+\n\006Commit\022\016.CommitRequest\032\017.Co" +
+      "mmitResponse\"\0002\241\001\n\017ActivateServers\022C\n\016ac" +
+      "tivateServer\022\026.ActivateServerRequest\032\027.A" +
+      "ctivateServerResponse\"\000\022I\n\020deactivateSer" +
+      "ver\022\030.DeactivateServerRequest\032\031.Deactiva" +
+      "teServerResponse\"\0002\304\001\n\010Commands\022/\n\014print" +
+      "Balance\022\r.CommandInput\032\016.CommandOutput\"\000" +
+      "\022+\n\010printLog\022\r.CommandInput\032\016.CommandOut" +
+      "put\"\000\022*\n\007printDB\022\r.CommandInput\032\016.Comman" +
+      "dOutput\"\000\022.\n\013Performance\022\r.CommandInput\032" +
+      "\016.CommandOutput\"\000B\024\n\020org.cse535.protoP\001b" +
+      "\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -129,38 +199,80 @@ public final class Paxos2Pc {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_TxnResponse_descriptor,
         new java.lang.String[] { "Success", "ServerName", });
-    internal_static_ActivateServerRequest_descriptor =
+    internal_static_PrepareRequest_descriptor =
       getDescriptor().getMessageTypes().get(3);
+    internal_static_PrepareRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_PrepareRequest_descriptor,
+        new java.lang.String[] { "BallotNumber", "ProcessId", "Transaction", "LatestCommittedTransaction", "LatestCommittedBallotNumber", "ClusterId", });
+    internal_static_PrepareResponse_descriptor =
+      getDescriptor().getMessageTypes().get(4);
+    internal_static_PrepareResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_PrepareResponse_descriptor,
+        new java.lang.String[] { "BallotNumber", "ProcessId", "Success", "LastAcceptedUncommittedTransaction", "LastAcceptedUncommittedBallotNumber", "LastCommittedTransaction", "LastCommittedBallotNumber", "SyncTransactionsMap", "SyncTransactionStatusMap", "SyncBalancesMap", "AcceptedServerName", "NeedToSync", "LatestBallotNumber", });
+    internal_static_PrepareResponse_SyncTransactionsMapEntry_descriptor =
+      internal_static_PrepareResponse_descriptor.getNestedTypes().get(0);
+    internal_static_PrepareResponse_SyncTransactionsMapEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_PrepareResponse_SyncTransactionsMapEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
+    internal_static_PrepareResponse_SyncTransactionStatusMapEntry_descriptor =
+      internal_static_PrepareResponse_descriptor.getNestedTypes().get(1);
+    internal_static_PrepareResponse_SyncTransactionStatusMapEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_PrepareResponse_SyncTransactionStatusMapEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
+    internal_static_PrepareResponse_SyncBalancesMapEntry_descriptor =
+      internal_static_PrepareResponse_descriptor.getNestedTypes().get(2);
+    internal_static_PrepareResponse_SyncBalancesMapEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_PrepareResponse_SyncBalancesMapEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
+    internal_static_CommitRequest_descriptor =
+      getDescriptor().getMessageTypes().get(5);
+    internal_static_CommitRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_CommitRequest_descriptor,
+        new java.lang.String[] { "BallotNumber", "ProcessId", "Transaction", "ClusterId", });
+    internal_static_CommitResponse_descriptor =
+      getDescriptor().getMessageTypes().get(6);
+    internal_static_CommitResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_CommitResponse_descriptor,
+        new java.lang.String[] { "BallotNumber", "ProcessId", "AcceptedServerName", "Success", });
+    internal_static_ActivateServerRequest_descriptor =
+      getDescriptor().getMessageTypes().get(7);
     internal_static_ActivateServerRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ActivateServerRequest_descriptor,
         new java.lang.String[] { "ServerName", });
     internal_static_ActivateServerResponse_descriptor =
-      getDescriptor().getMessageTypes().get(4);
+      getDescriptor().getMessageTypes().get(8);
     internal_static_ActivateServerResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ActivateServerResponse_descriptor,
         new java.lang.String[] { "Success", "ServerName", });
     internal_static_DeactivateServerRequest_descriptor =
-      getDescriptor().getMessageTypes().get(5);
+      getDescriptor().getMessageTypes().get(9);
     internal_static_DeactivateServerRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_DeactivateServerRequest_descriptor,
         new java.lang.String[] { "ServerName", });
     internal_static_DeactivateServerResponse_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(10);
     internal_static_DeactivateServerResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_DeactivateServerResponse_descriptor,
         new java.lang.String[] { "Success", "ServerName", });
     internal_static_CommandInput_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(11);
     internal_static_CommandInput_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_CommandInput_descriptor,
         new java.lang.String[] { "Input", });
     internal_static_CommandOutput_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(12);
     internal_static_CommandOutput_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_CommandOutput_descriptor,

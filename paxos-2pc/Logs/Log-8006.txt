@@ -1,0 +1,26 @@
+ 
+Transaction Worker Thread Started
+Received prepare request from S4 with ballot number 1
+Prepare Request Received from S4
+Prepare Request Accepted from S4
+Received Commit request from S4 with ballot number 1
+Commit Request Received from S4
+Commit Request Accepted from S4
+Received prepare request from S4 with ballot number 2
+Prepare Request Received from S4
+Prepare Request Accepted from S4
+Received Commit request from S4 with ballot number 2
+Commit Request Received from S4
+Commit Request Accepted from S4
+Received prepare request from S4 with ballot number 3
+Prepare Request Received from S4
+Prepare Request Accepted from S4
+Received Commit request from S4 with ballot number 3
+Commit Request Received from S4
+Commit Request Accepted from S4
+Received prepare request from S5 with ballot number 3
+Prepare Request Received from S5
+Prepare Request Rejected from S5 Because Current Server is ahead of Leader 
+Received prepare request from S5 with ballot number 3
+Prepare Request Received from S5
+Prepare Request Rejected from S5 Because Current Server is ahead of Leader 

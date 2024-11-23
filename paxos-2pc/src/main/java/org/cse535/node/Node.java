@@ -169,11 +169,16 @@ public class Node extends NodeServer {
         // add total balances map after request's committed tnx
         //prepareResponse.putAllSyncBalancesMap(this.database.getAllBalances());
         prepareResponse.setLatestBallotNumber(this.database.ballotNumber.get());
+        prepareResponse.setLastCommittedBallotNumber(this.database.lastCommittedBallotNumber);
+        if(this.database.lastCommittedTransaction != null)
+            prepareResponse.setLastCommittedTransaction(this.database.lastCommittedTransaction);
 
         prepareResponse.setNeedToSync(true);
     }
 
     public void syncData(PrepareResponse syncPrepareResponse) {
+        this.logger.log("Data Post Sync -------------");
+
 
         this.database.ballotNumber.set( Math.max(syncPrepareResponse.getLatestBallotNumber() , this.database.ballotNumber.get()) );
 
@@ -188,6 +193,12 @@ public class Node extends NodeServer {
                 this.logger.log("Synced Transaction Status: " + i);
             }
         }
+
+        this.database.lastCommittedBallotNumber = syncPrepareResponse.getLastCommittedBallotNumber();
+        this.database.lastCommittedTransaction = syncPrepareResponse.getLastCommittedTransaction();
+
+        this.database.lastAcceptedUncommittedTransaction = syncPrepareResponse.getLastAcceptedUncommittedTransaction();
+        this.database.lastAcceptedUncommittedBallotNumber = syncPrepareResponse.getLastAcceptedUncommittedBallotNumber();
 
         // RunUpdateBalancesWithTheseNewTransactions
 
@@ -206,6 +217,21 @@ public class Node extends NodeServer {
             prepareResponse.setLastAcceptedUncommittedTransaction(this.database.lastAcceptedUncommittedTransaction);
 
         this.logger.log("Prepare Request Received from " + request.getProcessId() );
+
+        this.logger.log(request.toString());
+
+        this.logger.log("-------------------");
+
+        this.logger.log("DB -> Last Committed Ballot Number: " + this.database.lastCommittedBallotNumber);
+        this.logger.log("Req -> getLatestCommittedBallotNumber" + request.getLatestCommittedBallotNumber());
+        this.logger.log("Ahead check");
+
+        this.logger.log("Last Accepted Uncommitted Ballot Number: " + this.database.lastAcceptedUncommittedBallotNumber);
+        this.logger.log("Req Ballot Number " + request.getBallotNumber());
+        this.logger.log("Success condition");
+
+        this.logger.log("Last Accepted Uncommitted Transaction: " + Utils.toString(this.database.lastAcceptedUncommittedTransaction));
+        this.logger.log("Last Committed Transaction: " + Utils.toString(this.database.lastCommittedTransaction));
 
         if(request.getLatestCommittedBallotNumber() < this.database.lastCommittedBallotNumber){
 

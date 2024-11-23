@@ -3,8 +3,8 @@ Transaction Worker Thread Started
 Processing Transaction: 2
 Prepare response from 5 : true
 Prepare response from 6 : true
-Commit response from 6 : true
 Commit response from 5 : true
+Commit response from 6 : true
 Processing Transaction: 4
 Prepare response from 6 : true
 Prepare response from 5 : true
@@ -16,4 +16,44 @@ Prepare response from 6 : true
 Commit response from 5 : false
 Commit response from 6 : true
 Received prepare request from S5 with ballot number 3
-Received prepare request from S5 with ballot number 3
+Received prepare request from S5 with ballot number 4
+Received Commit request from S5 with ballot number 4
+Processing Transaction: 16
+Prepare response from 5 : false
+Prepare response from 6 : false
+Data Post Sync -------------
+Synced Transaction Status: 4
+Synced data ... Now Retrying Prepare phase
+ballotNumber: 4
+processId: "S5"
+lastAcceptedUncommittedTransaction {
+}
+lastAcceptedUncommittedBallotNumber: -1
+lastCommittedTransaction {
+  sender: 1895
+  receiver: 1890
+  amount: 5
+  transactionNum: 10
+}
+lastCommittedBallotNumber: 4
+syncTransactionStatusMap {
+  key: 4
+  value: ACCEPTED
+}
+needToSync: true
+latestBallotNumber: 4
+
+Prepare response from 6 : true
+Prepare response from 5 : true
+Commit response from 6 : true
+Commit response from 5 : true
+Processing Transaction: 18
+Prepare response from 5 : true
+Prepare response from 6 : true
+Commit response from 6 : true
+Commit response from 5 : true
+Processing Transaction: 28
+Prepare response from 5 : true
+Prepare response from 6 : true
+Commit response from 5 : true
+Commit response from 6 : true

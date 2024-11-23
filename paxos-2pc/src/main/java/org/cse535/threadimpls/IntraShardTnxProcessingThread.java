@@ -89,19 +89,27 @@ public class IntraShardTnxProcessingThread extends Thread {
                 // Retry Prepare phase if Synced
                 PrepareResponse syncPrepareResponse = null;
 
+                int maxCommittedBallotNumber = -1;
+
                 for ( PrepareResponse r : prepareResponses.values() ) {
                     if( r.getNeedToSync() ) {
-                        syncPrepareResponse = r;
-                        break;
+                        if( r.getLastCommittedBallotNumber() > maxCommittedBallotNumber) {
+                            maxCommittedBallotNumber = r.getLastCommittedBallotNumber();
+                            syncPrepareResponse = r;
+                        }
                     }
                 }
 
                 if( syncPrepareResponse != null) {
                     // Sync the data
                     this.node.syncData(syncPrepareResponse);
+                    this.ballotNumber = this.node.database.ballotNumber.incrementAndGet();
                     Thread.sleep(10);
 
                     this.node.logger.log("Synced data ... Now Retrying Prepare phase");
+
+                    this.node.logger.log(syncPrepareResponse.toString());
+
 
                     intraPrepareThreads = new IntraPrepareThread[GlobalConfigs.numServersPerCluster];
 

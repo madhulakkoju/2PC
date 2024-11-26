@@ -10,9 +10,13 @@ service Paxos {
 
   rpc Request(TransactionInputConfig) returns (TxnResponse) {}
 
+  rpc CrossShardRequest(TransactionInputConfig) returns (CrossTxnResponse) {}
+
   rpc Prepare(PrepareRequest) returns (PrepareResponse) {}
 
   rpc Commit(CommitRequest) returns (CommitResponse) {}
+
+  rpc Sync(PrepareRequest) returns (PrepareResponse) {}
 
 }
 
@@ -55,12 +59,20 @@ message Transaction {
 }
 
 message TxnResponse{
-
   bool success = 1;
   string serverName = 2;
-
 }
 
+message CrossTxnResponse{
+  bool success = 1;
+  string serverName = 2;
+  int32 ballotNumber = 3;
+
+  int32 clusterId = 6;
+
+  int32 successPreparesCount = 4;
+  string failureReason = 5;
+}
 
 enum TransactionStatus{
   PENDING = 0;
@@ -115,10 +127,10 @@ message PrepareResponse {
 message CommitRequest {
   int32 ballotNumber = 1;
   string processId = 2; // processId is Server Name
-
   Transaction transaction = 3;
-
   int32 clusterId = 8;
+
+  bool abort = 4;
 }
 
 

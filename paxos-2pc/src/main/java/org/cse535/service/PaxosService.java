@@ -2,6 +2,7 @@ package org.cse535.service;
 
 import io.grpc.stub.StreamObserver;
 import org.cse535.Main;
+import org.cse535.configs.Utils;
 import org.cse535.proto.*;
 
 public class PaxosService extends PaxosGrpc.PaxosImplBase {
@@ -23,6 +24,34 @@ public class PaxosService extends PaxosGrpc.PaxosImplBase {
         responseObserver.onCompleted();
     }
 
+    @Override
+    public void crossShardRequest(TransactionInputConfig request, StreamObserver<CrossTxnResponse> responseObserver) {
+
+        if(!Main.node.isServerActive.get()){
+            //Inactive server
+            CrossTxnResponse response = CrossTxnResponse.newBuilder()
+                    .setSuccess(false)
+                    .setServerName(Main.node.serverName)
+                    .setBallotNumber(-1)
+                    .setClusterId(Main.node.clusterNumber)
+                    .setSuccessPreparesCount(0)
+                    .setFailureReason("Server Inactive")
+                    .build();
+
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
+            return;
+        }
+
+        Main.node.logger.log("Received cross shard request " + Utils.toString(request.getTransaction()) );
+
+        CrossTxnResponse response = Main.node.processCrossShardTransaction(request);
+
+        Main.node.logger.log("Sending cross shard response \n**************\n" + response.toString() + "\n**************" );
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
 
     @Override
     public void prepare(PrepareRequest request, StreamObserver<PrepareResponse> responseObserver) {
@@ -56,6 +85,7 @@ public class PaxosService extends PaxosGrpc.PaxosImplBase {
                     .setBallotNumber(request.getBallotNumber())
                     .setProcessId(Main.node.serverName)
                     .build();
+
             responseObserver.onNext(response);
             responseObserver.onCompleted();
             return;

@@ -89,8 +89,8 @@ latestBallotNumber: 3
 
 Prepare response from 4 : false
 Prepare response from 6 : true
-Commit response from 4 : false
 Commit response from 6 : true
+Commit response from 4 : false
 Received prepare request from S4 with ballot number 4
 Prepare Request Received from S4
 ballotNumber: 4
@@ -183,10 +183,11 @@ Prepare Request Received from S4
 ballotNumber: 7
 processId: "S4"
 transaction {
-  sender: 1500
-  receiver: 1505
-  amount: 7
-  transactionNum: 28
+  sender: 299
+  receiver: 1999
+  amount: 15
+  transactionNum: 20
+  isCrossShard: true
 }
 latestCommittedTransaction {
   sender: 1895
@@ -210,3 +211,165 @@ Prepare Request Accepted from S4
 Received Commit request from S4 with ballot number 7
 Commit Request Received from S4
 Commit Request Accepted from S4
+Received prepare request from S4 with ballot number 8
+Prepare Request Received from S4
+ballotNumber: 8
+processId: "S4"
+transaction {
+  sender: 1001
+  receiver: 2999
+  amount: 6
+  transactionNum: 21
+  isCrossShard: true
+}
+latestCommittedTransaction {
+  sender: 1895
+  receiver: 1890
+  amount: 5
+  transactionNum: 10
+}
+latestCommittedBallotNumber: 6
+clusterId: 2
+
+-------------------
+DB -> Last Committed Ballot Number: 7
+Req -> getLatestCommittedBallotNumber6
+Ahead check
+Last Accepted Uncommitted Ballot Number: -1
+Req Ballot Number 8
+Success condition
+Last Accepted Uncommitted Transaction: 
+Last Committed Transaction: Transaction ( 299 -> 1999 = 15 ) ; 
+Prepare Request Rejected from S4 Because Current Server is ahead of Leader 
+Received Commit request from S4 with ballot number 8
+Abort Request Received from S4
+Received prepare request from S4 with ballot number 9
+Prepare Request Received from S4
+ballotNumber: 9
+processId: "S4"
+transaction {
+  sender: 2150
+  receiver: 1111
+  amount: 9
+  transactionNum: 22
+  isCrossShard: true
+}
+latestCommittedTransaction {
+  sender: 1895
+  receiver: 1890
+  amount: 5
+  transactionNum: 10
+}
+latestCommittedBallotNumber: 6
+clusterId: 2
+
+-------------------
+DB -> Last Committed Ballot Number: 7
+Req -> getLatestCommittedBallotNumber6
+Ahead check
+Last Accepted Uncommitted Ballot Number: -1
+Req Ballot Number 9
+Success condition
+Last Accepted Uncommitted Transaction: 
+Last Committed Transaction: Transaction ( 299 -> 1999 = 15 ) ; 
+Prepare Request Rejected from S4 Because Current Server is ahead of Leader 
+Received Commit request from S4 with ballot number 9
+Abort Request Received from S4
+Received prepare request from S4 with ballot number 10
+Prepare Request Received from S4
+ballotNumber: 10
+processId: "S4"
+transaction {
+  sender: 2999
+  receiver: 1999
+  amount: 6
+  transactionNum: 25
+  isCrossShard: true
+}
+latestCommittedTransaction {
+  sender: 1895
+  receiver: 1890
+  amount: 5
+  transactionNum: 10
+}
+latestCommittedBallotNumber: 6
+clusterId: 2
+
+-------------------
+DB -> Last Committed Ballot Number: 7
+Req -> getLatestCommittedBallotNumber6
+Ahead check
+Last Accepted Uncommitted Ballot Number: -1
+Req Ballot Number 10
+Success condition
+Last Accepted Uncommitted Transaction: 
+Last Committed Transaction: Transaction ( 299 -> 1999 = 15 ) ; 
+Prepare Request Rejected from S4 Because Current Server is ahead of Leader 
+Received Commit request from S4 with ballot number 10
+Abort Request Received from S4
+Received prepare request from S4 with ballot number 11
+Prepare Request Received from S4
+ballotNumber: 11
+processId: "S4"
+transaction {
+  sender: 796
+  receiver: 1997
+  amount: 9
+  transactionNum: 30
+  isCrossShard: true
+}
+latestCommittedTransaction {
+  sender: 1895
+  receiver: 1890
+  amount: 5
+  transactionNum: 10
+}
+latestCommittedBallotNumber: 6
+clusterId: 2
+
+-------------------
+DB -> Last Committed Ballot Number: 7
+Req -> getLatestCommittedBallotNumber6
+Ahead check
+Last Accepted Uncommitted Ballot Number: -1
+Req Ballot Number 11
+Success condition
+Last Accepted Uncommitted Transaction: 
+Last Committed Transaction: Transaction ( 299 -> 1999 = 15 ) ; 
+Prepare Request Rejected from S4 Because Current Server is ahead of Leader 
+Received Commit request from S4 with ballot number 11
+Abort Request Received from S4
+Received prepare request from S4 with ballot number 12
+Prepare Request Received from S4
+ballotNumber: 12
+processId: "S4"
+transaction {
+  sender: 796
+  receiver: 1997
+  amount: 7
+  transactionNum: 32
+  isCrossShard: true
+}
+latestCommittedTransaction {
+  sender: 1895
+  receiver: 1890
+  amount: 5
+  transactionNum: 10
+}
+latestCommittedBallotNumber: 6
+clusterId: 2
+
+-------------------
+DB -> Last Committed Ballot Number: 7
+Req -> getLatestCommittedBallotNumber6
+Ahead check
+Last Accepted Uncommitted Ballot Number: -1
+Req Ballot Number 12
+Success condition
+Last Accepted Uncommitted Transaction: 
+Last Committed Transaction: Transaction ( 299 -> 1999 = 15 ) ; 
+Prepare Request Rejected from S4 Because Current Server is ahead of Leader 
+Received Commit request from S4 with ballot number 12
+Abort Request Received from S4
+Received Commit request from S4 with ballot number -1
+Abort Request Received from S4

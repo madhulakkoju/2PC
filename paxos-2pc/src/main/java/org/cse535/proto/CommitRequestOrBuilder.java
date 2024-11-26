@@ -47,4 +47,9 @@ public interface CommitRequestOrBuilder extends
    * <code>int32 clusterId = 8;</code>
    */
   int getClusterId();
+
+  /**
+   * <code>bool abort = 4;</code>
+   */
+  boolean getAbort();
 }

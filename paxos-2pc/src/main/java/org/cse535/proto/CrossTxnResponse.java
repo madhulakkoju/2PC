@@ -4,22 +4,24 @@
 package org.cse535.proto;
 
 /**
- * Protobuf type {@code CommitRequest}
+ * Protobuf type {@code CrossTxnResponse}
  */
-public  final class CommitRequest extends
+public  final class CrossTxnResponse extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:CommitRequest)
-    CommitRequestOrBuilder {
+    // @@protoc_insertion_point(message_implements:CrossTxnResponse)
+    CrossTxnResponseOrBuilder {
 private static final long serialVersionUID = 0L;
-  // Use CommitRequest.newBuilder() to construct.
-  private CommitRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+  // Use CrossTxnResponse.newBuilder() to construct.
+  private CrossTxnResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private CommitRequest() {
+  private CrossTxnResponse() {
+    success_ = false;
+    serverName_ = "";
     ballotNumber_ = 0;
-    processId_ = "";
     clusterId_ = 0;
-    abort_ = false;
+    successPreparesCount_ = 0;
+    failureReason_ = "";
   }
 
   @java.lang.Override
@@ -27,7 +29,7 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private CommitRequest(
+  private CrossTxnResponse(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -48,34 +50,32 @@ private static final long serialVersionUID = 0L;
             break;
           case 8: {
 
-            ballotNumber_ = input.readInt32();
+            success_ = input.readBool();
             break;
           }
           case 18: {
             java.lang.String s = input.readStringRequireUtf8();
 
-            processId_ = s;
+            serverName_ = s;
             break;
           }
-          case 26: {
-            org.cse535.proto.Transaction.Builder subBuilder = null;
-            if (transaction_ != null) {
-              subBuilder = transaction_.toBuilder();
-            }
-            transaction_ = input.readMessage(org.cse535.proto.Transaction.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(transaction_);
-              transaction_ = subBuilder.buildPartial();
-            }
+          case 24: {
 
+            ballotNumber_ = input.readInt32();
             break;
           }
           case 32: {
 
-            abort_ = input.readBool();
+            successPreparesCount_ = input.readInt32();
             break;
           }
-          case 64: {
+          case 42: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            failureReason_ = s;
+            break;
+          }
+          case 48: {
 
             clusterId_ = input.readInt32();
             break;
@@ -101,105 +101,119 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return org.cse535.proto.Paxos2Pc.internal_static_CommitRequest_descriptor;
+    return org.cse535.proto.Paxos2Pc.internal_static_CrossTxnResponse_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return org.cse535.proto.Paxos2Pc.internal_static_CommitRequest_fieldAccessorTable
+    return org.cse535.proto.Paxos2Pc.internal_static_CrossTxnResponse_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            org.cse535.proto.CommitRequest.class, org.cse535.proto.CommitRequest.Builder.class);
+            org.cse535.proto.CrossTxnResponse.class, org.cse535.proto.CrossTxnResponse.Builder.class);
   }
 
-  public static final int BALLOTNUMBER_FIELD_NUMBER = 1;
-  private int ballotNumber_;
+  public static final int SUCCESS_FIELD_NUMBER = 1;
+  private boolean success_;
   /**
-   * <code>int32 ballotNumber = 1;</code>
+   * <code>bool success = 1;</code>
    */
-  public int getBallotNumber() {
-    return ballotNumber_;
+  public boolean getSuccess() {
+    return success_;
   }
 
-  public static final int PROCESSID_FIELD_NUMBER = 2;
-  private volatile java.lang.Object processId_;
+  public static final int SERVERNAME_FIELD_NUMBER = 2;
+  private volatile java.lang.Object serverName_;
   /**
-   * <pre>
-   * processId is Server Name
-   * </pre>
-   *
-   * <code>string processId = 2;</code>
+   * <code>string serverName = 2;</code>
    */
-  public java.lang.String getProcessId() {
-    java.lang.Object ref = processId_;
+  public java.lang.String getServerName() {
+    java.lang.Object ref = serverName_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
-      processId_ = s;
+      serverName_ = s;
       return s;
     }
   }
   /**
-   * <pre>
-   * processId is Server Name
-   * </pre>
-   *
-   * <code>string processId = 2;</code>
+   * <code>string serverName = 2;</code>
    */
   public com.google.protobuf.ByteString
-      getProcessIdBytes() {
-    java.lang.Object ref = processId_;
+      getServerNameBytes() {
+    java.lang.Object ref = serverName_;
     if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
-      processId_ = b;
+      serverName_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
     }
   }
 
-  public static final int TRANSACTION_FIELD_NUMBER = 3;
-  private org.cse535.proto.Transaction transaction_;
+  public static final int BALLOTNUMBER_FIELD_NUMBER = 3;
+  private int ballotNumber_;
   /**
-   * <code>.Transaction transaction = 3;</code>
+   * <code>int32 ballotNumber = 3;</code>
    */
-  public boolean hasTransaction() {
-    return transaction_ != null;
-  }
-  /**
-   * <code>.Transaction transaction = 3;</code>
-   */
-  public org.cse535.proto.Transaction getTransaction() {
-    return transaction_ == null ? org.cse535.proto.Transaction.getDefaultInstance() : transaction_;
-  }
-  /**
-   * <code>.Transaction transaction = 3;</code>
-   */
-  public org.cse535.proto.TransactionOrBuilder getTransactionOrBuilder() {
-    return getTransaction();
+  public int getBallotNumber() {
+    return ballotNumber_;
   }
 
-  public static final int CLUSTERID_FIELD_NUMBER = 8;
+  public static final int CLUSTERID_FIELD_NUMBER = 6;
   private int clusterId_;
   /**
-   * <code>int32 clusterId = 8;</code>
+   * <code>int32 clusterId = 6;</code>
    */
   public int getClusterId() {
     return clusterId_;
   }
 
-  public static final int ABORT_FIELD_NUMBER = 4;
-  private boolean abort_;
+  public static final int SUCCESSPREPARESCOUNT_FIELD_NUMBER = 4;
+  private int successPreparesCount_;
   /**
-   * <code>bool abort = 4;</code>
+   * <code>int32 successPreparesCount = 4;</code>
    */
-  public boolean getAbort() {
-    return abort_;
+  public int getSuccessPreparesCount() {
+    return successPreparesCount_;
+  }
+
+  public static final int FAILUREREASON_FIELD_NUMBER = 5;
+  private volatile java.lang.Object failureReason_;
+  /**
+   * <code>string failureReason = 5;</code>
+   */
+  public java.lang.String getFailureReason() {
+    java.lang.Object ref = failureReason_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      failureReason_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string failureReason = 5;</code>
+   */
+  public com.google.protobuf.ByteString
+      getFailureReasonBytes() {
+    java.lang.Object ref = failureReason_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      failureReason_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
   private byte memoizedIsInitialized = -1;
@@ -216,20 +230,23 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
+    if (success_ != false) {
+      output.writeBool(1, success_);
+    }
+    if (!getServerNameBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, serverName_);
+    }
     if (ballotNumber_ != 0) {
-      output.writeInt32(1, ballotNumber_);
+      output.writeInt32(3, ballotNumber_);
     }
-    if (!getProcessIdBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, processId_);
+    if (successPreparesCount_ != 0) {
+      output.writeInt32(4, successPreparesCount_);
     }
-    if (transaction_ != null) {
-      output.writeMessage(3, getTransaction());
-    }
-    if (abort_ != false) {
-      output.writeBool(4, abort_);
+    if (!getFailureReasonBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 5, failureReason_);
     }
     if (clusterId_ != 0) {
-      output.writeInt32(8, clusterId_);
+      output.writeInt32(6, clusterId_);
     }
     unknownFields.writeTo(output);
   }
@@ -240,24 +257,27 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
+    if (success_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(1, success_);
+    }
+    if (!getServerNameBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, serverName_);
+    }
     if (ballotNumber_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(1, ballotNumber_);
+        .computeInt32Size(3, ballotNumber_);
     }
-    if (!getProcessIdBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, processId_);
-    }
-    if (transaction_ != null) {
+    if (successPreparesCount_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(3, getTransaction());
+        .computeInt32Size(4, successPreparesCount_);
     }
-    if (abort_ != false) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(4, abort_);
+    if (!getFailureReasonBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, failureReason_);
     }
     if (clusterId_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(8, clusterId_);
+        .computeInt32Size(6, clusterId_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -269,25 +289,24 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof org.cse535.proto.CommitRequest)) {
+    if (!(obj instanceof org.cse535.proto.CrossTxnResponse)) {
       return super.equals(obj);
     }
-    org.cse535.proto.CommitRequest other = (org.cse535.proto.CommitRequest) obj;
+    org.cse535.proto.CrossTxnResponse other = (org.cse535.proto.CrossTxnResponse) obj;
 
     boolean result = true;
+    result = result && (getSuccess()
+        == other.getSuccess());
+    result = result && getServerName()
+        .equals(other.getServerName());
     result = result && (getBallotNumber()
         == other.getBallotNumber());
-    result = result && getProcessId()
-        .equals(other.getProcessId());
-    result = result && (hasTransaction() == other.hasTransaction());
-    if (hasTransaction()) {
-      result = result && getTransaction()
-          .equals(other.getTransaction());
-    }
     result = result && (getClusterId()
         == other.getClusterId());
-    result = result && (getAbort()
-        == other.getAbort());
+    result = result && (getSuccessPreparesCount()
+        == other.getSuccessPreparesCount());
+    result = result && getFailureReason()
+        .equals(other.getFailureReason());
     result = result && unknownFields.equals(other.unknownFields);
     return result;
   }
@@ -299,87 +318,87 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
+    hash = (37 * hash) + SUCCESS_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getSuccess());
+    hash = (37 * hash) + SERVERNAME_FIELD_NUMBER;
+    hash = (53 * hash) + getServerName().hashCode();
     hash = (37 * hash) + BALLOTNUMBER_FIELD_NUMBER;
     hash = (53 * hash) + getBallotNumber();
-    hash = (37 * hash) + PROCESSID_FIELD_NUMBER;
-    hash = (53 * hash) + getProcessId().hashCode();
-    if (hasTransaction()) {
-      hash = (37 * hash) + TRANSACTION_FIELD_NUMBER;
-      hash = (53 * hash) + getTransaction().hashCode();
-    }
     hash = (37 * hash) + CLUSTERID_FIELD_NUMBER;
     hash = (53 * hash) + getClusterId();
-    hash = (37 * hash) + ABORT_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-        getAbort());
+    hash = (37 * hash) + SUCCESSPREPARESCOUNT_FIELD_NUMBER;
+    hash = (53 * hash) + getSuccessPreparesCount();
+    hash = (37 * hash) + FAILUREREASON_FIELD_NUMBER;
+    hash = (53 * hash) + getFailureReason().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
-  public static org.cse535.proto.CommitRequest parseFrom(
+  public static org.cse535.proto.CrossTxnResponse parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static org.cse535.proto.CommitRequest parseFrom(
+  public static org.cse535.proto.CrossTxnResponse parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static org.cse535.proto.CommitRequest parseFrom(
+  public static org.cse535.proto.CrossTxnResponse parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static org.cse535.proto.CommitRequest parseFrom(
+  public static org.cse535.proto.CrossTxnResponse parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static org.cse535.proto.CommitRequest parseFrom(byte[] data)
+  public static org.cse535.proto.CrossTxnResponse parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static org.cse535.proto.CommitRequest parseFrom(
+  public static org.cse535.proto.CrossTxnResponse parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static org.cse535.proto.CommitRequest parseFrom(java.io.InputStream input)
+  public static org.cse535.proto.CrossTxnResponse parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static org.cse535.proto.CommitRequest parseFrom(
+  public static org.cse535.proto.CrossTxnResponse parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static org.cse535.proto.CommitRequest parseDelimitedFrom(java.io.InputStream input)
+  public static org.cse535.proto.CrossTxnResponse parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static org.cse535.proto.CommitRequest parseDelimitedFrom(
+  public static org.cse535.proto.CrossTxnResponse parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static org.cse535.proto.CommitRequest parseFrom(
+  public static org.cse535.proto.CrossTxnResponse parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static org.cse535.proto.CommitRequest parseFrom(
+  public static org.cse535.proto.CrossTxnResponse parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -392,7 +411,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(org.cse535.proto.CommitRequest prototype) {
+  public static Builder newBuilder(org.cse535.proto.CrossTxnResponse prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -408,26 +427,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code CommitRequest}
+   * Protobuf type {@code CrossTxnResponse}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:CommitRequest)
-      org.cse535.proto.CommitRequestOrBuilder {
+      // @@protoc_insertion_point(builder_implements:CrossTxnResponse)
+      org.cse535.proto.CrossTxnResponseOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return org.cse535.proto.Paxos2Pc.internal_static_CommitRequest_descriptor;
+      return org.cse535.proto.Paxos2Pc.internal_static_CrossTxnResponse_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return org.cse535.proto.Paxos2Pc.internal_static_CommitRequest_fieldAccessorTable
+      return org.cse535.proto.Paxos2Pc.internal_static_CrossTxnResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              org.cse535.proto.CommitRequest.class, org.cse535.proto.CommitRequest.Builder.class);
+              org.cse535.proto.CrossTxnResponse.class, org.cse535.proto.CrossTxnResponse.Builder.class);
     }
 
-    // Construct using org.cse535.proto.CommitRequest.newBuilder()
+    // Construct using org.cse535.proto.CrossTxnResponse.newBuilder()
     private Builder() {
       maybeForceBuilderInitialization();
     }
@@ -445,19 +464,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      success_ = false;
+
+      serverName_ = "";
+
       ballotNumber_ = 0;
 
-      processId_ = "";
-
-      if (transactionBuilder_ == null) {
-        transaction_ = null;
-      } else {
-        transaction_ = null;
-        transactionBuilder_ = null;
-      }
       clusterId_ = 0;
 
-      abort_ = false;
+      successPreparesCount_ = 0;
+
+      failureReason_ = "";
 
       return this;
     }
@@ -465,17 +482,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return org.cse535.proto.Paxos2Pc.internal_static_CommitRequest_descriptor;
+      return org.cse535.proto.Paxos2Pc.internal_static_CrossTxnResponse_descriptor;
     }
 
     @java.lang.Override
-    public org.cse535.proto.CommitRequest getDefaultInstanceForType() {
-      return org.cse535.proto.CommitRequest.getDefaultInstance();
+    public org.cse535.proto.CrossTxnResponse getDefaultInstanceForType() {
+      return org.cse535.proto.CrossTxnResponse.getDefaultInstance();
     }
 
     @java.lang.Override
-    public org.cse535.proto.CommitRequest build() {
-      org.cse535.proto.CommitRequest result = buildPartial();
+    public org.cse535.proto.CrossTxnResponse build() {
+      org.cse535.proto.CrossTxnResponse result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -483,17 +500,14 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public org.cse535.proto.CommitRequest buildPartial() {
-      org.cse535.proto.CommitRequest result = new org.cse535.proto.CommitRequest(this);
+    public org.cse535.proto.CrossTxnResponse buildPartial() {
+      org.cse535.proto.CrossTxnResponse result = new org.cse535.proto.CrossTxnResponse(this);
+      result.success_ = success_;
+      result.serverName_ = serverName_;
       result.ballotNumber_ = ballotNumber_;
-      result.processId_ = processId_;
-      if (transactionBuilder_ == null) {
-        result.transaction_ = transaction_;
-      } else {
-        result.transaction_ = transactionBuilder_.build();
-      }
       result.clusterId_ = clusterId_;
-      result.abort_ = abort_;
+      result.successPreparesCount_ = successPreparesCount_;
+      result.failureReason_ = failureReason_;
       onBuilt();
       return result;
     }
@@ -532,31 +546,35 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof org.cse535.proto.CommitRequest) {
-        return mergeFrom((org.cse535.proto.CommitRequest)other);
+      if (other instanceof org.cse535.proto.CrossTxnResponse) {
+        return mergeFrom((org.cse535.proto.CrossTxnResponse)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(org.cse535.proto.CommitRequest other) {
-      if (other == org.cse535.proto.CommitRequest.getDefaultInstance()) return this;
-      if (other.getBallotNumber() != 0) {
-        setBallotNumber(other.getBallotNumber());
+    public Builder mergeFrom(org.cse535.proto.CrossTxnResponse other) {
+      if (other == org.cse535.proto.CrossTxnResponse.getDefaultInstance()) return this;
+      if (other.getSuccess() != false) {
+        setSuccess(other.getSuccess());
       }
-      if (!other.getProcessId().isEmpty()) {
-        processId_ = other.processId_;
+      if (!other.getServerName().isEmpty()) {
+        serverName_ = other.serverName_;
         onChanged();
       }
-      if (other.hasTransaction()) {
-        mergeTransaction(other.getTransaction());
+      if (other.getBallotNumber() != 0) {
+        setBallotNumber(other.getBallotNumber());
       }
       if (other.getClusterId() != 0) {
         setClusterId(other.getClusterId());
       }
-      if (other.getAbort() != false) {
-        setAbort(other.getAbort());
+      if (other.getSuccessPreparesCount() != 0) {
+        setSuccessPreparesCount(other.getSuccessPreparesCount());
+      }
+      if (!other.getFailureReason().isEmpty()) {
+        failureReason_ = other.failureReason_;
+        onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -573,11 +591,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      org.cse535.proto.CommitRequest parsedMessage = null;
+      org.cse535.proto.CrossTxnResponse parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (org.cse535.proto.CommitRequest) e.getUnfinishedMessage();
+        parsedMessage = (org.cse535.proto.CrossTxnResponse) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -587,15 +605,110 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
+    private boolean success_ ;
+    /**
+     * <code>bool success = 1;</code>
+     */
+    public boolean getSuccess() {
+      return success_;
+    }
+    /**
+     * <code>bool success = 1;</code>
+     */
+    public Builder setSuccess(boolean value) {
+      
+      success_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>bool success = 1;</code>
+     */
+    public Builder clearSuccess() {
+      
+      success_ = false;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object serverName_ = "";
+    /**
+     * <code>string serverName = 2;</code>
+     */
+    public java.lang.String getServerName() {
+      java.lang.Object ref = serverName_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        serverName_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string serverName = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getServerNameBytes() {
+      java.lang.Object ref = serverName_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        serverName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string serverName = 2;</code>
+     */
+    public Builder setServerName(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      serverName_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string serverName = 2;</code>
+     */
+    public Builder clearServerName() {
+      
+      serverName_ = getDefaultInstance().getServerName();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string serverName = 2;</code>
+     */
+    public Builder setServerNameBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      serverName_ = value;
+      onChanged();
+      return this;
+    }
+
     private int ballotNumber_ ;
     /**
-     * <code>int32 ballotNumber = 1;</code>
+     * <code>int32 ballotNumber = 3;</code>
      */
     public int getBallotNumber() {
       return ballotNumber_;
     }
     /**
-     * <code>int32 ballotNumber = 1;</code>
+     * <code>int32 ballotNumber = 3;</code>
      */
     public Builder setBallotNumber(int value) {
       
@@ -604,7 +717,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int32 ballotNumber = 1;</code>
+     * <code>int32 ballotNumber = 3;</code>
      */
     public Builder clearBallotNumber() {
       
@@ -613,221 +726,15 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private java.lang.Object processId_ = "";
-    /**
-     * <pre>
-     * processId is Server Name
-     * </pre>
-     *
-     * <code>string processId = 2;</code>
-     */
-    public java.lang.String getProcessId() {
-      java.lang.Object ref = processId_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        processId_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
-    }
-    /**
-     * <pre>
-     * processId is Server Name
-     * </pre>
-     *
-     * <code>string processId = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getProcessIdBytes() {
-      java.lang.Object ref = processId_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        processId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     * processId is Server Name
-     * </pre>
-     *
-     * <code>string processId = 2;</code>
-     */
-    public Builder setProcessId(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      processId_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * processId is Server Name
-     * </pre>
-     *
-     * <code>string processId = 2;</code>
-     */
-    public Builder clearProcessId() {
-      
-      processId_ = getDefaultInstance().getProcessId();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * processId is Server Name
-     * </pre>
-     *
-     * <code>string processId = 2;</code>
-     */
-    public Builder setProcessIdBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      processId_ = value;
-      onChanged();
-      return this;
-    }
-
-    private org.cse535.proto.Transaction transaction_ = null;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        org.cse535.proto.Transaction, org.cse535.proto.Transaction.Builder, org.cse535.proto.TransactionOrBuilder> transactionBuilder_;
-    /**
-     * <code>.Transaction transaction = 3;</code>
-     */
-    public boolean hasTransaction() {
-      return transactionBuilder_ != null || transaction_ != null;
-    }
-    /**
-     * <code>.Transaction transaction = 3;</code>
-     */
-    public org.cse535.proto.Transaction getTransaction() {
-      if (transactionBuilder_ == null) {
-        return transaction_ == null ? org.cse535.proto.Transaction.getDefaultInstance() : transaction_;
-      } else {
-        return transactionBuilder_.getMessage();
-      }
-    }
-    /**
-     * <code>.Transaction transaction = 3;</code>
-     */
-    public Builder setTransaction(org.cse535.proto.Transaction value) {
-      if (transactionBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        transaction_ = value;
-        onChanged();
-      } else {
-        transactionBuilder_.setMessage(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.Transaction transaction = 3;</code>
-     */
-    public Builder setTransaction(
-        org.cse535.proto.Transaction.Builder builderForValue) {
-      if (transactionBuilder_ == null) {
-        transaction_ = builderForValue.build();
-        onChanged();
-      } else {
-        transactionBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.Transaction transaction = 3;</code>
-     */
-    public Builder mergeTransaction(org.cse535.proto.Transaction value) {
-      if (transactionBuilder_ == null) {
-        if (transaction_ != null) {
-          transaction_ =
-            org.cse535.proto.Transaction.newBuilder(transaction_).mergeFrom(value).buildPartial();
-        } else {
-          transaction_ = value;
-        }
-        onChanged();
-      } else {
-        transactionBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.Transaction transaction = 3;</code>
-     */
-    public Builder clearTransaction() {
-      if (transactionBuilder_ == null) {
-        transaction_ = null;
-        onChanged();
-      } else {
-        transaction_ = null;
-        transactionBuilder_ = null;
-      }
-
-      return this;
-    }
-    /**
-     * <code>.Transaction transaction = 3;</code>
-     */
-    public org.cse535.proto.Transaction.Builder getTransactionBuilder() {
-      
-      onChanged();
-      return getTransactionFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.Transaction transaction = 3;</code>
-     */
-    public org.cse535.proto.TransactionOrBuilder getTransactionOrBuilder() {
-      if (transactionBuilder_ != null) {
-        return transactionBuilder_.getMessageOrBuilder();
-      } else {
-        return transaction_ == null ?
-            org.cse535.proto.Transaction.getDefaultInstance() : transaction_;
-      }
-    }
-    /**
-     * <code>.Transaction transaction = 3;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        org.cse535.proto.Transaction, org.cse535.proto.Transaction.Builder, org.cse535.proto.TransactionOrBuilder> 
-        getTransactionFieldBuilder() {
-      if (transactionBuilder_ == null) {
-        transactionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            org.cse535.proto.Transaction, org.cse535.proto.Transaction.Builder, org.cse535.proto.TransactionOrBuilder>(
-                getTransaction(),
-                getParentForChildren(),
-                isClean());
-        transaction_ = null;
-      }
-      return transactionBuilder_;
-    }
-
     private int clusterId_ ;
     /**
-     * <code>int32 clusterId = 8;</code>
+     * <code>int32 clusterId = 6;</code>
      */
     public int getClusterId() {
       return clusterId_;
     }
     /**
-     * <code>int32 clusterId = 8;</code>
+     * <code>int32 clusterId = 6;</code>
      */
     public Builder setClusterId(int value) {
       
@@ -836,7 +743,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int32 clusterId = 8;</code>
+     * <code>int32 clusterId = 6;</code>
      */
     public Builder clearClusterId() {
       
@@ -845,28 +752,97 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private boolean abort_ ;
+    private int successPreparesCount_ ;
     /**
-     * <code>bool abort = 4;</code>
+     * <code>int32 successPreparesCount = 4;</code>
      */
-    public boolean getAbort() {
-      return abort_;
+    public int getSuccessPreparesCount() {
+      return successPreparesCount_;
     }
     /**
-     * <code>bool abort = 4;</code>
+     * <code>int32 successPreparesCount = 4;</code>
      */
-    public Builder setAbort(boolean value) {
+    public Builder setSuccessPreparesCount(int value) {
       
-      abort_ = value;
+      successPreparesCount_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>bool abort = 4;</code>
+     * <code>int32 successPreparesCount = 4;</code>
      */
-    public Builder clearAbort() {
+    public Builder clearSuccessPreparesCount() {
       
-      abort_ = false;
+      successPreparesCount_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object failureReason_ = "";
+    /**
+     * <code>string failureReason = 5;</code>
+     */
+    public java.lang.String getFailureReason() {
+      java.lang.Object ref = failureReason_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        failureReason_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string failureReason = 5;</code>
+     */
+    public com.google.protobuf.ByteString
+        getFailureReasonBytes() {
+      java.lang.Object ref = failureReason_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        failureReason_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string failureReason = 5;</code>
+     */
+    public Builder setFailureReason(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      failureReason_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string failureReason = 5;</code>
+     */
+    public Builder clearFailureReason() {
+      
+      failureReason_ = getDefaultInstance().getFailureReason();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string failureReason = 5;</code>
+     */
+    public Builder setFailureReasonBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      failureReason_ = value;
       onChanged();
       return this;
     }
@@ -883,41 +859,41 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:CommitRequest)
+    // @@protoc_insertion_point(builder_scope:CrossTxnResponse)
   }
 
-  // @@protoc_insertion_point(class_scope:CommitRequest)
-  private static final org.cse535.proto.CommitRequest DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:CrossTxnResponse)
+  private static final org.cse535.proto.CrossTxnResponse DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new org.cse535.proto.CommitRequest();
+    DEFAULT_INSTANCE = new org.cse535.proto.CrossTxnResponse();
   }
 
-  public static org.cse535.proto.CommitRequest getDefaultInstance() {
+  public static org.cse535.proto.CrossTxnResponse getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<CommitRequest>
-      PARSER = new com.google.protobuf.AbstractParser<CommitRequest>() {
+  private static final com.google.protobuf.Parser<CrossTxnResponse>
+      PARSER = new com.google.protobuf.AbstractParser<CrossTxnResponse>() {
     @java.lang.Override
-    public CommitRequest parsePartialFrom(
+    public CrossTxnResponse parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new CommitRequest(input, extensionRegistry);
+      return new CrossTxnResponse(input, extensionRegistry);
     }
   };
 
-  public static com.google.protobuf.Parser<CommitRequest> parser() {
+  public static com.google.protobuf.Parser<CrossTxnResponse> parser() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.google.protobuf.Parser<CommitRequest> getParserForType() {
+  public com.google.protobuf.Parser<CrossTxnResponse> getParserForType() {
     return PARSER;
   }
 
   @java.lang.Override
-  public org.cse535.proto.CommitRequest getDefaultInstanceForType() {
+  public org.cse535.proto.CrossTxnResponse getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

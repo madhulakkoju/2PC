@@ -30,6 +30,11 @@ public final class Paxos2Pc {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_TxnResponse_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_CrossTxnResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_CrossTxnResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
     internal_static_PrepareRequest_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -113,60 +118,67 @@ public final class Paxos2Pc {
       "\n\017transactionHash\030\005 \001(\t\022\026\n\016transactionNu" +
       "m\030\006 \001(\005\022\024\n\014isCrossShard\030\007 \001(\010\"2\n\013TxnResp" +
       "onse\022\017\n\007success\030\001 \001(\010\022\022\n\nserverName\030\002 \001(" +
-      "\t\"\306\001\n\016PrepareRequest\022\024\n\014ballotNumber\030\001 \001" +
-      "(\005\022\021\n\tprocessId\030\002 \001(\t\022!\n\013transaction\030\003 \001" +
-      "(\0132\014.Transaction\0220\n\032latestCommittedTrans" +
-      "action\030\004 \001(\0132\014.Transaction\022#\n\033latestComm" +
-      "ittedBallotNumber\030\005 \001(\005\022\021\n\tclusterId\030\006 \001" +
-      "(\005\"\202\006\n\017PrepareResponse\022\024\n\014ballotNumber\030\001" +
-      " \001(\005\022\021\n\tprocessId\030\002 \001(\t\022\017\n\007success\030\003 \001(\010" +
-      "\0228\n\"lastAcceptedUncommittedTransaction\030\004" +
-      " \001(\0132\014.Transaction\022+\n#lastAcceptedUncomm" +
-      "ittedBallotNumber\030\005 \001(\005\022.\n\030lastCommitted" +
-      "Transaction\030\006 \001(\0132\014.Transaction\022!\n\031lastC" +
-      "ommittedBallotNumber\030\007 \001(\005\022F\n\023syncTransa" +
-      "ctionsMap\030\010 \003(\0132).PrepareResponse.SyncTr" +
-      "ansactionsMapEntry\022P\n\030syncTransactionSta" +
-      "tusMap\030\t \003(\0132..PrepareResponse.SyncTrans" +
-      "actionStatusMapEntry\022>\n\017syncBalancesMap\030" +
-      "\n \003(\0132%.PrepareResponse.SyncBalancesMapE" +
-      "ntry\022\032\n\022acceptedServerName\030\013 \001(\t\022\022\n\nneed" +
-      "ToSync\030\014 \001(\010\022\032\n\022latestBallotNumber\030\r \001(\005" +
-      "\032H\n\030SyncTransactionsMapEntry\022\013\n\003key\030\001 \001(" +
-      "\005\022\033\n\005value\030\002 \001(\0132\014.Transaction:\0028\001\032S\n\035Sy" +
-      "ncTransactionStatusMapEntry\022\013\n\003key\030\001 \001(\005" +
-      "\022!\n\005value\030\002 \001(\0162\022.TransactionStatus:\0028\001\032" +
-      "6\n\024SyncBalancesMapEntry\022\013\n\003key\030\001 \001(\005\022\r\n\005" +
-      "value\030\002 \001(\005:\0028\001\"n\n\rCommitRequest\022\024\n\014ball" +
-      "otNumber\030\001 \001(\005\022\021\n\tprocessId\030\002 \001(\t\022!\n\013tra" +
-      "nsaction\030\003 \001(\0132\014.Transaction\022\021\n\tclusterI" +
-      "d\030\010 \001(\005\"f\n\016CommitResponse\022\024\n\014ballotNumbe" +
-      "r\030\001 \001(\005\022\021\n\tprocessId\030\002 \001(\t\022\032\n\022acceptedSe" +
-      "rverName\030\003 \001(\t\022\017\n\007success\030\004 \001(\010\"+\n\025Activ" +
-      "ateServerRequest\022\022\n\nserverName\030\001 \001(\t\"=\n\026" +
-      "ActivateServerResponse\022\017\n\007success\030\001 \001(\010\022" +
-      "\022\n\nserverName\030\002 \001(\t\"-\n\027DeactivateServerR" +
-      "equest\022\022\n\nserverName\030\001 \001(\t\"?\n\030Deactivate" +
-      "ServerResponse\022\017\n\007success\030\001 \001(\010\022\022\n\nserve" +
-      "rName\030\002 \001(\t\"\035\n\014CommandInput\022\r\n\005input\030\001 \001" +
-      "(\t\"\037\n\rCommandOutput\022\016\n\006output\030\001 \001(\t*f\n\021T" +
-      "ransactionStatus\022\013\n\007PENDING\020\000\022\014\n\010PREPARE" +
-      "D\020\001\022\014\n\010ACCEPTED\020\002\022\r\n\tCOMMITTED\020\003\022\014\n\010EXEC" +
-      "UTED\020\004\022\013\n\007ABORTED\020\0052\230\001\n\005Paxos\0222\n\007Request" +
-      "\022\027.TransactionInputConfig\032\014.TxnResponse\"" +
-      "\000\022.\n\007Prepare\022\017.PrepareRequest\032\020.PrepareR" +
-      "esponse\"\000\022+\n\006Commit\022\016.CommitRequest\032\017.Co" +
-      "mmitResponse\"\0002\241\001\n\017ActivateServers\022C\n\016ac" +
-      "tivateServer\022\026.ActivateServerRequest\032\027.A" +
-      "ctivateServerResponse\"\000\022I\n\020deactivateSer" +
-      "ver\022\030.DeactivateServerRequest\032\031.Deactiva" +
-      "teServerResponse\"\0002\304\001\n\010Commands\022/\n\014print" +
-      "Balance\022\r.CommandInput\032\016.CommandOutput\"\000" +
-      "\022+\n\010printLog\022\r.CommandInput\032\016.CommandOut" +
-      "put\"\000\022*\n\007printDB\022\r.CommandInput\032\016.Comman" +
-      "dOutput\"\000\022.\n\013Performance\022\r.CommandInput\032" +
-      "\016.CommandOutput\"\000B\024\n\020org.cse535.protoP\001b" +
-      "\006proto3"
+      "\t\"\225\001\n\020CrossTxnResponse\022\017\n\007success\030\001 \001(\010\022" +
+      "\022\n\nserverName\030\002 \001(\t\022\024\n\014ballotNumber\030\003 \001(" +
+      "\005\022\021\n\tclusterId\030\006 \001(\005\022\034\n\024successPreparesC" +
+      "ount\030\004 \001(\005\022\025\n\rfailureReason\030\005 \001(\t\"\306\001\n\016Pr" +
+      "epareRequest\022\024\n\014ballotNumber\030\001 \001(\005\022\021\n\tpr" +
+      "ocessId\030\002 \001(\t\022!\n\013transaction\030\003 \001(\0132\014.Tra" +
+      "nsaction\0220\n\032latestCommittedTransaction\030\004" +
+      " \001(\0132\014.Transaction\022#\n\033latestCommittedBal" +
+      "lotNumber\030\005 \001(\005\022\021\n\tclusterId\030\006 \001(\005\"\202\006\n\017P" +
+      "repareResponse\022\024\n\014ballotNumber\030\001 \001(\005\022\021\n\t" +
+      "processId\030\002 \001(\t\022\017\n\007success\030\003 \001(\010\0228\n\"last" +
+      "AcceptedUncommittedTransaction\030\004 \001(\0132\014.T" +
+      "ransaction\022+\n#lastAcceptedUncommittedBal" +
+      "lotNumber\030\005 \001(\005\022.\n\030lastCommittedTransact" +
+      "ion\030\006 \001(\0132\014.Transaction\022!\n\031lastCommitted" +
+      "BallotNumber\030\007 \001(\005\022F\n\023syncTransactionsMa" +
+      "p\030\010 \003(\0132).PrepareResponse.SyncTransactio" +
+      "nsMapEntry\022P\n\030syncTransactionStatusMap\030\t" +
+      " \003(\0132..PrepareResponse.SyncTransactionSt" +
+      "atusMapEntry\022>\n\017syncBalancesMap\030\n \003(\0132%." +
+      "PrepareResponse.SyncBalancesMapEntry\022\032\n\022" +
+      "acceptedServerName\030\013 \001(\t\022\022\n\nneedToSync\030\014" +
+      " \001(\010\022\032\n\022latestBallotNumber\030\r \001(\005\032H\n\030Sync" +
+      "TransactionsMapEntry\022\013\n\003key\030\001 \001(\005\022\033\n\005val" +
+      "ue\030\002 \001(\0132\014.Transaction:\0028\001\032S\n\035SyncTransa" +
+      "ctionStatusMapEntry\022\013\n\003key\030\001 \001(\005\022!\n\005valu" +
+      "e\030\002 \001(\0162\022.TransactionStatus:\0028\001\0326\n\024SyncB" +
+      "alancesMapEntry\022\013\n\003key\030\001 \001(\005\022\r\n\005value\030\002 " +
+      "\001(\005:\0028\001\"}\n\rCommitRequest\022\024\n\014ballotNumber" +
+      "\030\001 \001(\005\022\021\n\tprocessId\030\002 \001(\t\022!\n\013transaction" +
+      "\030\003 \001(\0132\014.Transaction\022\021\n\tclusterId\030\010 \001(\005\022" +
+      "\r\n\005abort\030\004 \001(\010\"f\n\016CommitResponse\022\024\n\014ball" +
+      "otNumber\030\001 \001(\005\022\021\n\tprocessId\030\002 \001(\t\022\032\n\022acc" +
+      "eptedServerName\030\003 \001(\t\022\017\n\007success\030\004 \001(\010\"+" +
+      "\n\025ActivateServerRequest\022\022\n\nserverName\030\001 " +
+      "\001(\t\"=\n\026ActivateServerResponse\022\017\n\007success" +
+      "\030\001 \001(\010\022\022\n\nserverName\030\002 \001(\t\"-\n\027Deactivate" +
+      "ServerRequest\022\022\n\nserverName\030\001 \001(\t\"?\n\030Dea" +
+      "ctivateServerResponse\022\017\n\007success\030\001 \001(\010\022\022" +
+      "\n\nserverName\030\002 \001(\t\"\035\n\014CommandInput\022\r\n\005in" +
+      "put\030\001 \001(\t\"\037\n\rCommandOutput\022\016\n\006output\030\001 \001" +
+      "(\t*f\n\021TransactionStatus\022\013\n\007PENDING\020\000\022\014\n\010" +
+      "PREPARED\020\001\022\014\n\010ACCEPTED\020\002\022\r\n\tCOMMITTED\020\003\022" +
+      "\014\n\010EXECUTED\020\004\022\013\n\007ABORTED\020\0052\210\002\n\005Paxos\0222\n\007" +
+      "Request\022\027.TransactionInputConfig\032\014.TxnRe" +
+      "sponse\"\000\022A\n\021CrossShardRequest\022\027.Transact" +
+      "ionInputConfig\032\021.CrossTxnResponse\"\000\022.\n\007P" +
+      "repare\022\017.PrepareRequest\032\020.PrepareRespons" +
+      "e\"\000\022+\n\006Commit\022\016.CommitRequest\032\017.CommitRe" +
+      "sponse\"\000\022+\n\004Sync\022\017.PrepareRequest\032\020.Prep" +
+      "areResponse\"\0002\241\001\n\017ActivateServers\022C\n\016act" +
+      "ivateServer\022\026.ActivateServerRequest\032\027.Ac" +
+      "tivateServerResponse\"\000\022I\n\020deactivateServ" +
+      "er\022\030.DeactivateServerRequest\032\031.Deactivat" +
+      "eServerResponse\"\0002\304\001\n\010Commands\022/\n\014printB" +
+      "alance\022\r.CommandInput\032\016.CommandOutput\"\000\022" +
+      "+\n\010printLog\022\r.CommandInput\032\016.CommandOutp" +
+      "ut\"\000\022*\n\007printDB\022\r.CommandInput\032\016.Command" +
+      "Output\"\000\022.\n\013Performance\022\r.CommandInput\032\016" +
+      ".CommandOutput\"\000B\024\n\020org.cse535.protoP\001b\006" +
+      "proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -199,14 +211,20 @@ public final class Paxos2Pc {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_TxnResponse_descriptor,
         new java.lang.String[] { "Success", "ServerName", });
-    internal_static_PrepareRequest_descriptor =
+    internal_static_CrossTxnResponse_descriptor =
       getDescriptor().getMessageTypes().get(3);
+    internal_static_CrossTxnResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_CrossTxnResponse_descriptor,
+        new java.lang.String[] { "Success", "ServerName", "BallotNumber", "ClusterId", "SuccessPreparesCount", "FailureReason", });
+    internal_static_PrepareRequest_descriptor =
+      getDescriptor().getMessageTypes().get(4);
     internal_static_PrepareRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_PrepareRequest_descriptor,
         new java.lang.String[] { "BallotNumber", "ProcessId", "Transaction", "LatestCommittedTransaction", "LatestCommittedBallotNumber", "ClusterId", });
     internal_static_PrepareResponse_descriptor =
-      getDescriptor().getMessageTypes().get(4);
+      getDescriptor().getMessageTypes().get(5);
     internal_static_PrepareResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_PrepareResponse_descriptor,
@@ -230,49 +248,49 @@ public final class Paxos2Pc {
         internal_static_PrepareResponse_SyncBalancesMapEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_CommitRequest_descriptor =
-      getDescriptor().getMessageTypes().get(5);
+      getDescriptor().getMessageTypes().get(6);
     internal_static_CommitRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_CommitRequest_descriptor,
-        new java.lang.String[] { "BallotNumber", "ProcessId", "Transaction", "ClusterId", });
+        new java.lang.String[] { "BallotNumber", "ProcessId", "Transaction", "ClusterId", "Abort", });
     internal_static_CommitResponse_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(7);
     internal_static_CommitResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_CommitResponse_descriptor,
         new java.lang.String[] { "BallotNumber", "ProcessId", "AcceptedServerName", "Success", });
     internal_static_ActivateServerRequest_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(8);
     internal_static_ActivateServerRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ActivateServerRequest_descriptor,
         new java.lang.String[] { "ServerName", });
     internal_static_ActivateServerResponse_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(9);
     internal_static_ActivateServerResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ActivateServerResponse_descriptor,
         new java.lang.String[] { "Success", "ServerName", });
     internal_static_DeactivateServerRequest_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+      getDescriptor().getMessageTypes().get(10);
     internal_static_DeactivateServerRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_DeactivateServerRequest_descriptor,
         new java.lang.String[] { "ServerName", });
     internal_static_DeactivateServerResponse_descriptor =
-      getDescriptor().getMessageTypes().get(10);
+      getDescriptor().getMessageTypes().get(11);
     internal_static_DeactivateServerResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_DeactivateServerResponse_descriptor,
         new java.lang.String[] { "Success", "ServerName", });
     internal_static_CommandInput_descriptor =
-      getDescriptor().getMessageTypes().get(11);
+      getDescriptor().getMessageTypes().get(12);
     internal_static_CommandInput_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_CommandInput_descriptor,
         new java.lang.String[] { "Input", });
     internal_static_CommandOutput_descriptor =
-      getDescriptor().getMessageTypes().get(12);
+      getDescriptor().getMessageTypes().get(13);
     internal_static_CommandOutput_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_CommandOutput_descriptor,

@@ -59,6 +59,38 @@ public final class PaxosGrpc {
      return getRequestMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<org.cse535.proto.TransactionInputConfig,
+      org.cse535.proto.CrossTxnResponse> getCrossShardRequestMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "CrossShardRequest",
+      requestType = org.cse535.proto.TransactionInputConfig.class,
+      responseType = org.cse535.proto.CrossTxnResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<org.cse535.proto.TransactionInputConfig,
+      org.cse535.proto.CrossTxnResponse> getCrossShardRequestMethod() {
+    io.grpc.MethodDescriptor<org.cse535.proto.TransactionInputConfig, org.cse535.proto.CrossTxnResponse> getCrossShardRequestMethod;
+    if ((getCrossShardRequestMethod = PaxosGrpc.getCrossShardRequestMethod) == null) {
+      synchronized (PaxosGrpc.class) {
+        if ((getCrossShardRequestMethod = PaxosGrpc.getCrossShardRequestMethod) == null) {
+          PaxosGrpc.getCrossShardRequestMethod = getCrossShardRequestMethod = 
+              io.grpc.MethodDescriptor.<org.cse535.proto.TransactionInputConfig, org.cse535.proto.CrossTxnResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "Paxos", "CrossShardRequest"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.cse535.proto.TransactionInputConfig.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.cse535.proto.CrossTxnResponse.getDefaultInstance()))
+                  .setSchemaDescriptor(new PaxosMethodDescriptorSupplier("CrossShardRequest"))
+                  .build();
+          }
+        }
+     }
+     return getCrossShardRequestMethod;
+  }
+
   private static volatile io.grpc.MethodDescriptor<org.cse535.proto.PrepareRequest,
       org.cse535.proto.PrepareResponse> getPrepareMethod;
 
@@ -123,6 +155,38 @@ public final class PaxosGrpc {
      return getCommitMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<org.cse535.proto.PrepareRequest,
+      org.cse535.proto.PrepareResponse> getSyncMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "Sync",
+      requestType = org.cse535.proto.PrepareRequest.class,
+      responseType = org.cse535.proto.PrepareResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<org.cse535.proto.PrepareRequest,
+      org.cse535.proto.PrepareResponse> getSyncMethod() {
+    io.grpc.MethodDescriptor<org.cse535.proto.PrepareRequest, org.cse535.proto.PrepareResponse> getSyncMethod;
+    if ((getSyncMethod = PaxosGrpc.getSyncMethod) == null) {
+      synchronized (PaxosGrpc.class) {
+        if ((getSyncMethod = PaxosGrpc.getSyncMethod) == null) {
+          PaxosGrpc.getSyncMethod = getSyncMethod = 
+              io.grpc.MethodDescriptor.<org.cse535.proto.PrepareRequest, org.cse535.proto.PrepareResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "Paxos", "Sync"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.cse535.proto.PrepareRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.cse535.proto.PrepareResponse.getDefaultInstance()))
+                  .setSchemaDescriptor(new PaxosMethodDescriptorSupplier("Sync"))
+                  .build();
+          }
+        }
+     }
+     return getSyncMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -159,6 +223,13 @@ public final class PaxosGrpc {
 
     /**
      */
+    public void crossShardRequest(org.cse535.proto.TransactionInputConfig request,
+        io.grpc.stub.StreamObserver<org.cse535.proto.CrossTxnResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(getCrossShardRequestMethod(), responseObserver);
+    }
+
+    /**
+     */
     public void prepare(org.cse535.proto.PrepareRequest request,
         io.grpc.stub.StreamObserver<org.cse535.proto.PrepareResponse> responseObserver) {
       asyncUnimplementedUnaryCall(getPrepareMethod(), responseObserver);
@@ -171,6 +242,13 @@ public final class PaxosGrpc {
       asyncUnimplementedUnaryCall(getCommitMethod(), responseObserver);
     }
 
+    /**
+     */
+    public void sync(org.cse535.proto.PrepareRequest request,
+        io.grpc.stub.StreamObserver<org.cse535.proto.PrepareResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(getSyncMethod(), responseObserver);
+    }
+
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -180,6 +258,13 @@ public final class PaxosGrpc {
                 org.cse535.proto.TransactionInputConfig,
                 org.cse535.proto.TxnResponse>(
                   this, METHODID_REQUEST)))
+          .addMethod(
+            getCrossShardRequestMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                org.cse535.proto.TransactionInputConfig,
+                org.cse535.proto.CrossTxnResponse>(
+                  this, METHODID_CROSS_SHARD_REQUEST)))
           .addMethod(
             getPrepareMethod(),
             asyncUnaryCall(
@@ -194,6 +279,13 @@ public final class PaxosGrpc {
                 org.cse535.proto.CommitRequest,
                 org.cse535.proto.CommitResponse>(
                   this, METHODID_COMMIT)))
+          .addMethod(
+            getSyncMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                org.cse535.proto.PrepareRequest,
+                org.cse535.proto.PrepareResponse>(
+                  this, METHODID_SYNC)))
           .build();
     }
   }
@@ -226,6 +318,14 @@ public final class PaxosGrpc {
 
     /**
      */
+    public void crossShardRequest(org.cse535.proto.TransactionInputConfig request,
+        io.grpc.stub.StreamObserver<org.cse535.proto.CrossTxnResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getCrossShardRequestMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
     public void prepare(org.cse535.proto.PrepareRequest request,
         io.grpc.stub.StreamObserver<org.cse535.proto.PrepareResponse> responseObserver) {
       asyncUnaryCall(
@@ -238,6 +338,14 @@ public final class PaxosGrpc {
         io.grpc.stub.StreamObserver<org.cse535.proto.CommitResponse> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getCommitMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void sync(org.cse535.proto.PrepareRequest request,
+        io.grpc.stub.StreamObserver<org.cse535.proto.PrepareResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getSyncMethod(), getCallOptions()), request, responseObserver);
     }
   }
 
@@ -268,6 +376,13 @@ public final class PaxosGrpc {
 
     /**
      */
+    public org.cse535.proto.CrossTxnResponse crossShardRequest(org.cse535.proto.TransactionInputConfig request) {
+      return blockingUnaryCall(
+          getChannel(), getCrossShardRequestMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
     public org.cse535.proto.PrepareResponse prepare(org.cse535.proto.PrepareRequest request) {
       return blockingUnaryCall(
           getChannel(), getPrepareMethod(), getCallOptions(), request);
@@ -278,6 +393,13 @@ public final class PaxosGrpc {
     public org.cse535.proto.CommitResponse commit(org.cse535.proto.CommitRequest request) {
       return blockingUnaryCall(
           getChannel(), getCommitMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public org.cse535.proto.PrepareResponse sync(org.cse535.proto.PrepareRequest request) {
+      return blockingUnaryCall(
+          getChannel(), getSyncMethod(), getCallOptions(), request);
     }
   }
 
@@ -309,6 +431,14 @@ public final class PaxosGrpc {
 
     /**
      */
+    public com.google.common.util.concurrent.ListenableFuture<org.cse535.proto.CrossTxnResponse> crossShardRequest(
+        org.cse535.proto.TransactionInputConfig request) {
+      return futureUnaryCall(
+          getChannel().newCall(getCrossShardRequestMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
     public com.google.common.util.concurrent.ListenableFuture<org.cse535.proto.PrepareResponse> prepare(
         org.cse535.proto.PrepareRequest request) {
       return futureUnaryCall(
@@ -322,11 +452,21 @@ public final class PaxosGrpc {
       return futureUnaryCall(
           getChannel().newCall(getCommitMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<org.cse535.proto.PrepareResponse> sync(
+        org.cse535.proto.PrepareRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(getSyncMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_REQUEST = 0;
-  private static final int METHODID_PREPARE = 1;
-  private static final int METHODID_COMMIT = 2;
+  private static final int METHODID_CROSS_SHARD_REQUEST = 1;
+  private static final int METHODID_PREPARE = 2;
+  private static final int METHODID_COMMIT = 3;
+  private static final int METHODID_SYNC = 4;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -349,6 +489,10 @@ public final class PaxosGrpc {
           serviceImpl.request((org.cse535.proto.TransactionInputConfig) request,
               (io.grpc.stub.StreamObserver<org.cse535.proto.TxnResponse>) responseObserver);
           break;
+        case METHODID_CROSS_SHARD_REQUEST:
+          serviceImpl.crossShardRequest((org.cse535.proto.TransactionInputConfig) request,
+              (io.grpc.stub.StreamObserver<org.cse535.proto.CrossTxnResponse>) responseObserver);
+          break;
         case METHODID_PREPARE:
           serviceImpl.prepare((org.cse535.proto.PrepareRequest) request,
               (io.grpc.stub.StreamObserver<org.cse535.proto.PrepareResponse>) responseObserver);
@@ -356,6 +500,10 @@ public final class PaxosGrpc {
         case METHODID_COMMIT:
           serviceImpl.commit((org.cse535.proto.CommitRequest) request,
               (io.grpc.stub.StreamObserver<org.cse535.proto.CommitResponse>) responseObserver);
+          break;
+        case METHODID_SYNC:
+          serviceImpl.sync((org.cse535.proto.PrepareRequest) request,
+              (io.grpc.stub.StreamObserver<org.cse535.proto.PrepareResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -419,8 +567,10 @@ public final class PaxosGrpc {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
               .setSchemaDescriptor(new PaxosFileDescriptorSupplier())
               .addMethod(getRequestMethod())
+              .addMethod(getCrossShardRequestMethod())
               .addMethod(getPrepareMethod())
               .addMethod(getCommitMethod())
+              .addMethod(getSyncMethod())
               .build();
         }
       }

@@ -4,6 +4,7 @@ import org.cse535.configs.GlobalConfigs;
 import org.cse535.configs.Utils;
 
 import org.cse535.proto.*;
+import org.cse535.threadimpls.CrossShardTnxProcessingThread;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -185,9 +186,14 @@ public class ViewServer extends NodeServer {
 
 
     public void sendCrossShardTransaction(TransactionInputConfig transactionInputConfig, String senderServer, String receiverServer){
-
-
-
+        try {
+            CrossShardTnxProcessingThread thread = new CrossShardTnxProcessingThread(this, transactionInputConfig, senderServer, receiverServer);
+            thread.start();
+            thread.join();
+        }
+        catch (Exception e){
+            this.logger.log("Error in Cross Shard Transaction Processing: "+ e.getMessage());
+        }
     }
 
 

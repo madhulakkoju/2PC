@@ -519,10 +519,13 @@ Command: PrintLog
  server: 9
  output: 
 Log
+Transaction successful on both sender and receiver side, committing now....
 -------------------------------------------------------------
 Line: 21 : 6,"(1001, 2999, 6)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
+Transaction failed on sender side, aborting.
 -------------------------------------------------------------
 Line: 22 : 6,"(2150, 1111, 9)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
+Transaction failed on receiver side, aborting.
 -------------------------------------------------------------
 Line: 23 : 7,"(2001, 11, 3)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
 Command: PrintDB
@@ -605,10 +608,13 @@ Command: PrintLog
  server: 9
  output: 
 Log
+Transaction failed on receiver side, aborting.
 -------------------------------------------------------------
 Line: 24 : 7,"(11, 2001, 9)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
+Transaction failed on sender side, aborting.
 -------------------------------------------------------------
 Line: 25 : 7,"(2999, 1999, 6)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
+Transaction failed on receiver side, aborting.
 -------------------------------------------------------------
 Line: 26 : 8,"(121, 601, 1)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
 Command: PrintDB
@@ -693,6 +699,7 @@ Command: PrintLog
 Log
 -------------------------------------------------------------
 Line: 27 : 8,"(121, 2525, 8)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
+Transaction failed on sender side, aborting.
 -------------------------------------------------------------
 Line: 28 : 8,"(1500, 1505, 7)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
 -------------------------------------------------------------
@@ -779,6 +786,8 @@ Command: PrintLog
 Log
 -------------------------------------------------------------
 Line: 30 : 9,"(796, 1997, 9)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
+Transaction failed on sender side, aborting.
+Transaction failed on receiver side, aborting.
 -------------------------------------------------------------
 Line: 31 : 9,"(2196, 2397, 3)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
 -------------------------------------------------------------
@@ -863,5 +872,8 @@ Command: PrintLog
  server: 9
  output: 
 Log
+Transaction failed on sender side, aborting.
+Transaction failed on receiver side, aborting.
 -------------------------------------------------------------
 Line: 33 : 10,"(1998, 2998, 19)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
+Transaction failed on sender side, aborting.

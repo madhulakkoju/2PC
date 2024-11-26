@@ -3,12 +3,15 @@ package org.cse535.node;
 import org.cse535.configs.GlobalConfigs;
 import org.cse535.configs.Utils;
 import org.cse535.proto.*;
+import org.cse535.threadimpls.IntraPrepareThread;
 import org.cse535.threadimpls.IntraShardTnxProcessingThread;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Node extends NodeServer {
 
@@ -17,6 +20,7 @@ public class Node extends NodeServer {
 
 
     public boolean pauseTnxServiceUntilCommit;
+    public boolean pauseTnxServiceDueToCrossShard;
 
 
     public ConcurrentHashMap<Integer, Integer> lockedDataItemsWithTransactionNum;
@@ -56,6 +60,11 @@ public class Node extends NodeServer {
                     Thread.sleep(10);
                     continue;
                 }
+                if(pauseTnxServiceDueToCrossShard){
+                    //logger.log("Pausing Transaction Service until Cross Shard Commit");
+                    Thread.sleep(10);
+                    continue;
+                }
 
 
                 if( !this.isServerActive.get()){
@@ -86,7 +95,7 @@ public class Node extends NodeServer {
                 // Process the Transaction now.
 
                 if(transaction.getIsCrossShard()){
-                    processCrossShardTransaction(transaction, this.database.ballotNumber.incrementAndGet());
+                    processCrossShardTransaction(transactionInput);
                 }
                 else {
                     processIntraShardTransaction(transaction, this.database.ballotNumber.incrementAndGet());
@@ -134,17 +143,139 @@ public class Node extends NodeServer {
         return false;
     }
 
-    public boolean processCrossShardTransaction(Transaction transaction, int ballotNumber) {
+
+
+
+    public CrossTxnResponse processCrossShardTransaction(TransactionInputConfig transactionInputConfig) {
+
+        this.pauseTnxServiceDueToCrossShard = true;
+
+        this.logger.log("Processing Cross Shard Transaction: " + transactionInputConfig.getTransaction().getTransactionNum());
+        //Sync data from other servers in the cluster.
+        // TODO: Sync Data with sync request
+
+        this.logger.log("Syncing Data with other servers in the cluster");
+
+
+        this.logger.log("Data Sync Done");
+
+        CrossTxnResponse.Builder crossTxnResponse = CrossTxnResponse.newBuilder();
+        crossTxnResponse.setClusterId(this.clusterNumber);
+        crossTxnResponse.setSuccess(false);
+        crossTxnResponse.setServerName(this.serverName);
+        crossTxnResponse.setSuccessPreparesCount(0);
+        crossTxnResponse.setFailureReason("");
+        crossTxnResponse.setBallotNumber(-1);
+
+        int sender = transactionInputConfig.getTransaction().getSender();
+        int receiver = transactionInputConfig.getTransaction().getReceiver();
+        int amount = transactionInputConfig.getTransaction().getAmount();
+
+        if(this.lockedDataItemsWithTransactionNum.containsKey(sender) || this.lockedDataItemsWithTransactionNum.containsKey(receiver)){
+            crossTxnResponse.setFailureReason("Data Item Locked");
+            this.logger.log("Data Item Locked.... so rejecting the transaction");
+            return crossTxnResponse.build();
+        }
+
+
+
+        boolean belongsToCluster = false;
+
+        int itemToLock = sender;
+
+        if(Utils.FindClusterOfDataItem(sender) == this.clusterNumber){
+            this.logger.log("Processing Cross Shard Transaction - Sender : " + transactionInputConfig.getTransaction().getTransactionNum());
+            belongsToCluster = true;
+
+            if(!this.database.isValidTransaction(transactionInputConfig.getTransaction())){
+                crossTxnResponse.setFailureReason("Insufficient Balance");
+                return crossTxnResponse.build();
+            }
+
+        }
+        else if( Utils.FindClusterOfDataItem(receiver) == this.clusterNumber ){
+            this.logger.log("Processing Cross Shard Transaction - Receiver : " + transactionInputConfig.getTransaction().getTransactionNum());
+            belongsToCluster = true;
+            itemToLock = receiver;
+
+        }
+        else {
+            this.logger.log("Transaction does not belong to my cluster: " + transactionInputConfig.getTransaction().getTransactionNum());
+
+            return crossTxnResponse.build();
+        }
 
 
 
 
+        // Lock the data item
+
+        this.lockedDataItemsWithTransactionNum.put(itemToLock, transactionInputConfig.getTransaction().getTransactionNum());
+        this.logger.log("Locked Data Item: " + itemToLock);
+
+        // Prepare Request to cluster servers and return Response
+
+        int ballotNumber = this.database.ballotNumber.incrementAndGet();
+        crossTxnResponse.setBallotNumber(ballotNumber);
+
+        this.logger.log("Ballot Number: " + ballotNumber);
+
+        IntraPrepareThread[] intraPrepareThreads = new IntraPrepareThread[GlobalConfigs.numServersPerCluster];
+
+        ConcurrentHashMap<Integer, PrepareResponse> prepareResponses = new ConcurrentHashMap<>();
+        AtomicInteger successPrepares = new AtomicInteger(1);
+
+        PrepareRequest.Builder prepareBuilder = PrepareRequest.newBuilder();
+
+        prepareBuilder.setBallotNumber(ballotNumber)
+                .setProcessId(this.serverName)
+                .setTransaction(transactionInputConfig.getTransaction());
+
+        if(this.database.lastCommittedTransaction != null) {
+            prepareBuilder.setLatestCommittedTransaction(this.database.lastCommittedTransaction);
+        }
+
+        prepareBuilder.setLatestCommittedBallotNumber( this.database.lastCommittedBallotNumber)
+                .setClusterId(this.clusterNumber);
 
 
+        PrepareRequest prepareRequest = prepareBuilder.build();
+        this.logger.log("Prepare Request: " + prepareRequest.toString());
+        try {
+
+            for (int i = 0; i < GlobalConfigs.numServersPerCluster; i++) {
+                if (Objects.equals(GlobalConfigs.clusterToServersMap.get(this.clusterNumber).get(i), this.serverNumber)) {
+                    continue;
+                }
+                intraPrepareThreads[i] = new IntraPrepareThread(this, prepareRequest, prepareResponses, GlobalConfigs.clusterToServersMap.get(this.clusterNumber).get(i), successPrepares);
+                intraPrepareThreads[i].start();
+            }
+
+            this.database.transactionStatusMap.put(ballotNumber, TransactionStatus.PREPARED);
+
+            for (int i = 0; i < GlobalConfigs.numServersPerCluster; i++) {
+                if (intraPrepareThreads[i] == null) continue;
+                intraPrepareThreads[i].join();
+            }
+
+        } catch (Exception e) {
+            this.logger.log("Error " + e.getMessage());
+        }
 
 
+        if( successPrepares.get() < GlobalConfigs.ShardConsesusThreshold) {
+            this.logger.log("Consensus FAILED for Cross Shard Prepare Phase");
+            crossTxnResponse.setSuccessPreparesCount(successPrepares.get());
+            crossTxnResponse.setFailureReason("Consensus not reached");
+            return crossTxnResponse.build();
+        }
+        else{
+            this.logger.log("Consensus Reached for Cross Shard Prepare Phase");
+            crossTxnResponse.setSuccess(true);
+            crossTxnResponse.setSuccessPreparesCount(successPrepares.get());
 
-        return false;
+        }
+        return crossTxnResponse.build();
     }
 
 
@@ -262,16 +393,49 @@ public class Node extends NodeServer {
         commitResponse.setBallotNumber(request.getBallotNumber());
         commitResponse.setSuccess(false);
 
-        this.logger.log("Commit Request Received from " + request.getProcessId() );
+        if(request.getAbort()){
 
-        if(request.getBallotNumber() == this.database.lastAcceptedUncommittedBallotNumber){
-            this.database.lastCommittedBallotNumber = request.getBallotNumber();
-            this.database.lastCommittedTransaction = request.getTransaction();
-            this.database.lastAcceptedUncommittedBallotNumber = -1;
-            this.database.lastAcceptedUncommittedTransaction = null;
+            this.logger.log("Abort Request Received from " + request.getProcessId() );
+            this.database.transactionStatusMap.put(request.getBallotNumber(), TransactionStatus.ABORTED);
+
+            if(this.lockedDataItemsWithTransactionNum.containsKey(request.getTransaction().getSender()) &&
+                    this.lockedDataItemsWithTransactionNum.get(request.getTransaction().getSender()) == request.getTransaction().getTransactionNum()){
+                this.lockedDataItemsWithTransactionNum.remove(request.getTransaction().getSender());
+            }
+
+            if(this.lockedDataItemsWithTransactionNum.containsKey(request.getTransaction().getReceiver()) &&
+                    this.lockedDataItemsWithTransactionNum.get(request.getTransaction().getReceiver()) == request.getTransaction().getTransactionNum()){
+                this.lockedDataItemsWithTransactionNum.remove(request.getTransaction().getReceiver());
+            }
+
             commitResponse.setSuccess(true);
-            this.database.transactionStatusMap.put(request.getBallotNumber(), TransactionStatus.COMMITTED);
-            this.logger.log("Commit Request Accepted from " + request.getProcessId() );
+        }
+        else {
+
+            this.logger.log("Commit Request Received from " + request.getProcessId());
+
+            if (request.getBallotNumber() == this.database.lastAcceptedUncommittedBallotNumber) {
+                this.database.lastCommittedBallotNumber = request.getBallotNumber();
+                this.database.lastCommittedTransaction = request.getTransaction();
+                this.database.lastAcceptedUncommittedBallotNumber = -1;
+                this.database.lastAcceptedUncommittedTransaction = null;
+                commitResponse.setSuccess(true);
+                this.database.transactionStatusMap.put(request.getBallotNumber(), TransactionStatus.COMMITTED);
+                this.logger.log("Commit Request Accepted from " + request.getProcessId());
+            }
+
+        }
+
+        //Finally remove locks
+
+        if(this.lockedDataItemsWithTransactionNum.containsKey(request.getTransaction().getSender()) &&
+                this.lockedDataItemsWithTransactionNum.get(request.getTransaction().getSender()) == request.getTransaction().getTransactionNum()){
+            this.lockedDataItemsWithTransactionNum.remove(request.getTransaction().getSender());
+        }
+
+        if(this.lockedDataItemsWithTransactionNum.containsKey(request.getTransaction().getReceiver()) &&
+                this.lockedDataItemsWithTransactionNum.get(request.getTransaction().getReceiver()) == request.getTransaction().getTransactionNum()){
+            this.lockedDataItemsWithTransactionNum.remove(request.getTransaction().getReceiver());
         }
 
         return commitResponse.build();

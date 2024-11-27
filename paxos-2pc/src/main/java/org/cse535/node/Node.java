@@ -380,9 +380,15 @@ public class Node extends NodeServer {
 
             prepareResponse.setSuccess(true);
             prepareResponse.setNeedToSync(false);
+
+
+            if(request.getTransaction().getIsCrossShard())
+                this.database.addToDataStore(request);
         }
 
         this.logger.log("Prepare Request Accepted from " + request.getProcessId() );
+
+
 
         return prepareResponse.build();
     }
@@ -409,6 +415,7 @@ public class Node extends NodeServer {
             }
 
             commitResponse.setSuccess(true);
+            this.database.addToDataStore(request);
         }
         else {
 
@@ -422,6 +429,7 @@ public class Node extends NodeServer {
                 commitResponse.setSuccess(true);
                 this.database.transactionStatusMap.put(request.getBallotNumber(), TransactionStatus.COMMITTED);
                 this.logger.log("Commit Request Accepted from " + request.getProcessId());
+                this.database.addToDataStore(request);
             }
 
         }
@@ -441,6 +449,11 @@ public class Node extends NodeServer {
         return commitResponse.build();
     }
 
+
+
+    public String PrintDataStore(){
+        return this.serverName + " : " + String.join("->", this.database.dataStore.get());
+    }
 
 
 }

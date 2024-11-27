@@ -1,5 +1,6 @@
 package org.cse535.node;
 
+import org.cse535.Main;
 import org.cse535.configs.GlobalConfigs;
 import org.cse535.configs.Utils;
 
@@ -42,7 +43,8 @@ public class ViewServer extends NodeServer {
     public enum Command {
         PrintDB,
         PrintLog,
-        Performance
+        Performance,
+        PrintDataStore
     }
 
 
@@ -146,8 +148,38 @@ public class ViewServer extends NodeServer {
     }
 
 
+    public void PrintDataStore(){
+        this.logger.log("Printing Data Store");
+
+        this.commandLogger.log("---------------------------------------- Print Data Store -----------------------------------\n");
+        CommandInput commandInput = CommandInput.newBuilder().build();
+        HashMap<Integer, String> dataStore = new HashMap<>();
+
+        activeServersStatusMap.forEach((server, isActive) -> {
+            if(server == 0) return;
+            CommandsGrpc.CommandsBlockingStub stub = this.serversToCommandsStub.get(server);
+            CommandOutput op  = CommandOutput.newBuilder().setOutput("No Output").build() ;
+            op = stub.printDatastore(commandInput);
+            dataStore.put(server, op.getOutput());
+        });
+
+        this.commandLogger.log("Server \\      Data Store");
+        dataStore.forEach((server, data) -> {
+            this.commandLogger.log( data);
+        });
+
+        this.commandLogger.log("---------------------------------------------------------------------------------------------\n");
+    }
+
+
 
     public void sendCommandToServers(Command commandType) throws InterruptedException {
+
+        if(commandType == Command.PrintDataStore){
+            PrintDataStore();
+            return;
+        }
+
         CommandInput commandInput = CommandInput.newBuilder().build();
         Thread.sleep(10);
 
@@ -165,6 +197,9 @@ public class ViewServer extends NodeServer {
                     break;
                 case Performance:
                     op = stub.performance(commandInput);
+                    break;
+                case PrintDataStore:
+                    op = stub.printDatastore(commandInput);
                     break;
             }
 
@@ -293,28 +328,34 @@ public class ViewServer extends NodeServer {
                         viewServer.activeServersStatusMap.put( Integer.parseInt( server.replaceAll("S","") ) , true);
                     }
 
-                    Thread.sleep(50);
+                    Thread.sleep(10);
                     System.out.print("Press Enter to run Commands ");
                     System.console().readLine();
 
                     viewServer.sendCommandToServers( Command.PrintDB );
                     viewServer.sendCommandToServers( Command.PrintLog );
+                    viewServer.sendCommandToServers( Command.PrintDataStore );
 
-                    System.out.print("Press Enter to continue to next Test set "+transactionInputConfig.getSetNumber());
+                    System.out.print("Press Enter to continue to next Test set "+transactionInputConfig.getSetNumber() + " ");
                     System.console().readLine();
 
 
                     for( Integer server : GlobalConfigs.ServerToPortMap.keySet()) {
                         if(server == viewServerNum) continue;
                         if( viewServer.activeServersStatusMap.get(server)) {
-                            ActivateServerRequest request = ActivateServerRequest.newBuilder().setServerName("S"+ server).build();
+                            ActivateServerRequest request = ActivateServerRequest.newBuilder().setServerName("S"+ server).setTestCase(transactionInputConfig.getSetNumber()).build();
                             viewServer.serversToActivateServersStub.get(server).activateServer(request);
                         }
                         else {
-                            DeactivateServerRequest request = DeactivateServerRequest.newBuilder().setServerName("S"+ server).build();
+                            DeactivateServerRequest request = DeactivateServerRequest.newBuilder().setServerName("S"+ server).setTestCase(transactionInputConfig.getSetNumber()).build();
                             viewServer.serversToActivateServersStub.get(server).deactivateServer(request);
                         }
                     }
+
+
+                    viewServer.commandLogger.log("---------------------------------------------------------------------------------");
+                    viewServer.commandLogger.log("                               Test Case: " + transactionInputConfig.getSetNumber());
+                    viewServer.commandLogger.log("---------------------------------------------------------------------------------");
                 }
 
 

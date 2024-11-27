@@ -151,34 +151,36 @@ public final class Paxos2Pc {
       "\030\003 \001(\0132\014.Transaction\022\021\n\tclusterId\030\010 \001(\005\022" +
       "\r\n\005abort\030\004 \001(\010\"f\n\016CommitResponse\022\024\n\014ball" +
       "otNumber\030\001 \001(\005\022\021\n\tprocessId\030\002 \001(\t\022\032\n\022acc" +
-      "eptedServerName\030\003 \001(\t\022\017\n\007success\030\004 \001(\010\"+" +
+      "eptedServerName\030\003 \001(\t\022\017\n\007success\030\004 \001(\010\"=" +
       "\n\025ActivateServerRequest\022\022\n\nserverName\030\001 " +
-      "\001(\t\"=\n\026ActivateServerResponse\022\017\n\007success" +
-      "\030\001 \001(\010\022\022\n\nserverName\030\002 \001(\t\"-\n\027Deactivate" +
-      "ServerRequest\022\022\n\nserverName\030\001 \001(\t\"?\n\030Dea" +
-      "ctivateServerResponse\022\017\n\007success\030\001 \001(\010\022\022" +
-      "\n\nserverName\030\002 \001(\t\"\035\n\014CommandInput\022\r\n\005in" +
-      "put\030\001 \001(\t\"\037\n\rCommandOutput\022\016\n\006output\030\001 \001" +
-      "(\t*f\n\021TransactionStatus\022\013\n\007PENDING\020\000\022\014\n\010" +
-      "PREPARED\020\001\022\014\n\010ACCEPTED\020\002\022\r\n\tCOMMITTED\020\003\022" +
-      "\014\n\010EXECUTED\020\004\022\013\n\007ABORTED\020\0052\210\002\n\005Paxos\0222\n\007" +
-      "Request\022\027.TransactionInputConfig\032\014.TxnRe" +
-      "sponse\"\000\022A\n\021CrossShardRequest\022\027.Transact" +
-      "ionInputConfig\032\021.CrossTxnResponse\"\000\022.\n\007P" +
-      "repare\022\017.PrepareRequest\032\020.PrepareRespons" +
-      "e\"\000\022+\n\006Commit\022\016.CommitRequest\032\017.CommitRe" +
-      "sponse\"\000\022+\n\004Sync\022\017.PrepareRequest\032\020.Prep" +
-      "areResponse\"\0002\241\001\n\017ActivateServers\022C\n\016act" +
-      "ivateServer\022\026.ActivateServerRequest\032\027.Ac" +
-      "tivateServerResponse\"\000\022I\n\020deactivateServ" +
-      "er\022\030.DeactivateServerRequest\032\031.Deactivat" +
-      "eServerResponse\"\0002\304\001\n\010Commands\022/\n\014printB" +
-      "alance\022\r.CommandInput\032\016.CommandOutput\"\000\022" +
-      "+\n\010printLog\022\r.CommandInput\032\016.CommandOutp" +
-      "ut\"\000\022*\n\007printDB\022\r.CommandInput\032\016.Command" +
-      "Output\"\000\022.\n\013Performance\022\r.CommandInput\032\016" +
-      ".CommandOutput\"\000B\024\n\020org.cse535.protoP\001b\006" +
-      "proto3"
+      "\001(\t\022\020\n\010testCase\030\002 \001(\005\"=\n\026ActivateServerR" +
+      "esponse\022\017\n\007success\030\001 \001(\010\022\022\n\nserverName\030\002" +
+      " \001(\t\"?\n\027DeactivateServerRequest\022\022\n\nserve" +
+      "rName\030\001 \001(\t\022\020\n\010testCase\030\002 \001(\005\"?\n\030Deactiv" +
+      "ateServerResponse\022\017\n\007success\030\001 \001(\010\022\022\n\nse" +
+      "rverName\030\002 \001(\t\"\035\n\014CommandInput\022\r\n\005input\030" +
+      "\001 \001(\t\"\037\n\rCommandOutput\022\016\n\006output\030\001 \001(\t*f" +
+      "\n\021TransactionStatus\022\013\n\007PENDING\020\000\022\014\n\010PREP" +
+      "ARED\020\001\022\014\n\010ACCEPTED\020\002\022\r\n\tCOMMITTED\020\003\022\014\n\010E" +
+      "XECUTED\020\004\022\013\n\007ABORTED\020\0052\210\002\n\005Paxos\0222\n\007Requ" +
+      "est\022\027.TransactionInputConfig\032\014.TxnRespon" +
+      "se\"\000\022A\n\021CrossShardRequest\022\027.TransactionI" +
+      "nputConfig\032\021.CrossTxnResponse\"\000\022.\n\007Prepa" +
+      "re\022\017.PrepareRequest\032\020.PrepareResponse\"\000\022" +
+      "+\n\006Commit\022\016.CommitRequest\032\017.CommitRespon" +
+      "se\"\000\022+\n\004Sync\022\017.PrepareRequest\032\020.PrepareR" +
+      "esponse\"\0002\241\001\n\017ActivateServers\022C\n\016activat" +
+      "eServer\022\026.ActivateServerRequest\032\027.Activa" +
+      "teServerResponse\"\000\022I\n\020deactivateServer\022\030" +
+      ".DeactivateServerRequest\032\031.DeactivateSer" +
+      "verResponse\"\0002\367\001\n\010Commands\022/\n\014printBalan" +
+      "ce\022\r.CommandInput\032\016.CommandOutput\"\000\022+\n\010p" +
+      "rintLog\022\r.CommandInput\032\016.CommandOutput\"\000" +
+      "\022*\n\007printDB\022\r.CommandInput\032\016.CommandOutp" +
+      "ut\"\000\022.\n\013Performance\022\r.CommandInput\032\016.Com" +
+      "mandOutput\"\000\0221\n\016printDatastore\022\r.Command" +
+      "Input\032\016.CommandOutput\"\000B\024\n\020org.cse535.pr" +
+      "otoP\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -264,7 +266,7 @@ public final class Paxos2Pc {
     internal_static_ActivateServerRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ActivateServerRequest_descriptor,
-        new java.lang.String[] { "ServerName", });
+        new java.lang.String[] { "ServerName", "TestCase", });
     internal_static_ActivateServerResponse_descriptor =
       getDescriptor().getMessageTypes().get(9);
     internal_static_ActivateServerResponse_fieldAccessorTable = new
@@ -276,7 +278,7 @@ public final class Paxos2Pc {
     internal_static_DeactivateServerRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_DeactivateServerRequest_descriptor,
-        new java.lang.String[] { "ServerName", });
+        new java.lang.String[] { "ServerName", "TestCase", });
     internal_static_DeactivateServerResponse_descriptor =
       getDescriptor().getMessageTypes().get(11);
     internal_static_DeactivateServerResponse_fieldAccessorTable = new

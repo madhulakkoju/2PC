@@ -17,6 +17,7 @@ private static final long serialVersionUID = 0L;
   }
   private ActivateServerRequest() {
     serverName_ = "";
+    testCase_ = 0;
   }
 
   @java.lang.Override
@@ -47,6 +48,11 @@ private static final long serialVersionUID = 0L;
             java.lang.String s = input.readStringRequireUtf8();
 
             serverName_ = s;
+            break;
+          }
+          case 16: {
+
+            testCase_ = input.readInt32();
             break;
           }
           default: {
@@ -115,6 +121,15 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int TESTCASE_FIELD_NUMBER = 2;
+  private int testCase_;
+  /**
+   * <code>int32 testCase = 2;</code>
+   */
+  public int getTestCase() {
+    return testCase_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -132,6 +147,9 @@ private static final long serialVersionUID = 0L;
     if (!getServerNameBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 1, serverName_);
     }
+    if (testCase_ != 0) {
+      output.writeInt32(2, testCase_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -143,6 +161,10 @@ private static final long serialVersionUID = 0L;
     size = 0;
     if (!getServerNameBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, serverName_);
+    }
+    if (testCase_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(2, testCase_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -162,6 +184,8 @@ private static final long serialVersionUID = 0L;
     boolean result = true;
     result = result && getServerName()
         .equals(other.getServerName());
+    result = result && (getTestCase()
+        == other.getTestCase());
     result = result && unknownFields.equals(other.unknownFields);
     return result;
   }
@@ -175,6 +199,8 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + SERVERNAME_FIELD_NUMBER;
     hash = (53 * hash) + getServerName().hashCode();
+    hash = (37 * hash) + TESTCASE_FIELD_NUMBER;
+    hash = (53 * hash) + getTestCase();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -310,6 +336,8 @@ private static final long serialVersionUID = 0L;
       super.clear();
       serverName_ = "";
 
+      testCase_ = 0;
+
       return this;
     }
 
@@ -337,6 +365,7 @@ private static final long serialVersionUID = 0L;
     public org.cse535.proto.ActivateServerRequest buildPartial() {
       org.cse535.proto.ActivateServerRequest result = new org.cse535.proto.ActivateServerRequest(this);
       result.serverName_ = serverName_;
+      result.testCase_ = testCase_;
       onBuilt();
       return result;
     }
@@ -388,6 +417,9 @@ private static final long serialVersionUID = 0L;
       if (!other.getServerName().isEmpty()) {
         serverName_ = other.serverName_;
         onChanged();
+      }
+      if (other.getTestCase() != 0) {
+        setTestCase(other.getTestCase());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -483,6 +515,32 @@ private static final long serialVersionUID = 0L;
   checkByteStringIsUtf8(value);
       
       serverName_ = value;
+      onChanged();
+      return this;
+    }
+
+    private int testCase_ ;
+    /**
+     * <code>int32 testCase = 2;</code>
+     */
+    public int getTestCase() {
+      return testCase_;
+    }
+    /**
+     * <code>int32 testCase = 2;</code>
+     */
+    public Builder setTestCase(int value) {
+      
+      testCase_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 testCase = 2;</code>
+     */
+    public Builder clearTestCase() {
+      
+      testCase_ = 0;
       onChanged();
       return this;
     }

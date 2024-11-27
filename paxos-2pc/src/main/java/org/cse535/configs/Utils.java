@@ -1,5 +1,7 @@
 package org.cse535.configs;
 
+import org.cse535.proto.CommitRequest;
+import org.cse535.proto.PrepareRequest;
 import org.cse535.proto.Transaction;
 
 public class Utils {
@@ -84,4 +86,35 @@ public class Utils {
         if(transaction == null) return "";
         return "Transaction ( " + transaction.getSender() + " -> " + transaction.getReceiver() + " = " + transaction.getAmount() + " ) ; ";
     }
+
+    public static String toDataStoreString(Transaction transaction){
+        if(transaction == null) return "";
+        return "(" + transaction.getSender() + ", " + transaction.getReceiver() + ", " + transaction.getAmount() + ") ";
+    }
+
+    public static String toDataStoreString(PrepareRequest prepareRequest) {
+        if(prepareRequest == null) return "";
+
+        if(prepareRequest.getTransaction().getIsCrossShard()){
+            return "[<"+ prepareRequest.getBallotNumber() + ","+ prepareRequest.getProcessId() +">, P, "+ toDataStoreString(prepareRequest.getTransaction()) +"]";
+        }
+
+        return "[<"+ prepareRequest.getBallotNumber() + ","+ prepareRequest.getProcessId() +">,"+ toDataStoreString(prepareRequest.getTransaction()) +"]";
+    }
+
+    public static String toDataStoreString(CommitRequest commitRequest) {
+        if(commitRequest == null) return "";
+
+        if(commitRequest.getTransaction().getIsCrossShard()){
+            return "[<"+ commitRequest.getBallotNumber() + ","+ commitRequest.getProcessId() +">, C, "+ toDataStoreString(commitRequest.getTransaction()) +"]";
+        }
+
+        return "[<"+ commitRequest.getBallotNumber() + ","+ commitRequest.getProcessId() +">, "+ toDataStoreString(commitRequest.getTransaction()) +"]";
+    }
+
+
+
+
+
+
 }

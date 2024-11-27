@@ -12,6 +12,9 @@ public class ActivateServersService extends ActivateServersGrpc.ActivateServersI
         responseObserver.onNext(ActivateServerResponse.newBuilder().setSuccess(true).build());
         responseObserver.onCompleted();
         System.out.println("Server activated");
+        Main.node.commandLogger.log("---------------------------------------------------------------------------------");
+        Main.node.commandLogger.log("                               Test Case: " + request.getTestCase());
+        Main.node.commandLogger.log("---------------------------------------------------------------------------------");
     }
 
 
@@ -21,5 +24,8 @@ public class ActivateServersService extends ActivateServersGrpc.ActivateServersI
         responseObserver.onNext(DeactivateServerResponse.newBuilder().setSuccess(true).build());
         responseObserver.onCompleted();
         System.out.println("Server deactivated");
+        Main.node.commandLogger.log("---------------------------------------------------------------------------------");
+
+        Main.node.commandLogger.log("---------------------------------------------------------------------------------");
     }
 }

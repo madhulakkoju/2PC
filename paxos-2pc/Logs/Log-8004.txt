@@ -8,8 +8,8 @@ Commit response from 5 : true
 Processing Transaction: 4
 Prepare response from 6 : true
 Prepare response from 5 : true
-Commit response from 5 : true
 Commit response from 6 : true
+Commit response from 5 : true
 Processing Transaction: 10
 Prepare response from 5 : false
 Prepare response from 6 : true
@@ -19,8 +19,8 @@ Received prepare request from S5 with ballot number 3
 Received prepare request from S5 with ballot number 4
 Received Commit request from S5 with ballot number 4
 Processing Transaction: 16
-Prepare response from 5 : false
 Prepare response from 6 : false
+Prepare response from 5 : false
 Data Post Sync -------------
 Synced Transaction Status: 4
 Synced data ... Now Retrying Prepare phase
@@ -43,10 +43,10 @@ syncTransactionStatusMap {
 needToSync: true
 latestBallotNumber: 4
 
-Prepare response from 5 : true
 Prepare response from 6 : true
-Commit response from 5 : true
+Prepare response from 5 : true
 Commit response from 6 : true
+Commit response from 5 : true
 Processing Transaction: 18
 Prepare response from 6 : true
 Prepare response from 5 : true
@@ -77,8 +77,8 @@ latestCommittedTransaction {
 latestCommittedBallotNumber: 6
 clusterId: 2
 
-Prepare response from 5 : true
 Prepare response from 6 : true
+Prepare response from 5 : true
 Consensus Reached for Cross Shard Prepare Phase
 Sending cross shard response 
 **************
@@ -194,8 +194,8 @@ latestCommittedTransaction {
 latestCommittedBallotNumber: 6
 clusterId: 2
 
-Prepare response from 5 : false
 Prepare response from 6 : false
+Prepare response from 5 : false
 Consensus FAILED for Cross Shard Prepare Phase
 Sending cross shard response 
 **************
@@ -208,20 +208,20 @@ clusterId: 2
 **************
 Received Commit request from S4 with ballot number 10
 Abort Request Received from S4
-Received cross shard request Transaction ( 796 -> 1997 = 9 ) ; 
-Processing Cross Shard Transaction: 30
+Received cross shard request Transaction ( 2525 -> 1505 = 7 ) ; 
+Processing Cross Shard Transaction: 28
 Syncing Data with other servers in the cluster
 Data Sync Done
-Processing Cross Shard Transaction - Receiver : 30
-Locked Data Item: 1997
+Processing Cross Shard Transaction - Receiver : 28
+Locked Data Item: 1505
 Ballot Number: 11
 Prepare Request: ballotNumber: 11
 processId: "S4"
 transaction {
-  sender: 796
-  receiver: 1997
-  amount: 9
-  transactionNum: 30
+  sender: 2525
+  receiver: 1505
+  amount: 7
+  transactionNum: 28
   isCrossShard: true
 }
 latestCommittedTransaction {
@@ -247,14 +247,53 @@ clusterId: 2
 **************
 Received Commit request from S4 with ballot number 11
 Abort Request Received from S4
+Received cross shard request Transaction ( 796 -> 1997 = 9 ) ; 
+Processing Cross Shard Transaction: 30
+Syncing Data with other servers in the cluster
+Data Sync Done
+Processing Cross Shard Transaction - Receiver : 30
+Locked Data Item: 1997
+Ballot Number: 12
+Prepare Request: ballotNumber: 12
+processId: "S4"
+transaction {
+  sender: 796
+  receiver: 1997
+  amount: 9
+  transactionNum: 30
+  isCrossShard: true
+}
+latestCommittedTransaction {
+  sender: 1895
+  receiver: 1890
+  amount: 5
+  transactionNum: 10
+}
+latestCommittedBallotNumber: 6
+clusterId: 2
+
+Prepare response from 6 : false
+Prepare response from 5 : false
+Consensus FAILED for Cross Shard Prepare Phase
+Sending cross shard response 
+**************
+serverName: "S4"
+ballotNumber: 12
+successPreparesCount: 1
+failureReason: "Consensus not reached"
+clusterId: 2
+
+**************
+Received Commit request from S4 with ballot number 12
+Abort Request Received from S4
 Received cross shard request Transaction ( 796 -> 1997 = 7 ) ; 
 Processing Cross Shard Transaction: 32
 Syncing Data with other servers in the cluster
 Data Sync Done
 Processing Cross Shard Transaction - Receiver : 32
 Locked Data Item: 1997
-Ballot Number: 12
-Prepare Request: ballotNumber: 12
+Ballot Number: 13
+Prepare Request: ballotNumber: 13
 processId: "S4"
 transaction {
   sender: 796
@@ -278,13 +317,13 @@ Consensus FAILED for Cross Shard Prepare Phase
 Sending cross shard response 
 **************
 serverName: "S4"
-ballotNumber: 12
+ballotNumber: 13
 successPreparesCount: 1
 failureReason: "Consensus not reached"
 clusterId: 2
 
 **************
-Received Commit request from S4 with ballot number 12
+Received Commit request from S4 with ballot number 13
 Abort Request Received from S4
 Received cross shard request Transaction ( 1998 -> 2998 = 19 ) ; 
 Processing Cross Shard Transaction: 33

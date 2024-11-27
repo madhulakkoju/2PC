@@ -2,21 +2,17 @@ package org.cse535.database;
 
 import org.cse535.configs.GlobalConfigs;
 import org.cse535.configs.Utils;
-import org.cse535.proto.Transaction;
-import org.cse535.proto.TransactionInputConfig;
-import org.cse535.proto.TransactionStatus;
+import org.cse535.proto.*;
 import org.cse535.threadimpls.IntraShardTnxProcessingThread;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Lock;
 
 public class DatabaseService {
@@ -45,6 +41,15 @@ public class DatabaseService {
     public Transaction lastCommittedTransaction;
 
 
+
+
+    public AtomicReference<ArrayList<String>> dataStore;
+
+
+
+
+
+
     public DatabaseService( Integer serverNum) {
         this.ballotNumber = new AtomicInteger(0);
         this.lastAcceptedUncommittedBallotNumber = -1;
@@ -64,6 +69,8 @@ public class DatabaseService {
         this.transactionMap = new HashMap<>();
         this.processedTransactionsSet = new HashSet<>();
         this.transactionStatusMap = new HashMap<>();
+
+        this.dataStore = new AtomicReference<>(new ArrayList<>());
 
         initializeSQLiteDatabase();
     }
@@ -188,6 +195,15 @@ public class DatabaseService {
         }
     }
 
+
+
+    public synchronized void addToDataStore(PrepareRequest entry){
+        this.dataStore.get().add(Utils.toDataStoreString(entry));
+    }
+
+    public synchronized void addToDataStore(CommitRequest entry){
+        this.dataStore.get().add(Utils.toDataStoreString(entry));
+    }
 
 
 

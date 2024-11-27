@@ -32,6 +32,7 @@ service Commands{
   rpc printLog(CommandInput) returns (CommandOutput) {}
   rpc printDB(CommandInput) returns (CommandOutput) {}
   rpc Performance(CommandInput) returns (CommandOutput) {}
+  rpc printDatastore(CommandInput) returns (CommandOutput) {}
 }
 
 
@@ -152,6 +153,7 @@ message CommitResponse {
 
 message ActivateServerRequest{
   string serverName = 1;
+  int32 testCase = 2;
 }
 
 message ActivateServerResponse{
@@ -161,6 +163,7 @@ message ActivateServerResponse{
 
 message DeactivateServerRequest{
   string serverName = 1;
+  int32 testCase = 2;
 }
 
 message DeactivateServerResponse{

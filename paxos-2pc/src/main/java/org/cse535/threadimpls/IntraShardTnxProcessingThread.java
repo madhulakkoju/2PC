@@ -187,13 +187,16 @@ public class IntraShardTnxProcessingThread extends Thread {
                     intraCommitThreads[i].join();
                 }
 
+                this.node.database.addToDataStore(commitRequest);
+
+                // Commit the transaction
+                this.node.database.executeTransaction(this.tnx);
             } else {
                 // Abort the transaction
                 System.out.println("Transaction aborted");
             }
 
-            // Commit the transaction
-            this.node.database.executeTransaction(this.tnx);
+
 
             // If f+1 Commit responses received, Commit the transaction
 
@@ -208,7 +211,7 @@ public class IntraShardTnxProcessingThread extends Thread {
 
         }
 
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             this.node.logger.log("Error processing transaction " + this.tnx.getTransactionNum() + " " + e.getMessage());
         }

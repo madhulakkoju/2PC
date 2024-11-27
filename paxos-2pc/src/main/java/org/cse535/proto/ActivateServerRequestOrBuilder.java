@@ -16,4 +16,9 @@ public interface ActivateServerRequestOrBuilder extends
    */
   com.google.protobuf.ByteString
       getServerNameBytes();
+
+  /**
+   * <code>int32 testCase = 2;</code>
+   */
+  int getTestCase();
 }

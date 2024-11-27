@@ -1,6 +1,7 @@
 package org.cse535.service;
 
 import io.grpc.stub.StreamObserver;
+import org.cse535.Main;
 import org.cse535.proto.*;
 
 public class CommandsService extends CommandsGrpc.CommandsImplBase {
@@ -35,5 +36,12 @@ public class CommandsService extends CommandsGrpc.CommandsImplBase {
 
                 responseObserver.onNext(CommandOutput.newBuilder().setOutput("Balance").build());
                 responseObserver.onCompleted();
+    }
+
+    @Override
+    public void printDatastore(CommandInput request, StreamObserver<CommandOutput> responseObserver) {
+
+        responseObserver.onNext(CommandOutput.newBuilder().setOutput(Main.node.PrintDataStore()).build());
+        responseObserver.onCompleted();
     }
 }

@@ -3,24 +3,24 @@ Transaction Worker Thread Started
 Processing Transaction: 2
 Prepare response from 6 : true
 Prepare response from 5 : true
-Commit response from 6 : true
 Commit response from 5 : true
+Commit response from 6 : true
 Processing Transaction: 4
-Prepare response from 6 : true
 Prepare response from 5 : true
+Prepare response from 6 : true
 Commit response from 6 : true
 Commit response from 5 : true
 Processing Transaction: 10
 Prepare response from 5 : false
 Prepare response from 6 : true
-Commit response from 5 : false
 Commit response from 6 : true
+Commit response from 5 : false
 Received prepare request from S5 with ballot number 3
 Received prepare request from S5 with ballot number 4
 Received Commit request from S5 with ballot number 4
 Processing Transaction: 16
-Prepare response from 6 : false
 Prepare response from 5 : false
+Prepare response from 6 : false
 Data Post Sync -------------
 Synced Transaction Status: 4
 Synced data ... Now Retrying Prepare phase
@@ -45,13 +45,13 @@ latestBallotNumber: 4
 
 Prepare response from 6 : true
 Prepare response from 5 : true
-Commit response from 6 : true
 Commit response from 5 : true
+Commit response from 6 : true
 Processing Transaction: 18
 Prepare response from 6 : true
 Prepare response from 5 : true
-Commit response from 6 : true
 Commit response from 5 : true
+Commit response from 6 : true
 Received cross shard request Transaction ( 299 -> 1999 = 15 ) ; 
 Processing Cross Shard Transaction: 20
 Syncing Data with other servers in the cluster
@@ -194,8 +194,8 @@ latestCommittedTransaction {
 latestCommittedBallotNumber: 6
 clusterId: 2
 
-Prepare response from 6 : false
 Prepare response from 5 : false
+Prepare response from 6 : false
 Consensus FAILED for Cross Shard Prepare Phase
 Sending cross shard response 
 **************
@@ -233,8 +233,8 @@ latestCommittedTransaction {
 latestCommittedBallotNumber: 6
 clusterId: 2
 
-Prepare response from 5 : false
 Prepare response from 6 : false
+Prepare response from 5 : false
 Consensus FAILED for Cross Shard Prepare Phase
 Sending cross shard response 
 **************
@@ -272,8 +272,8 @@ latestCommittedTransaction {
 latestCommittedBallotNumber: 6
 clusterId: 2
 
-Prepare response from 6 : false
 Prepare response from 5 : false
+Prepare response from 6 : false
 Consensus FAILED for Cross Shard Prepare Phase
 Sending cross shard response 
 **************

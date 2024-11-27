@@ -390,6 +390,13 @@ public class ViewServer extends NodeServer {
 
             }
 
+            System.out.println("All Transactions Sent for final Test set. \nPress Enter to run all commands ");
+            System.console().readLine();
+            viewServer.sendCommandToServers( Command.PrintDB );
+            viewServer.sendCommandToServers( Command.PrintLog );
+            viewServer.sendCommandToServers( Command.PrintDataStore );
+
+
         }
         else {
             System.out.println("File does not exist");

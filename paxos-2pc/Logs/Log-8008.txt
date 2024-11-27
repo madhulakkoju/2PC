@@ -100,13 +100,11 @@ Ahead check
 Last Accepted Uncommitted Ballot Number: -1
 Req Ballot Number 6
 Success condition
+Received prepare request from S7 with ballot number 7
+Prepare Request Received from S7
 Last Accepted Uncommitted Transaction: 
 Last Committed Transaction: Transaction ( 2770 -> 2799 = 1 ) ; 
 Prepare Request Accepted from S7
-Received Commit request from S7 with ballot number 6
-Abort Request Received from S7
-Received prepare request from S7 with ballot number 7
-Prepare Request Received from S7
 ballotNumber: 7
 processId: "S7"
 transaction {
@@ -130,7 +128,10 @@ Last Accepted Uncommitted Transaction: Transaction ( 1001 -> 2999 = 6 ) ;
 Last Committed Transaction: Transaction ( 2770 -> 2799 = 1 ) ; 
 Prepare Request Accepted from S7
 Received Commit request from S7 with ballot number 7
-Abort Request Received from S7
+Received Commit request from S7 with ballot number 6
+Commit Request Received from S7
+Commit Request Received from S7
+Commit Request Accepted from S7
 Received prepare request from S7 with ballot number 8
 Prepare Request Received from S7
 ballotNumber: 8
@@ -146,15 +147,15 @@ latestCommittedBallotNumber: 4
 clusterId: 3
 
 -------------------
-DB -> Last Committed Ballot Number: 4
+DB -> Last Committed Ballot Number: 7
 Req -> getLatestCommittedBallotNumber4
 Ahead check
-Last Accepted Uncommitted Ballot Number: 7
+Last Accepted Uncommitted Ballot Number: -1
 Req Ballot Number 8
 Success condition
-Last Accepted Uncommitted Transaction: Transaction ( 2150 -> 1111 = 9 ) ; 
-Last Committed Transaction: Transaction ( 2770 -> 2799 = 1 ) ; 
-Prepare Request Accepted from S7
+Last Accepted Uncommitted Transaction: 
+Last Committed Transaction: Transaction ( 2150 -> 1111 = 9 ) ; 
+Prepare Request Rejected from S7 Because Current Server is ahead of Leader 
 Received Commit request from S7 with ballot number 8
 Abort Request Received from S7
 Received prepare request from S7 with ballot number 9
@@ -172,15 +173,15 @@ latestCommittedBallotNumber: 4
 clusterId: 3
 
 -------------------
-DB -> Last Committed Ballot Number: 4
+DB -> Last Committed Ballot Number: 7
 Req -> getLatestCommittedBallotNumber4
 Ahead check
-Last Accepted Uncommitted Ballot Number: 8
+Last Accepted Uncommitted Ballot Number: -1
 Req Ballot Number 9
 Success condition
-Last Accepted Uncommitted Transaction: Transaction ( 2001 -> 11 = 3 ) ; 
-Last Committed Transaction: Transaction ( 2770 -> 2799 = 1 ) ; 
-Prepare Request Accepted from S7
+Last Accepted Uncommitted Transaction: 
+Last Committed Transaction: Transaction ( 2150 -> 1111 = 9 ) ; 
+Prepare Request Rejected from S7 Because Current Server is ahead of Leader 
 Received Commit request from S7 with ballot number 9
 Abort Request Received from S7
 Received prepare request from S7 with ballot number 10
@@ -198,15 +199,15 @@ latestCommittedBallotNumber: 4
 clusterId: 3
 
 -------------------
-DB -> Last Committed Ballot Number: 4
+DB -> Last Committed Ballot Number: 7
 Req -> getLatestCommittedBallotNumber4
 Ahead check
-Last Accepted Uncommitted Ballot Number: 9
+Last Accepted Uncommitted Ballot Number: -1
 Req Ballot Number 10
 Success condition
-Last Accepted Uncommitted Transaction: Transaction ( 11 -> 2001 = 9 ) ; 
-Last Committed Transaction: Transaction ( 2770 -> 2799 = 1 ) ; 
-Prepare Request Accepted from S7
+Last Accepted Uncommitted Transaction: 
+Last Committed Transaction: Transaction ( 2150 -> 1111 = 9 ) ; 
+Prepare Request Rejected from S7 Because Current Server is ahead of Leader 
 Received Commit request from S7 with ballot number 10
 Abort Request Received from S7
 Received prepare request from S7 with ballot number 11
@@ -224,15 +225,15 @@ latestCommittedBallotNumber: 4
 clusterId: 3
 
 -------------------
-DB -> Last Committed Ballot Number: 4
+DB -> Last Committed Ballot Number: 7
 Req -> getLatestCommittedBallotNumber4
 Ahead check
-Last Accepted Uncommitted Ballot Number: 10
+Last Accepted Uncommitted Ballot Number: -1
 Req Ballot Number 11
 Success condition
-Last Accepted Uncommitted Transaction: Transaction ( 2999 -> 1999 = 6 ) ; 
-Last Committed Transaction: Transaction ( 2770 -> 2799 = 1 ) ; 
-Prepare Request Accepted from S7
+Last Accepted Uncommitted Transaction: 
+Last Committed Transaction: Transaction ( 2150 -> 1111 = 9 ) ; 
+Prepare Request Rejected from S7 Because Current Server is ahead of Leader 
 Received Commit request from S7 with ballot number 11
 Abort Request Received from S7
 Received prepare request from S7 with ballot number 12
@@ -250,15 +251,15 @@ latestCommittedBallotNumber: 4
 clusterId: 3
 
 -------------------
-DB -> Last Committed Ballot Number: 4
+DB -> Last Committed Ballot Number: 7
 Req -> getLatestCommittedBallotNumber4
 Ahead check
-Last Accepted Uncommitted Ballot Number: 11
+Last Accepted Uncommitted Ballot Number: -1
 Req Ballot Number 12
 Success condition
-Last Accepted Uncommitted Transaction: Transaction ( 121 -> 2525 = 8 ) ; 
-Last Committed Transaction: Transaction ( 2770 -> 2799 = 1 ) ; 
-Prepare Request Accepted from S7
+Last Accepted Uncommitted Transaction: 
+Last Committed Transaction: Transaction ( 2150 -> 1111 = 9 ) ; 
+Prepare Request Rejected from S7 Because Current Server is ahead of Leader 
 Received Commit request from S7 with ballot number 12
 Abort Request Received from S7
 Received prepare request from S7 with ballot number 13
@@ -276,14 +277,14 @@ latestCommittedBallotNumber: 4
 clusterId: 3
 
 -------------------
-DB -> Last Committed Ballot Number: 4
+DB -> Last Committed Ballot Number: 7
 Req -> getLatestCommittedBallotNumber4
 Ahead check
-Last Accepted Uncommitted Ballot Number: 12
+Last Accepted Uncommitted Ballot Number: -1
 Req Ballot Number 13
 Success condition
-Last Accepted Uncommitted Transaction: Transaction ( 2525 -> 1505 = 7 ) ; 
-Last Committed Transaction: Transaction ( 2770 -> 2799 = 1 ) ; 
-Prepare Request Accepted from S7
+Last Accepted Uncommitted Transaction: 
+Last Committed Transaction: Transaction ( 2150 -> 1111 = 9 ) ; 
+Prepare Request Rejected from S7 Because Current Server is ahead of Leader 
 Received Commit request from S7 with ballot number 13
 Abort Request Received from S7

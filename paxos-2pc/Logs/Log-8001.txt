@@ -1,25 +1,25 @@
  
 Transaction Worker Thread Started
 Processing Transaction: 1
-Prepare response from 2 : true
 Prepare response from 3 : true
+Prepare response from 2 : true
 Commit response from 3 : true
 Commit response from 2 : true
 Processing Transaction: 5
-Prepare response from 2 : true
 Prepare response from 3 : true
-Commit response from 3 : true
+Prepare response from 2 : true
 Commit response from 2 : true
+Commit response from 3 : true
 Processing Transaction: 6
 Prepare response from 2 : true
 Prepare response from 3 : true
-Commit response from 3 : true
 Commit response from 2 : true
+Commit response from 3 : true
 Processing Transaction: 7
-Prepare response from 3 : true
 Prepare response from 2 : true
-Commit response from 3 : true
+Prepare response from 3 : true
 Commit response from 2 : true
+Commit response from 3 : true
 Processing Transaction: 9
 Prepare response from 3 : true
 Prepare response from 2 : true
@@ -38,8 +38,8 @@ Commit response from 2 : true
 Processing Transaction: 17
 Prepare response from 3 : true
 Prepare response from 2 : true
-Commit response from 2 : true
 Commit response from 3 : true
+Commit response from 2 : true
 Received cross shard request Transaction ( 299 -> 1999 = 15 ) ; 
 Processing Cross Shard Transaction: 20
 Syncing Data with other servers in the cluster
@@ -92,8 +92,8 @@ transaction {
 latestCommittedBallotNumber: 8
 clusterId: 1
 
-Prepare response from 2 : false
 Prepare response from 3 : false
+Prepare response from 2 : false
 Consensus FAILED for Cross Shard Prepare Phase
 Sending cross shard response 
 **************
@@ -158,8 +158,8 @@ transaction {
 latestCommittedBallotNumber: 8
 clusterId: 1
 
-Prepare response from 2 : false
 Prepare response from 3 : false
+Prepare response from 2 : false
 Consensus FAILED for Cross Shard Prepare Phase
 Sending cross shard response 
 **************
@@ -206,8 +206,8 @@ transaction {
 latestCommittedBallotNumber: 8
 clusterId: 1
 
-Prepare response from 3 : false
 Prepare response from 2 : false
+Prepare response from 3 : false
 Consensus FAILED for Cross Shard Prepare Phase
 Sending cross shard response 
 **************

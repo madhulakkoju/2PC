@@ -203,7 +203,7 @@ public class ViewServer extends NodeServer {
                     break;
             }
 
-            this.logger.log("Command: " + commandType + "\n server: " + server + "\n output: \n"+ op.getOutput());
+            //this.logger.log("Command: " + commandType + "\n server: " + server + "\n output: \n"+ op.getOutput());
 
         });
 
@@ -218,13 +218,14 @@ public class ViewServer extends NodeServer {
 
     }
 
-
-
     public void sendCrossShardTransaction(TransactionInputConfig transactionInputConfig, String senderServer, String receiverServer){
         try {
             CrossShardTnxProcessingThread thread = new CrossShardTnxProcessingThread(this, transactionInputConfig, senderServer, receiverServer);
             thread.start();
-            thread.join();
+
+            //need not wait for the thread to finish
+            //thread.join();
+
         }
         catch (Exception e){
             this.logger.log("Error in Cross Shard Transaction Processing: "+ e.getMessage());

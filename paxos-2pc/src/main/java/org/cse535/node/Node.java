@@ -415,7 +415,7 @@ public class Node extends NodeServer {
             }
 
             commitResponse.setSuccess(true);
-            this.database.addToDataStore(request);
+            //this.database.addToDataStore(request);
         }
         else {
 

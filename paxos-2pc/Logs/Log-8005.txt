@@ -89,8 +89,8 @@ latestBallotNumber: 3
 
 Prepare response from 4 : false
 Prepare response from 6 : true
-Commit response from 6 : true
 Commit response from 4 : false
+Commit response from 6 : true
 Received prepare request from S4 with ballot number 4
 Prepare Request Received from S4
 ballotNumber: 4
@@ -208,9 +208,6 @@ Success condition
 Last Accepted Uncommitted Transaction: 
 Last Committed Transaction: Transaction ( 1690 -> 1695 = 6 ) ; 
 Prepare Request Accepted from S4
-Received Commit request from S4 with ballot number 7
-Commit Request Received from S4
-Commit Request Accepted from S4
 Received prepare request from S4 with ballot number 8
 Prepare Request Received from S4
 ballotNumber: 8
@@ -232,17 +229,17 @@ latestCommittedBallotNumber: 6
 clusterId: 2
 
 -------------------
-DB -> Last Committed Ballot Number: 7
+DB -> Last Committed Ballot Number: 6
 Req -> getLatestCommittedBallotNumber6
 Ahead check
-Last Accepted Uncommitted Ballot Number: -1
+Last Accepted Uncommitted Ballot Number: 7
 Req Ballot Number 8
 Success condition
-Last Accepted Uncommitted Transaction: 
-Last Committed Transaction: Transaction ( 299 -> 1999 = 15 ) ; 
-Prepare Request Rejected from S4 Because Current Server is ahead of Leader 
-Received Commit request from S4 with ballot number 8
-Abort Request Received from S4
+Last Accepted Uncommitted Transaction: Transaction ( 299 -> 1999 = 15 ) ; 
+Last Committed Transaction: Transaction ( 1690 -> 1695 = 6 ) ; 
+Prepare Request Accepted from S4
+Received Commit request from S4 with ballot number 7
+Commit Request Received from S4
 Received prepare request from S4 with ballot number 9
 Prepare Request Received from S4
 ballotNumber: 9
@@ -264,17 +261,20 @@ latestCommittedBallotNumber: 6
 clusterId: 2
 
 -------------------
-DB -> Last Committed Ballot Number: 7
+DB -> Last Committed Ballot Number: 6
 Req -> getLatestCommittedBallotNumber6
 Ahead check
-Last Accepted Uncommitted Ballot Number: -1
+Last Accepted Uncommitted Ballot Number: 8
 Req Ballot Number 9
 Success condition
-Last Accepted Uncommitted Transaction: 
-Last Committed Transaction: Transaction ( 299 -> 1999 = 15 ) ; 
-Prepare Request Rejected from S4 Because Current Server is ahead of Leader 
+Last Accepted Uncommitted Transaction: Transaction ( 1001 -> 2999 = 6 ) ; 
+Last Committed Transaction: Transaction ( 1690 -> 1695 = 6 ) ; 
+Prepare Request Accepted from S4
+Received Commit request from S4 with ballot number 8
+Commit Request Received from S4
 Received Commit request from S4 with ballot number 9
-Abort Request Received from S4
+Commit Request Received from S4
+Commit Request Accepted from S4
 Received prepare request from S4 with ballot number 10
 Prepare Request Received from S4
 ballotNumber: 10
@@ -296,14 +296,14 @@ latestCommittedBallotNumber: 6
 clusterId: 2
 
 -------------------
-DB -> Last Committed Ballot Number: 7
+DB -> Last Committed Ballot Number: 9
 Req -> getLatestCommittedBallotNumber6
 Ahead check
 Last Accepted Uncommitted Ballot Number: -1
 Req Ballot Number 10
 Success condition
 Last Accepted Uncommitted Transaction: 
-Last Committed Transaction: Transaction ( 299 -> 1999 = 15 ) ; 
+Last Committed Transaction: Transaction ( 2150 -> 1111 = 9 ) ; 
 Prepare Request Rejected from S4 Because Current Server is ahead of Leader 
 Received Commit request from S4 with ballot number 10
 Abort Request Received from S4
@@ -328,14 +328,14 @@ latestCommittedBallotNumber: 6
 clusterId: 2
 
 -------------------
-DB -> Last Committed Ballot Number: 7
+DB -> Last Committed Ballot Number: 9
 Req -> getLatestCommittedBallotNumber6
 Ahead check
 Last Accepted Uncommitted Ballot Number: -1
 Req Ballot Number 11
 Success condition
 Last Accepted Uncommitted Transaction: 
-Last Committed Transaction: Transaction ( 299 -> 1999 = 15 ) ; 
+Last Committed Transaction: Transaction ( 2150 -> 1111 = 9 ) ; 
 Prepare Request Rejected from S4 Because Current Server is ahead of Leader 
 Received Commit request from S4 with ballot number 11
 Abort Request Received from S4
@@ -360,14 +360,14 @@ latestCommittedBallotNumber: 6
 clusterId: 2
 
 -------------------
-DB -> Last Committed Ballot Number: 7
+DB -> Last Committed Ballot Number: 9
 Req -> getLatestCommittedBallotNumber6
 Ahead check
 Last Accepted Uncommitted Ballot Number: -1
 Req Ballot Number 12
 Success condition
 Last Accepted Uncommitted Transaction: 
-Last Committed Transaction: Transaction ( 299 -> 1999 = 15 ) ; 
+Last Committed Transaction: Transaction ( 2150 -> 1111 = 9 ) ; 
 Prepare Request Rejected from S4 Because Current Server is ahead of Leader 
 Received Commit request from S4 with ballot number 12
 Abort Request Received from S4
@@ -392,14 +392,14 @@ latestCommittedBallotNumber: 6
 clusterId: 2
 
 -------------------
-DB -> Last Committed Ballot Number: 7
+DB -> Last Committed Ballot Number: 9
 Req -> getLatestCommittedBallotNumber6
 Ahead check
 Last Accepted Uncommitted Ballot Number: -1
 Req Ballot Number 13
 Success condition
 Last Accepted Uncommitted Transaction: 
-Last Committed Transaction: Transaction ( 299 -> 1999 = 15 ) ; 
+Last Committed Transaction: Transaction ( 2150 -> 1111 = 9 ) ; 
 Prepare Request Rejected from S4 Because Current Server is ahead of Leader 
 Received Commit request from S4 with ballot number 13
 Abort Request Received from S4

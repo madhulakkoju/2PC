@@ -7,10 +7,7 @@ import org.cse535.node.NodeServer;
 import org.cse535.proto.*;
 import org.cse535.threadimpls.IntraShardTnxProcessingThread;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.PriorityBlockingQueue;
@@ -24,8 +21,7 @@ public class DatabaseService {
 
     public PriorityBlockingQueue<TransactionInputConfig> incomingTransactionsQueue;
 
-    //BallotNumber, Transaction
-    public HashMap<Integer, Transaction> transactionMap;
+
     public HashMap<Integer, TransactionStatus> transactionStatusMap;
 
     public HashSet<Integer> processedTransactionsSet;
@@ -69,7 +65,7 @@ public class DatabaseService {
             }
         });
 
-        this.transactionMap = new HashMap<>();
+        //this.transactionMap = new HashMap<>();
         this.processedTransactionsSet = new HashSet<>();
         this.transactionStatusMap = new HashMap<>();
 
@@ -92,6 +88,8 @@ public class DatabaseService {
             connection = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\mlakkoju\\2pc-madhulakkoju\\paxos-2pc\\Databases\\Database-"+this.serverNumber+".db");
             statement = connection.createStatement();
 
+            //Account Table - to store balances
+
             statement.executeUpdate("DELETE FROM accounts;");
 
             String createTableSQL = "CREATE TABLE IF NOT EXISTS accounts (" +
@@ -106,6 +104,26 @@ public class DatabaseService {
                 String insertSQL = "INSERT INTO accounts (id, amount) VALUES (" + i + ", "+GlobalConfigs.InitialBalance+");";
                 statement.executeUpdate(insertSQL);
             }
+
+
+            //Transactions Table - to store transactions and ballot numbers
+
+            //statement.executeUpdate("DELETE FROM transactions;");
+
+            createTableSQL = "CREATE TABLE IF NOT EXISTS transactions (" +
+                    "ballot INTEGER PRIMARY KEY, " +
+                    "transactionNum INTEGER NOT NULL, " +
+                    "sender INTEGER NOT NULL, " +
+                    "receiver INTEGER NOT NULL, " +
+                    "amount INTEGER NOT NULL, " +
+                    "isCrossShard BOOLEAN NOT NULL" +
+                    ");";
+
+
+            statement.executeUpdate(createTableSQL);
+
+
+
 
 
         } catch (SQLException e) {
@@ -260,6 +278,53 @@ public class DatabaseService {
         return lockedDataItemsWithTransactionNum.containsKey(dataItem) && lockedDataItemsWithTransactionNum.get(dataItem) == transactionNum;
     }
 
+
+
+
+
+
+
+
+
+    //BallotNumber, Transaction
+    public HashMap<Integer, Transaction> transactionMap;
+
+    public synchronized void addTransaction( int ballotNumber, Transaction transaction ) {
+        try {
+            String insertSQL = "INSERT INTO transactions (ballot, transactionNum, sender, receiver, amount, isCrossShard ) VALUES ("
+                    + ballotNumber + ", " + transaction.getTransactionNum() + ", "
+                    + transaction.getSender() + ", " + transaction.getReceiver() + ", "
+                    + transaction.getAmount() + ", " + transaction.getIsCrossShard()
+                    + ");";
+            statement.executeUpdate(insertSQL);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public Transaction getTransaction(int ballotNumber) {
+        Transaction.Builder transactionBuilder = Transaction.newBuilder().setTransactionNum(-1);
+
+        try {
+            String selectSQL = "SELECT * FROM transactions WHERE ballot = " + ballotNumber + ";";
+
+            ResultSet resultSet = statement.executeQuery(selectSQL);
+
+            transactionBuilder.setTransactionNum(resultSet.getInt("transactionNum"));
+            transactionBuilder.setSender(resultSet.getInt("sender"));
+            transactionBuilder.setReceiver(resultSet.getInt("receiver"));
+            transactionBuilder.setAmount(resultSet.getInt("amount"));
+            transactionBuilder.setIsCrossShard(resultSet.getBoolean("isCrossShard"));
+
+            return transactionBuilder.build();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return transactionBuilder.build();
+    }
 
 
 }

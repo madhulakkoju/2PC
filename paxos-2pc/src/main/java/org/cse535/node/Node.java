@@ -309,9 +309,10 @@ public class Node extends NodeServer {
     public void addSyncDataToPrepareResponse( PrepareResponse.Builder prepareResponse, PrepareRequest request){
         // add all Transactions & statuses after request's committed tnx
         for (int i = request.getLatestCommittedBallotNumber()+1; i <= this.database.ballotNumber.get() ; i++) {
-            if(this.database.transactionMap.containsKey(i)){
-                prepareResponse.putSyncTransactionsMap(i, this.database.transactionMap.get(i));
 
+            Transaction transaction = this.database.getTransaction(i);
+            if(transaction.getTransactionNum() != -1){
+                prepareResponse.putSyncTransactionsMap(i, transaction);
             }
             if(this.database.transactionStatusMap.containsKey(i)){
                 prepareResponse.putSyncTransactionStatusMap(i, this.database.transactionStatusMap.get(i));
@@ -337,7 +338,7 @@ public class Node extends NodeServer {
         // Sync Transactions
         for (int i = syncPrepareResponse.getLastAcceptedUncommittedBallotNumber()+1; i <= syncPrepareResponse.getLatestBallotNumber() ; i++) {
             if(syncPrepareResponse.getSyncTransactionsMapMap().containsKey(i)){
-                this.database.transactionMap.put(i, syncPrepareResponse.getSyncTransactionsMapMap().get(i));
+                this.database.addTransaction(i, syncPrepareResponse.getSyncTransactionsMapMap().get(i));
                 this.logger.log("Synced Transaction: " + i);
                 this.database.executeTransaction(syncPrepareResponse.getSyncTransactionsMapMap().get(i));
             }
@@ -397,7 +398,7 @@ public class Node extends NodeServer {
             this.database.lastAcceptedUncommittedTransaction = request.getTransaction();
             this.database.ballotNumber.set( Math.max(request.getBallotNumber() , this.database.ballotNumber.get()) );
 
-            this.database.transactionMap.put(request.getBallotNumber(), request.getTransaction());
+            this.database.addTransaction(request.getBallotNumber(), request.getTransaction());
             this.database.transactionStatusMap.put(request.getBallotNumber(), TransactionStatus.PREPARED);
 
             prepareResponse.setSuccess(true);

@@ -18,8 +18,7 @@ public class IntraShardTnxProcessingThread extends Thread {
         this.tnx = tnx;
         this.node = node;
         this.ballotNumber = ballotNumber;
-
-        this.node.database.transactionMap.put(ballotNumber, tnx);
+        this.node.database.addTransaction(ballotNumber, tnx);
     }
 
 

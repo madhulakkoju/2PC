@@ -196,7 +196,7 @@ public class Node extends NodeServer {
                     intraPrepareThreads[i].start();
                 }
 
-                this.database.transactionStatusMap.put(ballotNumber, TransactionStatus.PREPARED);
+                this.database.addTransactionStatus(ballotNumber, TransactionStatus.PREPARED);
 
                 for (int i = 0; i < GlobalConfigs.numServersPerCluster; i++) {
                     if (intraPrepareThreads[i] == null) continue;
@@ -269,7 +269,7 @@ public class Node extends NodeServer {
                         intraPrepareThreads[i].start();
                     }
 
-                    this.database.transactionStatusMap.put(ballotNumber, TransactionStatus.PREPARED);
+                    this.database.addTransactionStatus(ballotNumber, TransactionStatus.PREPARED);
 
                     for (int i = 0; i < GlobalConfigs.numServersPerCluster; i++) {
                         if (intraPrepareThreads[i] == null) continue;
@@ -314,8 +314,9 @@ public class Node extends NodeServer {
             if(transaction.getTransactionNum() != -1){
                 prepareResponse.putSyncTransactionsMap(i, transaction);
             }
-            if(this.database.transactionStatusMap.containsKey(i)){
-                prepareResponse.putSyncTransactionStatusMap(i, this.database.transactionStatusMap.get(i));
+            TransactionStatus status = this.database.getTransactionStatus(i);
+            if(status != TransactionStatus.PENDING){
+                prepareResponse.putSyncTransactionStatusMap(i, status);
             }
         }
 
@@ -343,7 +344,7 @@ public class Node extends NodeServer {
                 this.database.executeTransaction(syncPrepareResponse.getSyncTransactionsMapMap().get(i));
             }
             if(syncPrepareResponse.getSyncTransactionStatusMapMap().containsKey(i)){
-                this.database.transactionStatusMap.put(i, syncPrepareResponse.getSyncTransactionStatusMapMap().get(i));
+                this.database.addTransactionStatus(i, syncPrepareResponse.getSyncTransactionStatusMapMap().get(i));
                 this.logger.log("Synced Transaction Status: " + i);
             }
         }
@@ -399,7 +400,7 @@ public class Node extends NodeServer {
             this.database.ballotNumber.set( Math.max(request.getBallotNumber() , this.database.ballotNumber.get()) );
 
             this.database.addTransaction(request.getBallotNumber(), request.getTransaction());
-            this.database.transactionStatusMap.put(request.getBallotNumber(), TransactionStatus.PREPARED);
+            this.database.addTransactionStatus(request.getBallotNumber(), TransactionStatus.PREPARED);
 
             prepareResponse.setSuccess(true);
             prepareResponse.setNeedToSync(false);
@@ -429,7 +430,7 @@ public class Node extends NodeServer {
             if(request.getAbort()){
 
                 this.logger.log("Abort Request Received from " + request.getProcessId() );
-                this.database.transactionStatusMap.put(request.getBallotNumber(), TransactionStatus.ABORTED);
+                this.database.addTransactionStatus(request.getBallotNumber(), TransactionStatus.ABORTED);
 
                 this.database.unlockDataItem(request.getTransaction().getSender(), request.getTransaction().getTransactionNum());
                 this.database.unlockDataItem(request.getTransaction().getReceiver(), request.getTransaction().getTransactionNum());
@@ -445,7 +446,7 @@ public class Node extends NodeServer {
 //                    this.database.lastAcceptedUncommittedBallotNumber = -1;
 //                    this.database.lastAcceptedUncommittedTransaction = null;
                     commitResponse.setSuccess(true);
-                    this.database.transactionStatusMap.put(request.getBallotNumber(), TransactionStatus.COMMITTED);
+                    this.database.addTransactionStatus(request.getBallotNumber(), TransactionStatus.COMMITTED);
                     this.logger.log("Commit Request Accepted from " + request.getProcessId());
 
                     this.database.executeTransaction(request.getTransaction());
@@ -457,7 +458,7 @@ public class Node extends NodeServer {
             if(request.getAbort()){
 
                 this.logger.log("Abort Request Received from " + request.getProcessId() );
-                this.database.transactionStatusMap.put(request.getBallotNumber(), TransactionStatus.ABORTED);
+                this.database.addTransactionStatus(request.getBallotNumber(), TransactionStatus.ABORTED);
 
                 this.database.unlockDataItem(request.getTransaction().getSender(), request.getTransaction().getTransactionNum());
                 this.database.unlockDataItem(request.getTransaction().getReceiver(), request.getTransaction().getTransactionNum());
@@ -474,7 +475,7 @@ public class Node extends NodeServer {
                     this.database.lastAcceptedUncommittedBallotNumber = -1;
                     this.database.lastAcceptedUncommittedTransaction = null;
                     commitResponse.setSuccess(true);
-                    this.database.transactionStatusMap.put(request.getBallotNumber(), TransactionStatus.COMMITTED);
+                    this.database.addTransactionStatus(request.getBallotNumber(), TransactionStatus.COMMITTED);
                     this.logger.log("Commit Request Accepted from " + request.getProcessId());
 
                     this.database.executeTransaction(request.getTransaction());

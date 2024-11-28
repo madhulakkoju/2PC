@@ -22,7 +22,6 @@ public class DatabaseService {
     public PriorityBlockingQueue<TransactionInputConfig> incomingTransactionsQueue;
 
 
-    public HashMap<Integer, TransactionStatus> transactionStatusMap;
 
     public HashSet<Integer> processedTransactionsSet;
 
@@ -67,12 +66,13 @@ public class DatabaseService {
 
         //this.transactionMap = new HashMap<>();
         this.processedTransactionsSet = new HashSet<>();
-        this.transactionStatusMap = new HashMap<>();
+
 
         this.dataStore = new AtomicReference<>(new ArrayList<>());
         this.node = node;
 
         this.lockedDataItemsWithTransactionNum = new ConcurrentHashMap<>();
+        this.transactionStatusMap = new HashMap<>();
 
         initializeSQLiteDatabase();
     }
@@ -108,7 +108,7 @@ public class DatabaseService {
 
             //Transactions Table - to store transactions and ballot numbers
 
-            //statement.executeUpdate("DELETE FROM transactions;");
+            statement.executeUpdate("DELETE FROM transactions;");
 
             createTableSQL = "CREATE TABLE IF NOT EXISTS transactions (" +
                     "ballot INTEGER PRIMARY KEY, " +
@@ -122,6 +122,17 @@ public class DatabaseService {
 
             statement.executeUpdate(createTableSQL);
 
+
+            //Transaction Status Table - to store status of transactions
+
+            statement.executeUpdate("DELETE FROM transactionstatus;");
+
+            createTableSQL = "CREATE TABLE IF NOT EXISTS transactionstatus (" +
+                    "ballot INTEGER PRIMARY KEY, " +
+                    "status INTEGER NOT NULL " +
+                    ");";
+
+            statement.executeUpdate(createTableSQL);
 
 
 
@@ -326,5 +337,68 @@ public class DatabaseService {
         return transactionBuilder.build();
     }
 
+
+
+
+
+
+    //BallotNumber, TransactionStatus
+    public HashMap<Integer, TransactionStatus> transactionStatusMap;
+
+    public synchronized void addTransactionStatus( int ballotNumber, TransactionStatus status ) {
+
+        transactionStatusMap.put(ballotNumber, status);
+        return;
+
+//        TransactionStatus transactionStatus = getTransactionStatus(ballotNumber);
+//
+//        if(transactionStatus != TransactionStatus.PENDING){
+//
+//            try {
+//                String insertSQL = "UPDATE transactionstatus SET status =" + status.getNumber() + " WHERE ballot = " + ballotNumber + ";";
+//                statement.executeUpdate(insertSQL);
+//            }
+//            catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//
+//        }
+//        else{
+//            try {
+//                String insertSQL = "INSERT INTO transactionstatus (ballot, status ) VALUES ("
+//                        + ballotNumber + ", " + status.getNumber()
+//                        + ");";
+//                statement.executeUpdate(insertSQL);
+//            }
+//            catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+
+
+    }
+
+    public TransactionStatus getTransactionStatus(int ballotNumber) {
+
+        if(transactionStatusMap.containsKey(ballotNumber)){
+            return transactionStatusMap.get(ballotNumber);
+        }
+        else{
+            return TransactionStatus.PENDING;
+        }
+//
+//        try {
+//            String selectSQL = "SELECT * FROM transactionstatus WHERE ballot = " + ballotNumber + ";";
+//
+//            ResultSet resultSet = statement.executeQuery(selectSQL);
+//
+//            return TransactionStatus.forNumber(resultSet.getInt("status"));
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return TransactionStatus.PENDING;
+    }
 
 }

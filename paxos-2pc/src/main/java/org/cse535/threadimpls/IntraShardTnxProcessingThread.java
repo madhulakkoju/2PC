@@ -80,7 +80,7 @@ public class IntraShardTnxProcessingThread extends Thread {
                     intraPrepareThreads[i].start();
                 }
 
-                this.node.database.transactionStatusMap.put(ballotNumber, TransactionStatus.PREPARED);
+                this.node.database.addTransactionStatus(ballotNumber, TransactionStatus.PREPARED);
 
                 for (int i = 0; i < GlobalConfigs.numServersPerCluster; i++) {
                     if (intraPrepareThreads[i] == null) continue;
@@ -147,7 +147,7 @@ public class IntraShardTnxProcessingThread extends Thread {
                                 intraPrepareThreads[i].start();
                             }
 
-                            this.node.database.transactionStatusMap.put(ballotNumber, TransactionStatus.PREPARED);
+                            this.node.database.addTransactionStatus(ballotNumber, TransactionStatus.PREPARED);
 
                             for (int i = 0; i < GlobalConfigs.numServersPerCluster; i++) {
                                 if (intraPrepareThreads[i] == null) continue;
@@ -170,7 +170,7 @@ public class IntraShardTnxProcessingThread extends Thread {
                 // If f+1 Prepare responses received, Initiate Commit phase
                 if (successPrepares.get() >= GlobalConfigs.ShardConsesusThreshold) {
 
-                    this.node.database.transactionStatusMap.put(ballotNumber, TransactionStatus.ACCEPTED);
+                    this.node.database.addTransactionStatus(ballotNumber, TransactionStatus.ACCEPTED);
                     this.node.database.lastCommittedBallotNumber = this.ballotNumber;
 
                     CommitRequest commitRequest = CommitRequest.newBuilder()
@@ -205,7 +205,7 @@ public class IntraShardTnxProcessingThread extends Thread {
                     // Commit the transaction
                     this.node.database.executeTransaction(this.tnx);
 
-                    this.node.database.transactionStatusMap.put(ballotNumber, TransactionStatus.COMMITTED);
+                    this.node.database.addTransactionStatus(ballotNumber, TransactionStatus.COMMITTED);
                     success = true;
                 }
                 else {

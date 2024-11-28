@@ -1,18 +1,18 @@
  
 Transaction Worker Thread Started
 Processing Transaction: 1
-Prepare response from 3 : true
 Prepare response from 2 : true
+Prepare response from 3 : true
 Commit response from 3 : true
 Commit response from 2 : true
 Processing Transaction: 5
-Prepare response from 3 : true
 Prepare response from 2 : true
+Prepare response from 3 : true
 Commit response from 2 : true
 Commit response from 3 : true
 Processing Transaction: 6
-Prepare response from 2 : true
 Prepare response from 3 : true
+Prepare response from 2 : true
 Commit response from 2 : true
 Commit response from 3 : true
 Processing Transaction: 7
@@ -33,13 +33,13 @@ Commit response from 2 : true
 Processing Transaction: 15
 Prepare response from 2 : true
 Prepare response from 3 : true
-Commit response from 3 : true
 Commit response from 2 : true
+Commit response from 3 : true
 Processing Transaction: 17
-Prepare response from 3 : true
 Prepare response from 2 : true
-Commit response from 3 : true
+Prepare response from 3 : true
 Commit response from 2 : true
+Commit response from 3 : true
 Received cross shard request Transaction ( 299 -> 1999 = 15 ) ; 
 Processing Cross Shard Transaction: 20
 Syncing Data with other servers in the cluster
@@ -59,8 +59,8 @@ transaction {
 latestCommittedBallotNumber: 8
 clusterId: 1
 
-Prepare response from 2 : true
 Prepare response from 3 : true
+Prepare response from 2 : true
 Consensus Reached for Cross Shard Prepare Phase
 Sending cross shard response 
 **************
@@ -73,6 +73,7 @@ clusterId: 1
 **************
 Received Commit request from S1 with ballot number 9
 Commit Request Received from S1
+Commit Request Accepted from S1
 Received cross shard request Transaction ( 2001 -> 11 = 3 ) ; 
 Processing Cross Shard Transaction: 23
 Syncing Data with other servers in the cluster
@@ -89,23 +90,31 @@ transaction {
   transactionNum: 23
   isCrossShard: true
 }
-latestCommittedBallotNumber: 8
+latestCommittedTransaction {
+  sender: 299
+  receiver: 1999
+  amount: 15
+  transactionNum: 20
+  isCrossShard: true
+}
+latestCommittedBallotNumber: 9
 clusterId: 1
 
-Prepare response from 3 : false
-Prepare response from 2 : false
-Consensus FAILED for Cross Shard Prepare Phase
+Prepare response from 2 : true
+Prepare response from 3 : true
+Consensus Reached for Cross Shard Prepare Phase
 Sending cross shard response 
 **************
+success: true
 serverName: "S1"
 ballotNumber: 10
-successPreparesCount: 1
-failureReason: "Consensus not reached"
+successPreparesCount: 3
 clusterId: 1
 
 **************
 Received Commit request from S1 with ballot number 10
-Abort Request Received from S1
+Commit Request Received from S1
+Commit Request Accepted from S1
 Received cross shard request Transaction ( 11 -> 2001 = 9 ) ; 
 Processing Cross Shard Transaction: 24
 Syncing Data with other servers in the cluster
@@ -122,23 +131,31 @@ transaction {
   transactionNum: 24
   isCrossShard: true
 }
-latestCommittedBallotNumber: 8
+latestCommittedTransaction {
+  sender: 2001
+  receiver: 11
+  amount: 3
+  transactionNum: 23
+  isCrossShard: true
+}
+latestCommittedBallotNumber: 10
 clusterId: 1
 
-Prepare response from 3 : false
-Prepare response from 2 : false
-Consensus FAILED for Cross Shard Prepare Phase
+Prepare response from 2 : true
+Prepare response from 3 : true
+Consensus Reached for Cross Shard Prepare Phase
 Sending cross shard response 
 **************
+success: true
 serverName: "S1"
 ballotNumber: 11
-successPreparesCount: 1
-failureReason: "Consensus not reached"
+successPreparesCount: 3
 clusterId: 1
 
 **************
 Received Commit request from S1 with ballot number 11
-Abort Request Received from S1
+Commit Request Received from S1
+Commit Request Accepted from S1
 Received cross shard request Transaction ( 121 -> 2525 = 8 ) ; 
 Processing Cross Shard Transaction: 27
 Syncing Data with other servers in the cluster
@@ -155,23 +172,32 @@ transaction {
   transactionNum: 27
   isCrossShard: true
 }
-latestCommittedBallotNumber: 8
+latestCommittedTransaction {
+  sender: 11
+  receiver: 2001
+  amount: 9
+  transactionNum: 24
+  isCrossShard: true
+}
+latestCommittedBallotNumber: 11
 clusterId: 1
 
-Prepare response from 3 : false
-Prepare response from 2 : false
-Consensus FAILED for Cross Shard Prepare Phase
+Processing Transaction: 26
+Prepare response from 3 : true
+Prepare response from 2 : true
+Consensus Reached for Cross Shard Prepare Phase
 Sending cross shard response 
 **************
+success: true
 serverName: "S1"
 ballotNumber: 12
-successPreparesCount: 1
-failureReason: "Consensus not reached"
+successPreparesCount: 3
 clusterId: 1
 
 **************
 Received Commit request from S1 with ballot number 12
-Abort Request Received from S1
+Commit Request Received from S1
+Commit Request Accepted from S1
 Received cross shard request Transaction ( 796 -> 1997 = 9 ) ; 
 Processing Cross Shard Transaction: 30
 Syncing Data with other servers in the cluster
@@ -193,8 +219,8 @@ Syncing Data with other servers in the cluster
 Data Sync Done
 Processing Cross Shard Transaction - Sender : 32
 Locked Data Item: 796
-Ballot Number: 13
-Prepare Request: ballotNumber: 13
+Ballot Number: 14
+Prepare Request: ballotNumber: 14
 processId: "S1"
 transaction {
   sender: 796
@@ -203,20 +229,28 @@ transaction {
   transactionNum: 32
   isCrossShard: true
 }
-latestCommittedBallotNumber: 8
+latestCommittedTransaction {
+  sender: 121
+  receiver: 2525
+  amount: 8
+  transactionNum: 27
+  isCrossShard: true
+}
+latestCommittedBallotNumber: 12
 clusterId: 1
 
-Prepare response from 2 : false
-Prepare response from 3 : false
-Consensus FAILED for Cross Shard Prepare Phase
+Prepare response from 3 : true
+Prepare response from 2 : true
+Consensus Reached for Cross Shard Prepare Phase
 Sending cross shard response 
 **************
+success: true
 serverName: "S1"
-ballotNumber: 13
-successPreparesCount: 1
-failureReason: "Consensus not reached"
+ballotNumber: 14
+successPreparesCount: 3
 clusterId: 1
 
 **************
-Received Commit request from S1 with ballot number 13
-Abort Request Received from S1
+Received Commit request from S1 with ballot number 14
+Commit Request Received from S1
+Commit Request Accepted from S1

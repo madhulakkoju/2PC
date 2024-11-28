@@ -3,21 +3,17 @@ option  java_package = "org.cse535.proto";
 option java_multiple_files = true;
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
 
 
 
 service Paxos {
-
   rpc Request(TransactionInputConfig) returns (TxnResponse) {}
-
   rpc CrossShardRequest(TransactionInputConfig) returns (CrossTxnResponse) {}
-
   rpc Prepare(PrepareRequest) returns (PrepareResponse) {}
-
   rpc Commit(CommitRequest) returns (CommitResponse) {}
-
   rpc Sync(PrepareRequest) returns (PrepareResponse) {}
-
+  rpc ExecReply(ExecutionReply) returns (google.protobuf.Empty) {}
 }
 
 
@@ -145,6 +141,14 @@ message CommitResponse {
 }
 
 
+message ExecutionReply{
+
+  int32 transactionNum = 1;
+  bool success = 2;
+  string serverName = 3;
+  int32 clusterId = 4;
+  string failureReason = 5;
+}
 
 
 

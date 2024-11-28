@@ -26,11 +26,16 @@ public class IntraShardTnxProcessingThread extends Thread {
 
     public void run() {
         try {
+
+            String failureReason = "";
+            boolean success = false;
+
         //Wait until locks released if locked.
-        if( this.node.lockedDataItemsWithTransactionNum.containsKey(this.tnx.getSender())
-                || this.node.lockedDataItemsWithTransactionNum.containsKey(this.tnx.getReceiver())) {
-                Thread.sleep(10);
+        if( this.node.lockedDataItemsWithTransactionNum.containsKey(this.tnx.getSender()) || this.node.lockedDataItemsWithTransactionNum.containsKey(this.tnx.getReceiver())) {
+                failureReason = "Data Items Locked";
+                success = false;
         }
+        else {
 
 
             System.out.println("Processing transaction " + this.tnx.getTransactionNum() + " "
@@ -38,178 +43,202 @@ public class IntraShardTnxProcessingThread extends Thread {
                     + this.tnx.getReceiver() + " = "
                     + this.tnx.getAmount());
 
-        //Acquire the locks
-        this.node.lockedDataItemsWithTransactionNum.put(this.tnx.getSender(), this.tnx.getTransactionNum());
-        this.node.lockedDataItemsWithTransactionNum.put(this.tnx.getReceiver(), this.tnx.getTransactionNum());
+            //Acquire the locks
+            this.node.lockedDataItemsWithTransactionNum.put(this.tnx.getSender(), this.tnx.getTransactionNum());
+            this.node.lockedDataItemsWithTransactionNum.put(this.tnx.getReceiver(), this.tnx.getTransactionNum());
 
-        //Check if the transaction is valid
-        if(this.node.database.isValidTransaction(this.tnx)) {
-            // Valid transaction
+            //Check if the transaction is valid
+            if (this.node.database.isValidTransaction(this.tnx)) {
+                // Valid transaction
 
-            // Initiate Prepare phase
+                // Initiate Prepare phase
 
-            IntraPrepareThread[] intraPrepareThreads = new IntraPrepareThread[GlobalConfigs.numServersPerCluster];
+                IntraPrepareThread[] intraPrepareThreads = new IntraPrepareThread[GlobalConfigs.numServersPerCluster];
 
-            ConcurrentHashMap<Integer, PrepareResponse> prepareResponses = new ConcurrentHashMap<>();
-            AtomicInteger successPrepares = new AtomicInteger(1);
+                ConcurrentHashMap<Integer, PrepareResponse> prepareResponses = new ConcurrentHashMap<>();
+                AtomicInteger successPrepares = new AtomicInteger(1);
 
-            PrepareRequest.Builder prepareBuilder = PrepareRequest.newBuilder();
+                PrepareRequest.Builder prepareBuilder = PrepareRequest.newBuilder();
 
-            prepareBuilder.setBallotNumber(this.ballotNumber)
-                    .setProcessId(this.node.serverName)
-                    .setTransaction(this.tnx);
-
-            if(this.node.database.lastCommittedTransaction != null) {
-                    prepareBuilder.setLatestCommittedTransaction(this.node.database.lastCommittedTransaction);
-            }
-
-            prepareBuilder.setLatestCommittedBallotNumber( this.node.database.lastCommittedBallotNumber)
-                    .setClusterId(this.node.clusterNumber);
-
-
-            PrepareRequest prepareRequest = prepareBuilder.build();
-
-            for (int i = 0; i < GlobalConfigs.numServersPerCluster; i++) {
-                if (Objects.equals(GlobalConfigs.clusterToServersMap.get(this.node.clusterNumber).get(i), this.node.serverNumber)) {
-                    continue;
-                }
-                intraPrepareThreads[i] = new IntraPrepareThread( this.node, prepareRequest, prepareResponses, GlobalConfigs.clusterToServersMap.get(this.node.clusterNumber).get(i), successPrepares);
-                intraPrepareThreads[i].start();
-            }
-
-            this.node.database.transactionStatusMap.put(ballotNumber, TransactionStatus.PREPARED);
-
-            for (int i = 0; i < GlobalConfigs.numServersPerCluster; i++) {
-                if(intraPrepareThreads[i] == null) continue;
-                intraPrepareThreads[i].join();
-            }
-
-
-            if( successPrepares.get() < GlobalConfigs.ShardConsesusThreshold) {
-                // Retry Prepare phase if Synced
-                PrepareResponse syncPrepareResponse = null;
-
-                int maxCommittedBallotNumber = -1;
-
-                for ( PrepareResponse r : prepareResponses.values() ) {
-                    if( r.getNeedToSync() ) {
-                        if( r.getLastCommittedBallotNumber() > maxCommittedBallotNumber) {
-                            maxCommittedBallotNumber = r.getLastCommittedBallotNumber();
-                            syncPrepareResponse = r;
-                        }
-                    }
-                }
-
-                if( syncPrepareResponse != null) {
-                    // Sync the data
-                    this.node.syncData(syncPrepareResponse);
-                    this.ballotNumber = this.node.database.ballotNumber.incrementAndGet();
-                    Thread.sleep(10);
-
-                    this.node.logger.log("Synced data ... Now Retrying Prepare phase");
-
-                    this.node.logger.log(syncPrepareResponse.toString());
-
-
-                    intraPrepareThreads = new IntraPrepareThread[GlobalConfigs.numServersPerCluster];
-
-                    prepareResponses = new ConcurrentHashMap<>();
-                    successPrepares = new AtomicInteger(1);
-
-                    prepareBuilder = PrepareRequest.newBuilder();
-
-                    prepareBuilder.setBallotNumber(this.ballotNumber)
-                            .setProcessId(this.node.serverName)
-                            .setTransaction(this.tnx);
-
-                    if (this.node.database.lastCommittedTransaction != null) {
-                        prepareBuilder.setLatestCommittedTransaction(this.node.database.lastCommittedTransaction);
-                    }
-
-                    prepareBuilder.setLatestCommittedBallotNumber(this.node.database.lastCommittedBallotNumber)
-                            .setClusterId(this.node.clusterNumber);
-
-
-                    prepareRequest = prepareBuilder.build();
-
-                    for (int i = 0; i < GlobalConfigs.numServersPerCluster; i++) {
-                        if (Objects.equals(GlobalConfigs.clusterToServersMap.get(this.node.clusterNumber).get(i), this.node.serverNumber)) {
-                            continue;
-                        }
-                        intraPrepareThreads[i] = new IntraPrepareThread(this.node, prepareRequest, prepareResponses, GlobalConfigs.clusterToServersMap.get(this.node.clusterNumber).get(i), successPrepares);
-                        intraPrepareThreads[i].start();
-                    }
-
-                    this.node.database.transactionStatusMap.put(ballotNumber, TransactionStatus.PREPARED);
-
-                    for (int i = 0; i < GlobalConfigs.numServersPerCluster; i++) {
-                        if (intraPrepareThreads[i] == null) continue;
-                        intraPrepareThreads[i].join();
-                    }
-                }
-
-            }
-
-
-
-
-
-            // If f+1 Prepare responses received, Initiate Commit phase
-            if( successPrepares.get() >= GlobalConfigs.ShardConsesusThreshold) {
-
-                this.node.database.transactionStatusMap.put(ballotNumber, TransactionStatus.ACCEPTED);
-                this.node.database.lastCommittedBallotNumber = this.ballotNumber;
-
-                CommitRequest commitRequest = CommitRequest.newBuilder()
-                        .setBallotNumber(this.ballotNumber)
+                prepareBuilder.setBallotNumber(this.ballotNumber)
                         .setProcessId(this.node.serverName)
-                        .setTransaction(this.tnx)
-                        .setClusterId(this.node.clusterNumber)
-                        .build();
+                        .setTransaction(this.tnx);
 
-                ConcurrentHashMap<Integer, CommitResponse> commitResponses = new ConcurrentHashMap<>();
-                AtomicInteger successCommits = new AtomicInteger(1);
+                if (this.node.database.lastCommittedTransaction != null) {
+                    prepareBuilder.setLatestCommittedTransaction(this.node.database.lastCommittedTransaction);
+                }
 
-                // Initiate Commit phase
+                prepareBuilder.setLatestCommittedBallotNumber(this.node.database.lastCommittedBallotNumber)
+                        .setClusterId(this.node.clusterNumber);
 
-                IntraCommitThread[] intraCommitThreads = new IntraCommitThread[GlobalConfigs.numServersPerCluster];
+
+                PrepareRequest prepareRequest = prepareBuilder.build();
 
                 for (int i = 0; i < GlobalConfigs.numServersPerCluster; i++) {
                     if (Objects.equals(GlobalConfigs.clusterToServersMap.get(this.node.clusterNumber).get(i), this.node.serverNumber)) {
                         continue;
                     }
-                    intraCommitThreads[i] = new IntraCommitThread( this.node, commitRequest, commitResponses, GlobalConfigs.clusterToServersMap.get(this.node.clusterNumber).get(i), successCommits);
-                    intraCommitThreads[i].start();
+                    intraPrepareThreads[i] = new IntraPrepareThread(this.node, prepareRequest, prepareResponses, GlobalConfigs.clusterToServersMap.get(this.node.clusterNumber).get(i), successPrepares);
+                    intraPrepareThreads[i].start();
                 }
+
+                this.node.database.transactionStatusMap.put(ballotNumber, TransactionStatus.PREPARED);
 
                 for (int i = 0; i < GlobalConfigs.numServersPerCluster; i++) {
-                    if(intraCommitThreads[i] == null) continue;
-                    intraCommitThreads[i].join();
+                    if (intraPrepareThreads[i] == null) continue;
+                    intraPrepareThreads[i].join();
                 }
 
-                this.node.database.addToDataStore(commitRequest);
 
-                // Commit the transaction
-                this.node.database.executeTransaction(this.tnx);
-            } else {
-                // Abort the transaction
-                System.out.println("Transaction aborted");
+                if (successPrepares.get() < GlobalConfigs.ShardConsesusThreshold) {
+                    // Retry Prepare phase if Synced
+                    PrepareResponse syncPrepareResponse = null;
+
+                    int maxCommittedBallotNumber = -1;
+
+                    for (PrepareResponse r : prepareResponses.values()) {
+                        if (r.getNeedToSync()) {
+                            if (r.getLastCommittedBallotNumber() > maxCommittedBallotNumber) {
+                                maxCommittedBallotNumber = r.getLastCommittedBallotNumber();
+                                syncPrepareResponse = r;
+                            }
+                        }
+                    }
+
+                    if (syncPrepareResponse != null) {
+                        // Sync the data
+                        this.node.syncData(syncPrepareResponse);
+
+                        if(this.node.database.isValidTransaction(this.tnx)){
+                            this.node.logger.log("Synced data ... Transaction is valid");
+
+                            this.ballotNumber = this.node.database.ballotNumber.incrementAndGet();
+                            Thread.sleep(10);
+
+                            this.node.logger.log("Synced data ... Now Retrying Prepare phase");
+
+                            this.node.logger.log(syncPrepareResponse.toString());
+
+
+                            intraPrepareThreads = new IntraPrepareThread[GlobalConfigs.numServersPerCluster];
+
+                            prepareResponses = new ConcurrentHashMap<>();
+                            successPrepares = new AtomicInteger(1);
+
+                            prepareBuilder = PrepareRequest.newBuilder();
+
+                            prepareBuilder.setBallotNumber(this.ballotNumber)
+                                    .setProcessId(this.node.serverName)
+                                    .setTransaction(this.tnx);
+
+                            if (this.node.database.lastCommittedTransaction != null) {
+                                prepareBuilder.setLatestCommittedTransaction(this.node.database.lastCommittedTransaction);
+                            }
+
+                            prepareBuilder.setLatestCommittedBallotNumber(this.node.database.lastCommittedBallotNumber)
+                                    .setClusterId(this.node.clusterNumber);
+
+
+                            prepareRequest = prepareBuilder.build();
+
+                            for (int i = 0; i < GlobalConfigs.numServersPerCluster; i++) {
+                                if (Objects.equals(GlobalConfigs.clusterToServersMap.get(this.node.clusterNumber).get(i), this.node.serverNumber)) {
+                                    continue;
+                                }
+                                intraPrepareThreads[i] = new IntraPrepareThread(this.node, prepareRequest, prepareResponses, GlobalConfigs.clusterToServersMap.get(this.node.clusterNumber).get(i), successPrepares);
+                                intraPrepareThreads[i].start();
+                            }
+
+                            this.node.database.transactionStatusMap.put(ballotNumber, TransactionStatus.PREPARED);
+
+                            for (int i = 0; i < GlobalConfigs.numServersPerCluster; i++) {
+                                if (intraPrepareThreads[i] == null) continue;
+                                intraPrepareThreads[i].join();
+                            }
+
+                        }
+                        else{
+                            failureReason = "Invalid Transaction - Insufficient Balance";
+                            success = false;
+                            this.node.logger.log("Synced data ... Invalid Transaction");
+                        }
+
+
+                    }
+
+                }
+
+
+                // If f+1 Prepare responses received, Initiate Commit phase
+                if (successPrepares.get() >= GlobalConfigs.ShardConsesusThreshold) {
+
+                    this.node.database.transactionStatusMap.put(ballotNumber, TransactionStatus.ACCEPTED);
+                    this.node.database.lastCommittedBallotNumber = this.ballotNumber;
+
+                    CommitRequest commitRequest = CommitRequest.newBuilder()
+                            .setBallotNumber(this.ballotNumber)
+                            .setProcessId(this.node.serverName)
+                            .setTransaction(this.tnx)
+                            .setClusterId(this.node.clusterNumber)
+                            .build();
+
+                    ConcurrentHashMap<Integer, CommitResponse> commitResponses = new ConcurrentHashMap<>();
+                    AtomicInteger successCommits = new AtomicInteger(1);
+
+                    // Initiate Commit phase
+
+                    IntraCommitThread[] intraCommitThreads = new IntraCommitThread[GlobalConfigs.numServersPerCluster];
+
+                    for (int i = 0; i < GlobalConfigs.numServersPerCluster; i++) {
+                        if (Objects.equals(GlobalConfigs.clusterToServersMap.get(this.node.clusterNumber).get(i), this.node.serverNumber)) {
+                            continue;
+                        }
+                        intraCommitThreads[i] = new IntraCommitThread(this.node, commitRequest, commitResponses, GlobalConfigs.clusterToServersMap.get(this.node.clusterNumber).get(i), successCommits);
+                        intraCommitThreads[i].start();
+                    }
+
+                    for (int i = 0; i < GlobalConfigs.numServersPerCluster; i++) {
+                        if (intraCommitThreads[i] == null) continue;
+                        intraCommitThreads[i].join();
+                    }
+
+                    this.node.database.addToDataStore(commitRequest);
+
+                    // Commit the transaction
+                    this.node.database.executeTransaction(this.tnx);
+
+                    this.node.database.transactionStatusMap.put(ballotNumber, TransactionStatus.COMMITTED);
+                    success = true;
+                }
+                else {
+                    // Abort the transaction
+                    System.out.println("Transaction aborted");
+                    failureReason = "Transaction Aborted - Prepare Phase Failed";
+                    success = false;
+                }
+
+
+                // If f+1 Commit responses received, Commit the transaction
+
+
+                //Release the locks
+                this.node.lockedDataItemsWithTransactionNum.remove(this.tnx.getSender());
+                this.node.lockedDataItemsWithTransactionNum.remove(this.tnx.getReceiver());
+
+                //Send reply to Client
+                System.out.println("Transaction processed successfully");
+
             }
-
-
-
-            // If f+1 Commit responses received, Commit the transaction
-
-
-
-            //Release the locks
-            this.node.lockedDataItemsWithTransactionNum.remove(this.tnx.getSender());
-            this.node.lockedDataItemsWithTransactionNum.remove(this.tnx.getReceiver());
-
-            //Send reply to Client
-            System.out.println("Transaction processed successfully");
-
+            else{
+                // Invalid transaction
+                failureReason = "Invalid Transaction - Insufficient Balance";
+                success = false;
+            }
         }
+
+        if( ! tnx.getIsCrossShard() )
+            this.node.sendExecutionReplyToClient(tnx, success, failureReason);
+
 
         } catch (Exception e) {
             e.printStackTrace();

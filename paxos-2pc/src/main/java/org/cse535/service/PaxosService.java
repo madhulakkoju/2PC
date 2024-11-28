@@ -1,8 +1,10 @@
 package org.cse535.service;
 
+import com.google.protobuf.Empty;
 import io.grpc.stub.StreamObserver;
 import org.cse535.Main;
 import org.cse535.configs.Utils;
+import org.cse535.node.ViewServer;
 import org.cse535.proto.*;
 
 public class PaxosService extends PaxosGrpc.PaxosImplBase {
@@ -93,6 +95,18 @@ public class PaxosService extends PaxosGrpc.PaxosImplBase {
 
         CommitResponse resp = Main.node.handleCommit(request);
         responseObserver.onNext(resp);
+        responseObserver.onCompleted();
+    }
+
+
+    @Override
+    public void execReply(ExecutionReply request, StreamObserver<Empty> responseObserver) {
+        if(ViewServer.viewServer != null){
+            ViewServer.viewServer.transactionStatuses.put(request.getTransactionNum(),
+                    request.getSuccess() ? "COMMITTED" : "ABORTED-"+request.getFailureReason());
+        }
+
+        responseObserver.onNext(Empty.newBuilder().build());
         responseObserver.onCompleted();
     }
 }

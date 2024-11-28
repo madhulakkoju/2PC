@@ -1,6 +1,7 @@
 package org.cse535.threadimpls;
 
 import org.cse535.configs.GlobalConfigs;
+import org.cse535.configs.Utils;
 import org.cse535.node.ViewServer;
 import org.cse535.proto.*;
 
@@ -27,6 +28,9 @@ public class CrossShardTnxProcessingThread extends Thread {
 
         AtomicBoolean senderSuccess = new AtomicBoolean(false);
         AtomicBoolean receiverSuccess = new AtomicBoolean(false);
+
+
+        String failureReason = "COMMITTED";
 
 
         //Send request to both cluster contact servers
@@ -102,104 +106,115 @@ public class CrossShardTnxProcessingThread extends Thread {
 
         //if both servers respond with success, then commit the transaction
 
+
+        CommitRequest senderCommitRequest = CommitRequest.newBuilder()
+                .setBallotNumber(senderResponse.get().getBallotNumber())
+                .setProcessId(senderResponse.get().getServerName())
+                .setClusterId(senderResponse.get().getClusterId())
+                .setTransaction(transactionInputConfig.getTransaction())
+                .setAbort(true)
+                .build();
+
+
+        CommitRequest receiverCommitRequest = CommitRequest.newBuilder()
+                .setBallotNumber(receiverResponse.get().getBallotNumber())
+                .setProcessId(receiverResponse.get().getServerName())
+                .setClusterId(receiverResponse.get().getClusterId())
+                .setTransaction(transactionInputConfig.getTransaction())
+                .setAbort(true)
+                .build();
+
+
         if (senderSuccess.get() && receiverSuccess.get()) {
             // Commit the transaction
             this.viewServer.logger.log("Transaction successful on both sender and receiver side, committing now....");
 
 
-            CommitRequest senderCommitRequest = CommitRequest.newBuilder()
+            senderCommitRequest = CommitRequest.newBuilder()
                     .setBallotNumber(senderResponse.get().getBallotNumber())
                     .setProcessId(senderResponse.get().getServerName())
                     .setClusterId(senderResponse.get().getClusterId())
                     .setTransaction(transactionInputConfig.getTransaction())
                     .build();
 
-            GlobalConfigs.clusterToServersMap.get(senderResponse.get().getClusterId())
-                    .forEach(serverId -> {
-                        try {
-                            viewServer.serversToPaxosStub.get(serverId).commit(senderCommitRequest);
-                        } catch (Exception e) {
-                            System.err.println("Error occurred while sending commit request to server " + serverId + ": " + e.getMessage());
-                            this.viewServer.logger.log("Error occurred while sending commit request to server " + serverId + ": " + e.getMessage());
-                        }
-                    });
-
-
-            CommitRequest receiverCommitRequest = CommitRequest.newBuilder()
+            receiverCommitRequest = CommitRequest.newBuilder()
                     .setBallotNumber(receiverResponse.get().getBallotNumber())
                     .setProcessId(receiverResponse.get().getServerName())
                     .setClusterId(receiverResponse.get().getClusterId())
                     .setTransaction(transactionInputConfig.getTransaction())
                     .build();
 
-            GlobalConfigs.clusterToServersMap.get(receiverResponse.get().getClusterId())
-                    .forEach(serverId -> {
-                        try {
-                            viewServer.serversToPaxosStub.get(serverId).commit(receiverCommitRequest);
-                        } catch (Exception e) {
-                            System.err.println("Error occurred while sending commit request to server " + serverId + ": " + e.getMessage());
-                            this.viewServer.logger.log("Error occurred while sending commit request to server " + serverId + ": " + e.getMessage());
-                        }
-                    });
 
+            failureReason = "COMMITTED";
 
-
-        } else {
+        }
+        else {
+            failureReason = "ABORTED-";
             // Abort the transaction if any request failed
             if (!senderSuccess.get()) {
                this.viewServer.logger.log("Transaction failed on sender side, aborting.");
+               failureReason += "Sender failed; ";
             }
             if (!receiverSuccess.get()) {
                 this.viewServer.logger.log("Transaction failed on receiver side, aborting.");
+                failureReason += "Receiver failed; ";
             }
 
             // Abort transaction logic here
 
-
-            CommitRequest senderCommitRequest = CommitRequest.newBuilder()
-                    .setBallotNumber(senderResponse.get().getBallotNumber())
-                    .setProcessId(senderResponse.get().getServerName())
-                    .setClusterId(senderResponse.get().getClusterId())
-                    .setTransaction(transactionInputConfig.getTransaction())
-                    .setAbort(true)
-                    .build();
-
-            GlobalConfigs.clusterToServersMap.get(senderResponse.get().getClusterId())
-                    .forEach(serverId -> {
-                        try {
-                            viewServer.serversToPaxosStub.get(serverId).commit(senderCommitRequest);
-                        } catch (Exception e) {
-                            System.err.println("Error occurred while sending commit request to server " + serverId + ": " + e.getMessage());
-                            this.viewServer.logger.log("Error occurred while sending commit request to server " + serverId + ": " + e.getMessage());
-                        }
-                    });
-
-
-            CommitRequest receiverCommitRequest = CommitRequest.newBuilder()
-                    .setBallotNumber(receiverResponse.get().getBallotNumber())
-                    .setProcessId(receiverResponse.get().getServerName())
-                    .setClusterId(receiverResponse.get().getClusterId())
-                    .setTransaction(transactionInputConfig.getTransaction())
-                    .setAbort(true)
-                    .build();
-
-            GlobalConfigs.clusterToServersMap.get(receiverResponse.get().getClusterId())
-                    .forEach(serverId -> {
-                        try {
-                            viewServer.serversToPaxosStub.get(serverId).commit(receiverCommitRequest);
-                        } catch (Exception e) {
-                            System.err.println("Error occurred while sending commit request to server " + serverId + ": " + e.getMessage());
-                            this.viewServer.logger.log("Error occurred while sending commit request to server " + serverId + ": " + e.getMessage());
-                        }
-                    });
-
-
         }
 
 
+        CommitRequest finalSenderCommitRequest = senderCommitRequest;
+        GlobalConfigs.clusterToServersMap.get(senderResponse.get().getClusterId())
+                .forEach(serverId -> {
+                    try {
+                        this.sendCommit(finalSenderCommitRequest, serverId);
+                    } catch (Exception e) {
+                        System.err.println("Error occurred while sending commit request to server " + serverId + ": " + e.getMessage());
+                        this.viewServer.logger.log("Error occurred while sending commit request to server " + serverId + ": " + e.getMessage());
+                    }
+                });
+
+        CommitRequest finalReceiverCommitRequest = receiverCommitRequest;
+        GlobalConfigs.clusterToServersMap.get(receiverResponse.get().getClusterId())
+                .forEach(serverId -> {
+                    try {
+                        this.sendCommit(finalReceiverCommitRequest, serverId);
+                    } catch (Exception e) {
+                        System.err.println("Error occurred while sending commit request to server " + serverId + ": " + e.getMessage());
+                        this.viewServer.logger.log("Error occurred while sending commit request to server " + serverId + ": " + e.getMessage());
+                    }
+                });
+
+        this.viewServer.logger.log("-----------------------------------------" + Utils.toString(transactionInputConfig.getTransaction()) + "-----------------------------------------");
+        this.viewServer.logger.log("Transaction status: " + failureReason);
+        this.viewServer.logger.log(finalSenderCommitRequest.toString());
+        this.viewServer.logger.log(finalReceiverCommitRequest.toString());
+        this.viewServer.logger.log("-----------------------------------------DONE-----------------------------------------");
+
+
         //if any one of the server fails, then abort the transaction
-
-
+        this.viewServer.transactionStatuses.put(transactionInputConfig.getTransaction().getTransactionNum(), failureReason);
     }
+
+
+
+    public void sendCommit(CommitRequest request, int serverId){
+        Thread thread = new Thread(() -> {
+            try {
+
+                viewServer.serversToPaxosStub.get(serverId).commit(request);
+
+            } catch (Exception e) {
+                System.err.println("Error occurred while processing receiver response: " + e.getMessage());
+                this.viewServer.logger.log("Error occurred while processing receiver response: " + e.getMessage());
+
+            }
+        });
+
+        thread.start();
+    }
+
 
 }

@@ -187,6 +187,38 @@ public final class PaxosGrpc {
      return getSyncMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<org.cse535.proto.ExecutionReply,
+      com.google.protobuf.Empty> getExecReplyMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "ExecReply",
+      requestType = org.cse535.proto.ExecutionReply.class,
+      responseType = com.google.protobuf.Empty.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<org.cse535.proto.ExecutionReply,
+      com.google.protobuf.Empty> getExecReplyMethod() {
+    io.grpc.MethodDescriptor<org.cse535.proto.ExecutionReply, com.google.protobuf.Empty> getExecReplyMethod;
+    if ((getExecReplyMethod = PaxosGrpc.getExecReplyMethod) == null) {
+      synchronized (PaxosGrpc.class) {
+        if ((getExecReplyMethod = PaxosGrpc.getExecReplyMethod) == null) {
+          PaxosGrpc.getExecReplyMethod = getExecReplyMethod = 
+              io.grpc.MethodDescriptor.<org.cse535.proto.ExecutionReply, com.google.protobuf.Empty>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "Paxos", "ExecReply"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.cse535.proto.ExecutionReply.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.google.protobuf.Empty.getDefaultInstance()))
+                  .setSchemaDescriptor(new PaxosMethodDescriptorSupplier("ExecReply"))
+                  .build();
+          }
+        }
+     }
+     return getExecReplyMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -249,6 +281,13 @@ public final class PaxosGrpc {
       asyncUnimplementedUnaryCall(getSyncMethod(), responseObserver);
     }
 
+    /**
+     */
+    public void execReply(org.cse535.proto.ExecutionReply request,
+        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+      asyncUnimplementedUnaryCall(getExecReplyMethod(), responseObserver);
+    }
+
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -286,6 +325,13 @@ public final class PaxosGrpc {
                 org.cse535.proto.PrepareRequest,
                 org.cse535.proto.PrepareResponse>(
                   this, METHODID_SYNC)))
+          .addMethod(
+            getExecReplyMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                org.cse535.proto.ExecutionReply,
+                com.google.protobuf.Empty>(
+                  this, METHODID_EXEC_REPLY)))
           .build();
     }
   }
@@ -347,6 +393,14 @@ public final class PaxosGrpc {
       asyncUnaryCall(
           getChannel().newCall(getSyncMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void execReply(org.cse535.proto.ExecutionReply request,
+        io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getExecReplyMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -400,6 +454,13 @@ public final class PaxosGrpc {
     public org.cse535.proto.PrepareResponse sync(org.cse535.proto.PrepareRequest request) {
       return blockingUnaryCall(
           getChannel(), getSyncMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.google.protobuf.Empty execReply(org.cse535.proto.ExecutionReply request) {
+      return blockingUnaryCall(
+          getChannel(), getExecReplyMethod(), getCallOptions(), request);
     }
   }
 
@@ -460,6 +521,14 @@ public final class PaxosGrpc {
       return futureUnaryCall(
           getChannel().newCall(getSyncMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.google.protobuf.Empty> execReply(
+        org.cse535.proto.ExecutionReply request) {
+      return futureUnaryCall(
+          getChannel().newCall(getExecReplyMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_REQUEST = 0;
@@ -467,6 +536,7 @@ public final class PaxosGrpc {
   private static final int METHODID_PREPARE = 2;
   private static final int METHODID_COMMIT = 3;
   private static final int METHODID_SYNC = 4;
+  private static final int METHODID_EXEC_REPLY = 5;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -504,6 +574,10 @@ public final class PaxosGrpc {
         case METHODID_SYNC:
           serviceImpl.sync((org.cse535.proto.PrepareRequest) request,
               (io.grpc.stub.StreamObserver<org.cse535.proto.PrepareResponse>) responseObserver);
+          break;
+        case METHODID_EXEC_REPLY:
+          serviceImpl.execReply((org.cse535.proto.ExecutionReply) request,
+              (io.grpc.stub.StreamObserver<com.google.protobuf.Empty>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -571,6 +645,7 @@ public final class PaxosGrpc {
               .addMethod(getPrepareMethod())
               .addMethod(getCommitMethod())
               .addMethod(getSyncMethod())
+              .addMethod(getExecReplyMethod())
               .build();
         }
       }

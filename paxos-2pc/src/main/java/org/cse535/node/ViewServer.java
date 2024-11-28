@@ -51,6 +51,13 @@ public class ViewServer extends NodeServer {
 
     HashMap<Integer, Boolean> activeServersStatusMap = new HashMap<>();
 
+
+    public HashMap<Integer, String> transactionStatuses = new HashMap<>();
+
+
+
+
+
     public ViewServer(String serverName, int port) {
         super(0, port);
         try {
@@ -163,12 +170,21 @@ public class ViewServer extends NodeServer {
             dataStore.put(server, op.getOutput());
         });
 
-        this.commandLogger.log("Server \\      Data Store");
+        this.commandLogger.log("Server \\ Data Store");
         dataStore.forEach((server, data) -> {
             this.commandLogger.log( data);
         });
 
         this.commandLogger.log("---------------------------------------------------------------------------------------------\n");
+
+
+        this.commandLogger.log("Transaction Statuses: \n");
+
+        this.transactionStatuses.forEach((tnxNum, status) -> {
+            this.commandLogger.log(" " + tnxNum + " :: " + Utils.toString(transactions.get(tnxNum)) + " : " + status);
+        });
+
+
     }
 
 
@@ -236,9 +252,6 @@ public class ViewServer extends NodeServer {
 
 
     public HashMap<Integer, Transaction> transactions = new HashMap<>();
-
-    public HashMap<Integer, Integer> transactionsStstusMap = new HashMap<>();
-
 
 
     public static ViewServer viewServer;

@@ -106,6 +106,11 @@ public class Utils {
         if(commitRequest == null) return "";
 
         if(commitRequest.getTransaction().getIsCrossShard()){
+
+            if(commitRequest.getAbort()){
+                return "[<"+ commitRequest.getBallotNumber() + ","+ commitRequest.getProcessId() +">, A, "+ toDataStoreString(commitRequest.getTransaction()) +"]";
+            }
+
             return "[<"+ commitRequest.getBallotNumber() + ","+ commitRequest.getProcessId() +">, C, "+ toDataStoreString(commitRequest.getTransaction()) +"]";
         }
 

@@ -298,16 +298,10 @@ public class ViewServer extends NodeServer {
 
     public static void main(String[] args) throws InterruptedException, IOException {
 
-//        int viewServerNum = Integer.parseInt(args[0]);
-//        GlobalConfigs.TotalServers = Integer.parseInt(args[1]);
-//        GlobalConfigs.numServersPerCluster = Integer.parseInt(args[2]);
-//        GlobalConfigs.TotalDataItems = Integer.parseInt(args[3]);
-
-        int viewServerNum = 0;
-        GlobalConfigs.TotalServers = 9;
-        GlobalConfigs.numServersPerCluster = 3;
-        GlobalConfigs.TotalDataItems = 3000;
-
+        int viewServerNum = Integer.parseInt(args[0]);
+        GlobalConfigs.TotalServers = Integer.parseInt(args[1]);
+        GlobalConfigs.numServersPerCluster = Integer.parseInt(args[2]);
+        GlobalConfigs.TotalDataItems = Integer.parseInt(args[3]);
 
         GlobalConfigs.LoadConfigs();
 

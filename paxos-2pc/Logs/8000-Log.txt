@@ -47,11 +47,11 @@ Line: 20 : 6,"(299, 1999, 15)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, 
 Printing Data Store
 -------------------------------------------------------------
 Line: 21 : 6,"(1001, 2999, 6)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
--------------------------------------------------------------
-Line: 22 : 6,"(2150, 1111, 9)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
 ( 299, 1999, 15)  Transaction successful on both sender and receiver side, committing now....
 -----------------------------------------Transaction ( 299 -> 1999 = 15 ) ; -----------------------------------------
 ( 299, 1999, 15)  Transaction status: COMMITTED
+-------------------------------------------------------------
+Line: 22 : 6,"(2150, 1111, 9)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
 -------------------------------------------------------------
 Line: 23 : 7,"(2001, 11, 3)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
 ( 299, 1999, 15)  ballotNumber: 9
@@ -78,6 +78,8 @@ clusterId: 2
 
 ( 299, 1999, 15)  -----------------------------------------DONE-----------------------------------------
 (2150, 1111,  9)  Transaction successful on both sender and receiver side, committing now....
+(1001, 2999,  6)  Transaction successful on both sender and receiver side, committing now....
+-----------------------------------------Transaction ( 1001 -> 2999 = 6 ) ; -----------------------------------------
 -----------------------------------------Transaction ( 2150 -> 1111 = 9 ) ; -----------------------------------------
 (2150, 1111,  9)  Transaction status: COMMITTED
 (2150, 1111,  9)  ballotNumber: 7
@@ -103,8 +105,6 @@ transaction {
 clusterId: 2
 
 (2150, 1111,  9)  -----------------------------------------DONE-----------------------------------------
-(1001, 2999,  6)  Transaction successful on both sender and receiver side, committing now....
------------------------------------------Transaction ( 1001 -> 2999 = 6 ) ; -----------------------------------------
 (1001, 2999,  6)  Transaction status: COMMITTED
 (1001, 2999,  6)  ballotNumber: 7
 processId: "S4"
@@ -130,12 +130,10 @@ clusterId: 3
 
 (1001, 2999,  6)  -----------------------------------------DONE-----------------------------------------
 Printing Data Store
--------------------------------------------------------------
-Line: 24 : 7,"(11, 2001, 9)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
 (2001,   11,  3)  Transaction successful on both sender and receiver side, committing now....
 -----------------------------------------Transaction ( 2001 -> 11 = 3 ) ; -----------------------------------------
 (2001,   11,  3)  Transaction status: COMMITTED
-(2001,   11,  3)  ballotNumber: 9
+(2001,   11,  3)  ballotNumber: 8
 processId: "S7"
 transaction {
   sender: 2001
@@ -158,13 +156,12 @@ transaction {
 clusterId: 1
 
 (2001,   11,  3)  -----------------------------------------DONE-----------------------------------------
-(  11, 2001,  9)  Transaction failed on sender side, aborting.
-(  11, 2001,  9)  Transaction failed on receiver side, aborting.
 -------------------------------------------------------------
-Line: 25 : 7,"(2999, 1999, 6)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
+Line: 24 : 7,"(11, 2001, 9)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
+(  11, 2001,  9)  Transaction successful on both sender and receiver side, committing now....
 -----------------------------------------Transaction ( 11 -> 2001 = 9 ) ; -----------------------------------------
-(  11, 2001,  9)  Transaction status: ABORTED-Sender failed; Receiver failed; 
-(  11, 2001,  9)  ballotNumber: -1
+(  11, 2001,  9)  Transaction status: COMMITTED
+(  11, 2001,  9)  ballotNumber: 11
 processId: "S1"
 transaction {
   sender: 11
@@ -173,10 +170,9 @@ transaction {
   transactionNum: 24
   isCrossShard: true
 }
-abort: true
 clusterId: 1
 
-(  11, 2001,  9)  ballotNumber: -1
+(  11, 2001,  9)  ballotNumber: 9
 processId: "S7"
 transaction {
   sender: 11
@@ -185,12 +181,11 @@ transaction {
   transactionNum: 24
   isCrossShard: true
 }
-abort: true
 clusterId: 3
 
 (  11, 2001,  9)  -----------------------------------------DONE-----------------------------------------
 -------------------------------------------------------------
-Line: 26 : 8,"(121, 601, 1)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
+Line: 25 : 7,"(2999, 1999, 6)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
 (2999, 1999,  6)  Transaction successful on both sender and receiver side, committing now....
 -----------------------------------------Transaction ( 2999 -> 1999 = 6 ) ; -----------------------------------------
 (2999, 1999,  6)  Transaction status: COMMITTED
@@ -205,7 +200,7 @@ transaction {
 }
 clusterId: 3
 
-(2999, 1999,  6)  ballotNumber: 10
+(2999, 1999,  6)  ballotNumber: 9
 processId: "S4"
 transaction {
   sender: 2999
@@ -217,6 +212,8 @@ transaction {
 clusterId: 2
 
 (2999, 1999,  6)  -----------------------------------------DONE-----------------------------------------
+-------------------------------------------------------------
+Line: 26 : 8,"(121, 601, 1)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
 Printing Data Store
 -------------------------------------------------------------
 Line: 27 : 8,"(121, 2525, 8)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
@@ -250,8 +247,6 @@ clusterId: 3
 ( 121, 2525,  8)  -----------------------------------------DONE-----------------------------------------
 -------------------------------------------------------------
 Line: 28 : 8,"(2525, 1505, 7)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
--------------------------------------------------------------
-Line: 29 : 9,"(2596, 2297, 3)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
 (2525, 1505,  7)  Transaction successful on both sender and receiver side, committing now....
 -----------------------------------------Transaction ( 2525 -> 1505 = 7 ) ; -----------------------------------------
 (2525, 1505,  7)  Transaction status: COMMITTED
@@ -266,7 +261,7 @@ transaction {
 }
 clusterId: 3
 
-(2525, 1505,  7)  ballotNumber: 11
+(2525, 1505,  7)  ballotNumber: 10
 processId: "S4"
 transaction {
   sender: 2525
@@ -278,13 +273,11 @@ transaction {
 clusterId: 2
 
 (2525, 1505,  7)  -----------------------------------------DONE-----------------------------------------
+-------------------------------------------------------------
+Line: 29 : 9,"(2596, 2297, 3)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
 Printing Data Store
 -------------------------------------------------------------
 Line: 30 : 9,"(796, 1997, 9)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
--------------------------------------------------------------
-Line: 31 : 9,"(2196, 2397, 3)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
--------------------------------------------------------------
-Line: 32 : 10,"(796, 1997, 7)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
 ( 796, 1997,  9)  Transaction failed on sender side, aborting.
 -----------------------------------------Transaction ( 796 -> 1997 = 9 ) ; -----------------------------------------
 ( 796, 1997,  9)  Transaction status: ABORTED-Sender failed; 
@@ -300,7 +293,7 @@ transaction {
 abort: true
 clusterId: 1
 
-( 796, 1997,  9)  ballotNumber: 12
+( 796, 1997,  9)  ballotNumber: 11
 processId: "S4"
 transaction {
   sender: 796
@@ -313,11 +306,15 @@ abort: true
 clusterId: 2
 
 ( 796, 1997,  9)  -----------------------------------------DONE-----------------------------------------
+-------------------------------------------------------------
+Line: 31 : 9,"(2196, 2397, 3)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
+-------------------------------------------------------------
+Line: 32 : 10,"(796, 1997, 7)","[S1, S2, S3, S4, S5, S6, S7, S8, S9]","[S1, S4, S7]"
 Printing Data Store
 ( 796, 1997,  7)  Transaction successful on both sender and receiver side, committing now....
 -----------------------------------------Transaction ( 796 -> 1997 = 7 ) ; -----------------------------------------
 ( 796, 1997,  7)  Transaction status: COMMITTED
-( 796, 1997,  7)  ballotNumber: 12
+( 796, 1997,  7)  ballotNumber: 13
 processId: "S1"
 transaction {
   sender: 796
@@ -328,7 +325,7 @@ transaction {
 }
 clusterId: 1
 
-( 796, 1997,  7)  ballotNumber: 13
+( 796, 1997,  7)  ballotNumber: 12
 processId: "S4"
 transaction {
   sender: 796

@@ -11,10 +11,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 
 public class ViewServer extends NodeServer {
@@ -44,7 +41,8 @@ public class ViewServer extends NodeServer {
         PrintDB,
         PrintLog,
         Performance,
-        PrintDataStore
+        PrintDataStore,
+        PrintBalance
     }
 
 
@@ -54,7 +52,7 @@ public class ViewServer extends NodeServer {
 
     public HashMap<Integer, String> transactionStatuses = new HashMap<>();
 
-
+    public HashSet<Integer> participatingDataItems = new HashSet<>();
 
 
 
@@ -175,24 +173,45 @@ public class ViewServer extends NodeServer {
             this.commandLogger.log( data);
         });
 
-        this.commandLogger.log("---------------------------------------------------------------------------------------------\n");
-
-
-        this.commandLogger.log("Transaction Statuses: \n");
+        this.commandLogger.log("\n\n-----------------------------------Transaction Statuses:-----------------------------------\n");
 
         this.transactionStatuses.forEach((tnxNum, status) -> {
-            this.commandLogger.log(" " + tnxNum + " :: " + Utils.toString(transactions.get(tnxNum)) + " : " + status);
+            this.commandLogger.log(" " + String.format("%3d", tnxNum) + " :: Transaction " + Utils.toDataStoreString(transactions.get(tnxNum)) + " : " + status);
         });
-
-
     }
 
+    public void PrintBalance(){
+        this.commandLogger.log("------------------------------PrintBalance---------------------------------\n");
 
+        this.participatingDataItems.forEach( dataItem -> {
+            CommandInput commandInput = CommandInput.newBuilder().setInput( String.valueOf(dataItem) ).build();
+            StringBuilder balances = new StringBuilder();
+
+            int cluster = Utils.FindClusterOfDataItem(dataItem);
+
+            GlobalConfigs.clusterToServersMap.get(cluster).forEach( server -> {
+                if(server == 0) return;
+                CommandsGrpc.CommandsBlockingStub stub = this.serversToCommandsStub.get(server);
+                CommandOutput op = stub.printBalance(commandInput);
+                balances.append(op.getOutput()).append("; ");
+            });
+
+            this.commandLogger.log( String.format("%4d", dataItem) + " Balances: " + balances.toString());
+        });
+
+        this.commandLogger.log("----------------------------------------------------------------------------\n");
+
+    }
 
     public void sendCommandToServers(Command commandType) throws InterruptedException {
 
         if(commandType == Command.PrintDataStore){
             PrintDataStore();
+            return;
+        }
+
+        if(commandType == Command.PrintBalance){
+            PrintBalance();
             return;
         }
 
@@ -226,15 +245,17 @@ public class ViewServer extends NodeServer {
     }
 
 
-
-
     public void sendTransactionToServer(TransactionInputConfig transactionInputConfig, String server){
 
+        participatingDataItems.add(transactionInputConfig.getTransaction().getSender());
+        participatingDataItems.add(transactionInputConfig.getTransaction().getReceiver());
         serversToPaxosStub.get( Integer.parseInt(server.replaceAll("S","")) ).request(transactionInputConfig);
 
     }
 
     public void sendCrossShardTransaction(TransactionInputConfig transactionInputConfig, String senderServer, String receiverServer){
+        participatingDataItems.add(transactionInputConfig.getTransaction().getSender());
+        participatingDataItems.add(transactionInputConfig.getTransaction().getReceiver());
         try {
             CrossShardTnxProcessingThread thread = new CrossShardTnxProcessingThread(this, transactionInputConfig, senderServer, receiverServer);
             thread.start();
@@ -349,10 +370,12 @@ public class ViewServer extends NodeServer {
                     viewServer.sendCommandToServers( Command.PrintDB );
                     viewServer.sendCommandToServers( Command.PrintLog );
                     viewServer.sendCommandToServers( Command.PrintDataStore );
+                    viewServer.sendCommandToServers( Command.PrintBalance );
 
                     System.out.print("Press Enter to continue to next Test set "+transactionInputConfig.getSetNumber() + " ");
                     System.console().readLine();
 
+                    viewServer.participatingDataItems.clear();
 
                     for( Integer server : GlobalConfigs.ServerToPortMap.keySet()) {
                         if(server == viewServerNum) continue;
@@ -409,6 +432,7 @@ public class ViewServer extends NodeServer {
             viewServer.sendCommandToServers( Command.PrintDB );
             viewServer.sendCommandToServers( Command.PrintLog );
             viewServer.sendCommandToServers( Command.PrintDataStore );
+            viewServer.sendCommandToServers( Command.PrintBalance );
 
 
         }

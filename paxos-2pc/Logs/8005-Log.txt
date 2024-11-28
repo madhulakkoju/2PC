@@ -175,30 +175,6 @@ transaction {
   transactionNum: 22
   isCrossShard: true
 }
-latestCommittedBallotNumber: 5
-clusterId: 2
-
--------------------
-DB -> Last Committed Ballot Number: 6
-Req -> getLatestCommittedBallotNumber5
-Ahead check
-Last Accepted Uncommitted Ballot Number: 7
-Req Ballot Number 8
-Success condition
-Last Accepted Uncommitted Transaction: Transaction ( 1001 -> 2999 = 6 ) ; 
-Last Committed Transaction: Transaction ( 299 -> 1999 = 15 ) ; 
-Prepare Request Rejected from S4 Because Current Server is ahead of Leader 
-Received prepare request from S4 with ballot number 9
-Prepare Request Received from S4
-ballotNumber: 9
-processId: "S4"
-transaction {
-  sender: 2150
-  receiver: 1111
-  amount: 9
-  transactionNum: 22
-  isCrossShard: true
-}
 latestCommittedTransaction {
   sender: 299
   receiver: 1999
@@ -214,7 +190,7 @@ DB -> Last Committed Ballot Number: 6
 Req -> getLatestCommittedBallotNumber6
 Ahead check
 Last Accepted Uncommitted Ballot Number: 7
-Req Ballot Number 9
+Req Ballot Number 8
 Success condition
 Last Accepted Uncommitted Transaction: Transaction ( 1001 -> 2999 = 6 ) ; 
 Last Committed Transaction: Transaction ( 299 -> 1999 = 15 ) ; 
@@ -225,9 +201,9 @@ Commit Request Accepted from S4
 Received Commit request from S4 with ballot number 7
 Commit Request Received from S4
 Commit Request Accepted from S4
-Received prepare request from S4 with ballot number 10
+Received prepare request from S4 with ballot number 9
 Prepare Request Received from S4
-ballotNumber: 10
+ballotNumber: 9
 processId: "S4"
 transaction {
   sender: 2999
@@ -237,31 +213,31 @@ transaction {
   isCrossShard: true
 }
 latestCommittedTransaction {
-  sender: 1001
-  receiver: 2999
-  amount: 6
-  transactionNum: 21
+  sender: 2150
+  receiver: 1111
+  amount: 9
+  transactionNum: 22
   isCrossShard: true
 }
-latestCommittedBallotNumber: 7
+latestCommittedBallotNumber: 8
 clusterId: 2
 
 -------------------
 DB -> Last Committed Ballot Number: 7
-Req -> getLatestCommittedBallotNumber7
+Req -> getLatestCommittedBallotNumber8
 Ahead check
-Last Accepted Uncommitted Ballot Number: 9
-Req Ballot Number 10
+Last Accepted Uncommitted Ballot Number: 8
+Req Ballot Number 9
 Success condition
 Last Accepted Uncommitted Transaction: Transaction ( 2150 -> 1111 = 9 ) ; 
 Last Committed Transaction: Transaction ( 1001 -> 2999 = 6 ) ; 
 Prepare Request Accepted from S4
-Received Commit request from S4 with ballot number 10
+Received Commit request from S4 with ballot number 9
 Commit Request Received from S4
 Commit Request Accepted from S4
-Received prepare request from S4 with ballot number 11
+Received prepare request from S4 with ballot number 10
 Prepare Request Received from S4
-ballotNumber: 11
+ballotNumber: 10
 processId: "S4"
 transaction {
   sender: 2525
@@ -277,25 +253,25 @@ latestCommittedTransaction {
   transactionNum: 25
   isCrossShard: true
 }
-latestCommittedBallotNumber: 10
+latestCommittedBallotNumber: 9
 clusterId: 2
 
 -------------------
-DB -> Last Committed Ballot Number: 10
-Req -> getLatestCommittedBallotNumber10
+DB -> Last Committed Ballot Number: 9
+Req -> getLatestCommittedBallotNumber9
 Ahead check
-Last Accepted Uncommitted Ballot Number: 10
-Req Ballot Number 11
+Last Accepted Uncommitted Ballot Number: 9
+Req Ballot Number 10
 Success condition
 Last Accepted Uncommitted Transaction: Transaction ( 2999 -> 1999 = 6 ) ; 
 Last Committed Transaction: Transaction ( 2999 -> 1999 = 6 ) ; 
 Prepare Request Accepted from S4
-Received Commit request from S4 with ballot number 11
+Received Commit request from S4 with ballot number 10
 Commit Request Received from S4
 Commit Request Accepted from S4
-Received prepare request from S4 with ballot number 12
+Received prepare request from S4 with ballot number 11
 Prepare Request Received from S4
-ballotNumber: 12
+ballotNumber: 11
 processId: "S4"
 transaction {
   sender: 796
@@ -311,24 +287,24 @@ latestCommittedTransaction {
   transactionNum: 28
   isCrossShard: true
 }
-latestCommittedBallotNumber: 11
+latestCommittedBallotNumber: 10
 clusterId: 2
 
 -------------------
-DB -> Last Committed Ballot Number: 11
-Req -> getLatestCommittedBallotNumber11
+DB -> Last Committed Ballot Number: 10
+Req -> getLatestCommittedBallotNumber10
 Ahead check
-Last Accepted Uncommitted Ballot Number: 11
-Req Ballot Number 12
+Last Accepted Uncommitted Ballot Number: 10
+Req Ballot Number 11
 Success condition
 Last Accepted Uncommitted Transaction: Transaction ( 2525 -> 1505 = 7 ) ; 
 Last Committed Transaction: Transaction ( 2525 -> 1505 = 7 ) ; 
 Prepare Request Accepted from S4
-Received Commit request from S4 with ballot number 12
+Received Commit request from S4 with ballot number 11
 Abort Request Received from S4
-Received prepare request from S4 with ballot number 13
+Received prepare request from S4 with ballot number 12
 Prepare Request Received from S4
-ballotNumber: 13
+ballotNumber: 12
 processId: "S4"
 transaction {
   sender: 796
@@ -344,20 +320,20 @@ latestCommittedTransaction {
   transactionNum: 28
   isCrossShard: true
 }
-latestCommittedBallotNumber: 11
+latestCommittedBallotNumber: 10
 clusterId: 2
 
 -------------------
-DB -> Last Committed Ballot Number: 11
-Req -> getLatestCommittedBallotNumber11
+DB -> Last Committed Ballot Number: 10
+Req -> getLatestCommittedBallotNumber10
 Ahead check
-Last Accepted Uncommitted Ballot Number: 12
-Req Ballot Number 13
+Last Accepted Uncommitted Ballot Number: 11
+Req Ballot Number 12
 Success condition
 Last Accepted Uncommitted Transaction: Transaction ( 796 -> 1997 = 9 ) ; 
 Last Committed Transaction: Transaction ( 2525 -> 1505 = 7 ) ; 
 Prepare Request Accepted from S4
-Received Commit request from S4 with ballot number 13
+Received Commit request from S4 with ballot number 12
 Commit Request Received from S4
 Commit Request Accepted from S4
 Received Commit request from S4 with ballot number -1

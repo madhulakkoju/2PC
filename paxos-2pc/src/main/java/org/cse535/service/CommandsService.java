@@ -33,9 +33,10 @@ public class CommandsService extends CommandsGrpc.CommandsImplBase {
     @Override
     public void printBalance(CommandInput request, StreamObserver<CommandOutput> responseObserver) {
 
-
-                responseObserver.onNext(CommandOutput.newBuilder().setOutput("Balance").build());
-                responseObserver.onCompleted();
+        responseObserver.onNext(CommandOutput.newBuilder().setOutput(
+                Main.node.serverName + " : " + String.format( "%2d",
+                Main.node.database.getBalance( Integer.parseInt( request.getInput() )))).build());
+        responseObserver.onCompleted();
     }
 
     @Override

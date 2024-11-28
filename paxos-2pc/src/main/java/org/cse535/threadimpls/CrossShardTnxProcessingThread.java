@@ -62,7 +62,7 @@ public class CrossShardTnxProcessingThread extends Thread {
 
             } catch (Exception e) {
                 System.err.println("Error occurred while processing sender response: " + e.getMessage());
-                this.viewServer.logger.log("Error occurred while processing sender response: " + e.getMessage());
+                this.viewServer.logger.log( Utils.toDataStoreString(this.transactionInputConfig.getTransaction()) + " "+  "Error occurred while processing sender response: " + e.getMessage());
                 senderSuccess.set(false);
             } finally {
                 latch.countDown(); // Signal that the sender request has completed
@@ -82,7 +82,7 @@ public class CrossShardTnxProcessingThread extends Thread {
 
             } catch (Exception e) {
                 System.err.println("Error occurred while processing receiver response: " + e.getMessage());
-                this.viewServer.logger.log("Error occurred while processing receiver response: " + e.getMessage());
+                this.viewServer.logger.log( Utils.toDataStoreString(this.transactionInputConfig.getTransaction()) + " "+  "Error occurred while processing receiver response: " + e.getMessage());
                 receiverSuccess.set(false);
             } finally {
                 latch.countDown(); // Signal that the receiver request has completed
@@ -99,7 +99,7 @@ public class CrossShardTnxProcessingThread extends Thread {
         }
         catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            this.viewServer.logger.log("Thread interrupted while waiting for responses: " + e.getMessage());
+            this.viewServer.logger.log( Utils.toDataStoreString(this.transactionInputConfig.getTransaction()) + " "+  "Thread interrupted while waiting for responses: " + e.getMessage());
         }
 
         //wait for response from both servers
@@ -127,7 +127,7 @@ public class CrossShardTnxProcessingThread extends Thread {
 
         if (senderSuccess.get() && receiverSuccess.get()) {
             // Commit the transaction
-            this.viewServer.logger.log("Transaction successful on both sender and receiver side, committing now....");
+            this.viewServer.logger.log( Utils.toDataStoreString(this.transactionInputConfig.getTransaction()) + " "+  "Transaction successful on both sender and receiver side, committing now....");
 
 
             senderCommitRequest = CommitRequest.newBuilder()
@@ -152,11 +152,11 @@ public class CrossShardTnxProcessingThread extends Thread {
             failureReason = "ABORTED-";
             // Abort the transaction if any request failed
             if (!senderSuccess.get()) {
-               this.viewServer.logger.log("Transaction failed on sender side, aborting.");
+               this.viewServer.logger.log( Utils.toDataStoreString(this.transactionInputConfig.getTransaction()) + " "+  "Transaction failed on sender side, aborting.");
                failureReason += "Sender failed; ";
             }
             if (!receiverSuccess.get()) {
-                this.viewServer.logger.log("Transaction failed on receiver side, aborting.");
+                this.viewServer.logger.log( Utils.toDataStoreString(this.transactionInputConfig.getTransaction()) + " "+  "Transaction failed on receiver side, aborting.");
                 failureReason += "Receiver failed; ";
             }
 
@@ -172,7 +172,7 @@ public class CrossShardTnxProcessingThread extends Thread {
                         this.sendCommit(finalSenderCommitRequest, serverId);
                     } catch (Exception e) {
                         System.err.println("Error occurred while sending commit request to server " + serverId + ": " + e.getMessage());
-                        this.viewServer.logger.log("Error occurred while sending commit request to server " + serverId + ": " + e.getMessage());
+                        this.viewServer.logger.log( Utils.toDataStoreString(this.transactionInputConfig.getTransaction()) + " "+  "Error occurred while sending commit request to server " + serverId + ": " + e.getMessage());
                     }
                 });
 
@@ -183,15 +183,15 @@ public class CrossShardTnxProcessingThread extends Thread {
                         this.sendCommit(finalReceiverCommitRequest, serverId);
                     } catch (Exception e) {
                         System.err.println("Error occurred while sending commit request to server " + serverId + ": " + e.getMessage());
-                        this.viewServer.logger.log("Error occurred while sending commit request to server " + serverId + ": " + e.getMessage());
+                        this.viewServer.logger.log( Utils.toDataStoreString(this.transactionInputConfig.getTransaction()) + " "+  "Error occurred while sending commit request to server " + serverId + ": " + e.getMessage());
                     }
                 });
 
         this.viewServer.logger.log("-----------------------------------------" + Utils.toString(transactionInputConfig.getTransaction()) + "-----------------------------------------");
-        this.viewServer.logger.log("Transaction status: " + failureReason);
-        this.viewServer.logger.log(finalSenderCommitRequest.toString());
-        this.viewServer.logger.log(finalReceiverCommitRequest.toString());
-        this.viewServer.logger.log("-----------------------------------------DONE-----------------------------------------");
+        this.viewServer.logger.log( Utils.toDataStoreString(this.transactionInputConfig.getTransaction()) + " "+  "Transaction status: " + failureReason);
+        this.viewServer.logger.log( Utils.toDataStoreString(this.transactionInputConfig.getTransaction()) + " "+  finalSenderCommitRequest.toString());
+        this.viewServer.logger.log( Utils.toDataStoreString(this.transactionInputConfig.getTransaction()) + " "+  finalReceiverCommitRequest.toString());
+        this.viewServer.logger.log( Utils.toDataStoreString(this.transactionInputConfig.getTransaction()) + " "+  "-----------------------------------------DONE-----------------------------------------");
 
 
         //if any one of the server fails, then abort the transaction
@@ -208,7 +208,7 @@ public class CrossShardTnxProcessingThread extends Thread {
 
             } catch (Exception e) {
                 System.err.println("Error occurred while processing receiver response: " + e.getMessage());
-                this.viewServer.logger.log("Error occurred while processing receiver response: " + e.getMessage());
+                this.viewServer.logger.log( Utils.toDataStoreString(this.transactionInputConfig.getTransaction()) + " "+  "Error occurred while processing receiver response: " + e.getMessage());
 
             }
         });

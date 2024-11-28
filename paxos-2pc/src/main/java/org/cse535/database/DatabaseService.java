@@ -2,6 +2,8 @@ package org.cse535.database;
 
 import org.cse535.configs.GlobalConfigs;
 import org.cse535.configs.Utils;
+import org.cse535.node.Node;
+import org.cse535.node.NodeServer;
 import org.cse535.proto.*;
 import org.cse535.threadimpls.IntraShardTnxProcessingThread;
 
@@ -47,10 +49,10 @@ public class DatabaseService {
 
 
 
+    public NodeServer node;
 
 
-
-    public DatabaseService( Integer serverNum) {
+    public DatabaseService( Integer serverNum, NodeServer node) {
         this.ballotNumber = new AtomicInteger(0);
         this.lastAcceptedUncommittedBallotNumber = -1;
         this.lastAcceptedUncommittedTransaction = null;
@@ -71,6 +73,7 @@ public class DatabaseService {
         this.transactionStatusMap = new HashMap<>();
 
         this.dataStore = new AtomicReference<>(new ArrayList<>());
+        this.node = node;
 
         initializeSQLiteDatabase();
     }
@@ -123,22 +126,41 @@ public class DatabaseService {
         return true;
     }
 
-    public synchronized boolean executeTransaction(Transaction transaction) {
+    public boolean executeTransaction(Transaction transaction) {
+
+        this.node.walLogger.log( transaction.getTransactionNum() + " - BEGIN TNX : " + Utils.toDataStoreString(transaction));
 
         int sender = transaction.getSender();
         int receiver = transaction.getReceiver();
         int amount = transaction.getAmount();
 
+        this.node.walLogger.log( transaction.getTransactionNum() + " - READ : " + sender );
+
         int senderBalance = getBalance(sender);
 
         if(senderBalance < amount){
+            this.node.walLogger.log( transaction.getTransactionNum() + " - ABORTED : " + Utils.toDataStoreString(transaction));
             return false;
         }
 
+        this.node.walLogger.log( transaction.getTransactionNum() + " - READ : " + receiver );
+
         int receiverBalance = getBalance(receiver);
 
-        updateBalance(sender, senderBalance - amount);
-        updateBalance(receiver, receiverBalance + amount);
+        this.node.walLogger.log( transaction.getTransactionNum() + " - BEFORE TNX : " + Utils.toDataStoreString(transaction));
+
+        if(Utils.FindClusterOfDataItem(receiver) == this.node.clusterNumber ) {
+            updateBalance(sender, senderBalance - amount);
+            this.node.walLogger.log(transaction.getTransactionNum() + " - WRITE : " + sender + " : " + (senderBalance - amount));
+        }
+
+
+        if(Utils.FindClusterOfDataItem(receiver) == this.node.clusterNumber ){
+            updateBalance(receiver, receiverBalance + amount);
+            this.node.walLogger.log( transaction.getTransactionNum() + " - WRITE : " + receiver + " : " + (receiverBalance + amount));
+        }
+
+        this.node.walLogger.log( transaction.getTransactionNum() + " - COMMIT : " + Utils.toDataStoreString(transaction));
 
         return true;
     }

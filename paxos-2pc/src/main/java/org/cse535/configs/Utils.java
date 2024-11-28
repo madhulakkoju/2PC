@@ -89,17 +89,17 @@ public class Utils {
 
     public static String toDataStoreString(Transaction transaction){
         if(transaction == null) return "";
-        return "(" + transaction.getSender() + ", " + transaction.getReceiver() + ", " + transaction.getAmount() + ") ";
+        return "(" + String.format("%4d", transaction.getSender()) + ", " + String.format("%4d", transaction.getReceiver()) + ", " + String.format("%2d", transaction.getAmount()) + ") ";
     }
 
     public static String toDataStoreString(PrepareRequest prepareRequest) {
         if(prepareRequest == null) return "";
 
         if(prepareRequest.getTransaction().getIsCrossShard()){
-            return "[<"+ prepareRequest.getBallotNumber() + ","+ prepareRequest.getProcessId() +">, P, "+ toDataStoreString(prepareRequest.getTransaction()) +"]";
+            return "[<"+ String.format("%4d", prepareRequest.getBallotNumber()) + ","+ prepareRequest.getProcessId() +">, P, "+ toDataStoreString(prepareRequest.getTransaction()) +"]";
         }
 
-        return "[<"+ prepareRequest.getBallotNumber() + ","+ prepareRequest.getProcessId() +">,"+ toDataStoreString(prepareRequest.getTransaction()) +"]";
+        return "[<"+ String.format("%2d", prepareRequest.getBallotNumber()) + ","+ prepareRequest.getProcessId() +">,"+ toDataStoreString(prepareRequest.getTransaction()) +"]";
     }
 
     public static String toDataStoreString(CommitRequest commitRequest) {
@@ -108,13 +108,13 @@ public class Utils {
         if(commitRequest.getTransaction().getIsCrossShard()){
 
             if(commitRequest.getAbort()){
-                return "[<"+ commitRequest.getBallotNumber() + ","+ commitRequest.getProcessId() +">, A, "+ toDataStoreString(commitRequest.getTransaction()) +"]";
+                return "[<"+ String.format("%4d", commitRequest.getBallotNumber()) + ","+ commitRequest.getProcessId() +">, A, "+ toDataStoreString(commitRequest.getTransaction()) +"]";
             }
 
-            return "[<"+ commitRequest.getBallotNumber() + ","+ commitRequest.getProcessId() +">, C, "+ toDataStoreString(commitRequest.getTransaction()) +"]";
+            return "[<"+ String.format("%4d", commitRequest.getBallotNumber()) + ","+ commitRequest.getProcessId() +">, C, "+ toDataStoreString(commitRequest.getTransaction()) +"]";
         }
 
-        return "[<"+ commitRequest.getBallotNumber() + ","+ commitRequest.getProcessId() +">, "+ toDataStoreString(commitRequest.getTransaction()) +"]";
+        return "[<"+ String.format("%4d", commitRequest.getBallotNumber()) + ","+ commitRequest.getProcessId() +">, "+ toDataStoreString(commitRequest.getTransaction()) +"]";
     }
 
 

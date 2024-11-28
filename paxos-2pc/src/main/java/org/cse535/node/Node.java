@@ -116,11 +116,6 @@ public class Node extends NodeServer {
 
 
 
-
-
-
-
-
     public boolean processIntraShardTransaction(Transaction transaction, int ballotNumber) {
 
         if(Utils.CheckTransactionBelongToMyCluster(transaction, this.serverNumber)){
@@ -143,9 +138,6 @@ public class Node extends NodeServer {
         }
         return false;
     }
-
-
-
 
     public CrossTxnResponse processCrossShardTransaction(TransactionInputConfig transactionInputConfig) {
 
@@ -355,8 +347,6 @@ public class Node extends NodeServer {
 
 
 
-
-
     public void addSyncDataToPrepareResponse( PrepareResponse.Builder prepareResponse, PrepareRequest request){
         // add all Transactions & statuses after request's committed tnx
         for (int i = request.getLatestCommittedBallotNumber()+1; i <= this.database.ballotNumber.get() ; i++) {
@@ -504,6 +494,8 @@ public class Node extends NodeServer {
                     commitResponse.setSuccess(true);
                     this.database.transactionStatusMap.put(request.getBallotNumber(), TransactionStatus.COMMITTED);
                     this.logger.log("Commit Request Accepted from " + request.getProcessId());
+
+                    this.database.executeTransaction(request.getTransaction());
             }
 
         }
@@ -539,6 +531,7 @@ public class Node extends NodeServer {
                     this.database.transactionStatusMap.put(request.getBallotNumber(), TransactionStatus.COMMITTED);
                     this.logger.log("Commit Request Accepted from " + request.getProcessId());
 
+                    this.database.executeTransaction(request.getTransaction());
                 }
 
             }

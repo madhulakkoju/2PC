@@ -24,6 +24,7 @@ public class NodeServer {
     public int port;
     public LogUtils logger;
     public LogUtils commandLogger;
+    public LogUtils walLogger;
 
 
 
@@ -60,6 +61,7 @@ public class NodeServer {
 
         this.logger = new LogUtils(port);
         this.commandLogger = new LogUtils("Commands", port);
+        this.walLogger = new LogUtils(port, true);
 
 
 
@@ -84,7 +86,7 @@ public class NodeServer {
 
         isServerActive = new AtomicBoolean(true);
 
-        database = new DatabaseService(this.serverNumber);
+        database = new DatabaseService(this.serverNumber, this);
 
         System.out.println("Current Server: " + serverName + " Port: " + port);
 

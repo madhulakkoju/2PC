@@ -1,0 +1,82 @@
+ 
+1 - BEGIN TNX : ( 100,  501,  8) 
+1 - READ : 100
+1 - READ : 501
+1 - BEFORE TNX : ( 100,  501,  8) 
+1 - WRITE : 100 : 2
+1 - WRITE : 501 : 18
+1 - COMMIT : ( 100,  501,  8) 
+5 - BEGIN TNX : ( 501,  299, 13) 
+5 - READ : 501
+5 - READ : 299
+5 - BEFORE TNX : ( 501,  299, 13) 
+5 - WRITE : 501 : 5
+5 - WRITE : 299 : 23
+5 - COMMIT : ( 501,  299, 13) 
+6 - BEGIN TNX : ( 101,  301,  9) 
+6 - READ : 101
+6 - READ : 301
+6 - BEFORE TNX : ( 101,  301,  9) 
+6 - WRITE : 101 : 1
+6 - WRITE : 301 : 19
+6 - COMMIT : ( 101,  301,  9) 
+7 - BEGIN TNX : ( 299,    1,  4) 
+7 - READ : 299
+7 - READ : 1
+7 - BEFORE TNX : ( 299,    1,  4) 
+7 - WRITE : 299 : 19
+7 - WRITE : 1 : 14
+7 - COMMIT : ( 299,    1,  4) 
+9 - BEGIN TNX : ( 796,  997,  3) 
+9 - READ : 796
+9 - READ : 997
+9 - BEFORE TNX : ( 796,  997,  3) 
+9 - WRITE : 796 : 7
+9 - WRITE : 997 : 13
+9 - COMMIT : ( 796,  997,  3) 
+13 - BEGIN TNX : ( 196,  197,  3) 
+13 - READ : 196
+13 - READ : 197
+13 - BEFORE TNX : ( 196,  197,  3) 
+13 - WRITE : 196 : 7
+13 - WRITE : 197 : 13
+13 - COMMIT : ( 196,  197,  3) 
+15 - BEGIN TNX : ( 973,  707,  2) 
+15 - READ : 973
+15 - READ : 707
+15 - BEFORE TNX : ( 973,  707,  2) 
+15 - WRITE : 973 : 8
+15 - WRITE : 707 : 12
+15 - COMMIT : ( 973,  707,  2) 
+17 - BEGIN TNX : ( 333,  691,  4) 
+17 - READ : 333
+17 - READ : 691
+17 - BEFORE TNX : ( 333,  691,  4) 
+17 - WRITE : 333 : 6
+17 - WRITE : 691 : 14
+17 - COMMIT : ( 333,  691,  4) 
+20 - BEGIN TNX : ( 299, 1999, 15) 
+20 - READ : 299
+20 - READ : 1999
+20 - BEFORE TNX : ( 299, 1999, 15) 
+20 - COMMIT : ( 299, 1999, 15) 
+23 - BEGIN TNX : (2001,   11,  3) 
+23 - READ : 2001
+23 - ABORTED : (2001,   11,  3) 
+24 - BEGIN TNX : (  11, 2001,  9) 
+24 - READ : 11
+24 - READ : 2001
+24 - BEFORE TNX : (  11, 2001,  9) 
+24 - COMMIT : (  11, 2001,  9) 
+26 - BEGIN TNX : ( 121,  601,  1) 
+26 - READ : 121
+26 - READ : 601
+26 - BEFORE TNX : ( 121,  601,  1) 
+26 - WRITE : 121 : 9
+26 - WRITE : 601 : 11
+26 - COMMIT : ( 121,  601,  1) 
+32 - BEGIN TNX : ( 796, 1997,  7) 
+32 - READ : 796
+32 - READ : 1997
+32 - BEFORE TNX : ( 796, 1997,  7) 
+32 - COMMIT : ( 796, 1997,  7) 

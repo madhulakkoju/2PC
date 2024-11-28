@@ -30,7 +30,14 @@ public class LogUtils {
 
     public LogUtils(int portId) {
         this.portId = portId;
-        this.filePath = "Logs/Log-" + this.portId +".txt";
+        this.filePath = "Logs/"+this.portId+"-Log.txt";
+        this.initializeLogger();
+    }
+
+    public LogUtils(int portId, boolean isWAL) {
+        super();
+        this.filePath = "Logs/WAL/S"+(portId-8000)+".txt";
+        this.portId = portId;
         this.initializeLogger();
     }
 

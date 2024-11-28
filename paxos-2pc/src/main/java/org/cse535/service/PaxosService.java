@@ -104,6 +104,7 @@ public class PaxosService extends PaxosGrpc.PaxosImplBase {
         if(ViewServer.viewServer != null){
             ViewServer.viewServer.transactionStatuses.put(request.getTransactionNum(),
                     request.getSuccess() ? "COMMITTED" : "ABORTED-"+request.getFailureReason());
+            ViewServer.viewServer.endTime = System.currentTimeMillis();
         }
 
         responseObserver.onNext(Empty.newBuilder().build());

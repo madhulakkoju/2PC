@@ -46,6 +46,12 @@ public class ViewServer extends NodeServer {
     }
 
 
+    public long startTime = System.currentTimeMillis();
+    public long endTime = System.currentTimeMillis();
+    public long transactionsCount = 0;
+
+
+
 
     HashMap<Integer, Boolean> activeServersStatusMap = new HashMap<>();
 
@@ -203,6 +209,20 @@ public class ViewServer extends NodeServer {
 
     }
 
+    public void PrintPerformance(){
+        double latency = endTime - startTime;
+        double throughput = 0.0;
+        if( latency != 0.0){
+            throughput = (transactionsCount / latency)*1000;
+        }
+
+        this.commandLogger.log("-------------------------Performance---------------------------------\n"
+                + "Total Transactions: " + transactionsCount + "\n"
+                + "Latency: " + String.format("%.8f",latency) + " ms\n"
+                + "Throughput: " + String.format("%.8f", throughput) + " tps\n" +
+                "----------------------------------------------------------------------------\n");
+    }
+
     public void sendCommandToServers(Command commandType) throws InterruptedException {
 
         if(commandType == Command.PrintDataStore){
@@ -212,6 +232,11 @@ public class ViewServer extends NodeServer {
 
         if(commandType == Command.PrintBalance){
             PrintBalance();
+            return;
+        }
+
+        if(commandType == Command.Performance){
+            PrintPerformance();
             return;
         }
 
@@ -229,12 +254,6 @@ public class ViewServer extends NodeServer {
                     break;
                 case PrintLog:
                     op = stub.printLog(commandInput);
-                    break;
-                case Performance:
-                    op = stub.performance(commandInput);
-                    break;
-                case PrintDataStore:
-                    op = stub.printDatastore(commandInput);
                     break;
             }
 
@@ -321,7 +340,7 @@ public class ViewServer extends NodeServer {
             {
                 lineNum++;
 
-                Thread.sleep(5);
+                //Thread.sleep(5);
 
                 // System.out.println("Line: " + line);
                 viewServer.logger.log("-------------------------------------------------------------\nLine: "+ lineNum +" : "+ line);
@@ -371,11 +390,13 @@ public class ViewServer extends NodeServer {
                     viewServer.sendCommandToServers( Command.PrintLog );
                     viewServer.sendCommandToServers( Command.PrintDataStore );
                     viewServer.sendCommandToServers( Command.PrintBalance );
+                    viewServer.sendCommandToServers( Command.Performance );
 
                     System.out.print("Press Enter to continue to next Test set "+transactionInputConfig.getSetNumber() + " ");
                     System.console().readLine();
 
                     viewServer.participatingDataItems.clear();
+                    viewServer.transactionsCount = 0;
 
                     for( Integer server : GlobalConfigs.ServerToPortMap.keySet()) {
                         if(server == viewServerNum) continue;
@@ -393,6 +414,9 @@ public class ViewServer extends NodeServer {
                     viewServer.commandLogger.log("---------------------------------------------------------------------------------");
                     viewServer.commandLogger.log("                               Test Case: " + transactionInputConfig.getSetNumber());
                     viewServer.commandLogger.log("---------------------------------------------------------------------------------");
+
+                    viewServer.startTime = System.currentTimeMillis();
+                    viewServer.endTime = System.currentTimeMillis();
                 }
 
 
@@ -405,7 +429,7 @@ public class ViewServer extends NodeServer {
                 viewServer.transactions.put(transactionInputConfig.getTransaction().getTransactionNum(), transactionInputConfig.getTransaction());
 
                 // Check whether transaction is IntraShard or Cross Shard
-
+                viewServer.transactionsCount++;
                 if( !transactionInputConfig.getTransaction().getIsCrossShard() ){
                     //Intra Shard.. can send to contact server from the shard.
                     int cluster = Utils.FindClusterOfDataItem(transactionInputConfig.getTransaction().getSender());
@@ -418,7 +442,7 @@ public class ViewServer extends NodeServer {
                             tnxLine.clusterContactServermapping.get(Utils.FindClusterOfDataItem(transactionInputConfig.getTransaction().getSender())),
                             tnxLine.clusterContactServermapping.get(Utils.FindClusterOfDataItem(transactionInputConfig.getTransaction().getReceiver())));
 
-                    Thread.sleep(100);
+                    //Thread.sleep(100);
                 }
 
 
@@ -433,6 +457,7 @@ public class ViewServer extends NodeServer {
             viewServer.sendCommandToServers( Command.PrintLog );
             viewServer.sendCommandToServers( Command.PrintDataStore );
             viewServer.sendCommandToServers( Command.PrintBalance );
+            viewServer.sendCommandToServers( Command.Performance );
 
 
         }

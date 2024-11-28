@@ -1,0 +1,402 @@
+ 
+Transaction Worker Thread Started
+Received prepare request from S7 with ballot number 1
+Prepare Request Received from S7
+ballotNumber: 1
+processId: "S7"
+transaction {
+  sender: 2800
+  receiver: 2150
+  amount: 7
+  transactionNum: 3
+}
+latestCommittedBallotNumber: -1
+clusterId: 3
+
+-------------------
+DB -> Last Committed Ballot Number: -1
+Req -> getLatestCommittedBallotNumber-1
+Ahead check
+Last Accepted Uncommitted Ballot Number: -1
+Req Ballot Number 1
+Success condition
+Last Accepted Uncommitted Transaction: 
+Last Committed Transaction: 
+Prepare Request Accepted from S7
+Received Commit request from S7 with ballot number 1
+Commit Request Received from S7
+Commit Request Accepted from S7
+Received prepare request from S7 with ballot number 2
+Prepare Request Received from S7
+ballotNumber: 2
+processId: "S7"
+transaction {
+  sender: 2995
+  receiver: 2990
+  amount: 5
+  transactionNum: 8
+}
+latestCommittedBallotNumber: 1
+clusterId: 3
+
+-------------------
+DB -> Last Committed Ballot Number: 1
+Req -> getLatestCommittedBallotNumber1
+Ahead check
+Last Accepted Uncommitted Ballot Number: -1
+Req Ballot Number 2
+Success condition
+Last Accepted Uncommitted Transaction: 
+Last Committed Transaction: Transaction ( 2800 -> 2150 = 7 ) ; 
+Prepare Request Accepted from S7
+Received Commit request from S7 with ballot number 2
+Commit Request Received from S7
+Commit Request Accepted from S7
+Received prepare request from S7 with ballot number 4
+Prepare Request Received from S7
+ballotNumber: 4
+processId: "S7"
+transaction {
+  sender: 2770
+  receiver: 2799
+  amount: 1
+  transactionNum: 12
+}
+latestCommittedBallotNumber: 2
+clusterId: 3
+
+-------------------
+DB -> Last Committed Ballot Number: 2
+Req -> getLatestCommittedBallotNumber2
+Ahead check
+Last Accepted Uncommitted Ballot Number: -1
+Req Ballot Number 4
+Success condition
+Last Accepted Uncommitted Transaction: 
+Last Committed Transaction: Transaction ( 2995 -> 2990 = 5 ) ; 
+Prepare Request Accepted from S7
+Received Commit request from S7 with ballot number 4
+Commit Request Received from S7
+Commit Request Accepted from S7
+Received prepare request from S7 with ballot number 5
+Received prepare request from S7 with ballot number 7
+Received prepare request from S7 with ballot number 6
+Prepare Request Received from S7
+Prepare Request Received from S7
+ballotNumber: 7
+processId: "S7"
+transaction {
+  sender: 2150
+  receiver: 1111
+  amount: 9
+  transactionNum: 22
+  isCrossShard: true
+}
+latestCommittedBallotNumber: 4
+clusterId: 3
+
+-------------------
+ballotNumber: 6
+processId: "S7"
+transaction {
+  sender: 1001
+  receiver: 2999
+  amount: 6
+  transactionNum: 21
+  isCrossShard: true
+}
+latestCommittedBallotNumber: 4
+clusterId: 3
+
+-------------------
+DB -> Last Committed Ballot Number: 4
+Req -> getLatestCommittedBallotNumber4
+DB -> Last Committed Ballot Number: 4
+Ahead check
+Last Accepted Uncommitted Ballot Number: -1
+Req Ballot Number 7
+Success condition
+Last Accepted Uncommitted Transaction: 
+Req -> getLatestCommittedBallotNumber4
+Last Committed Transaction: Transaction ( 2770 -> 2799 = 1 ) ; 
+Ahead check
+Prepare Request Accepted from S7
+Last Accepted Uncommitted Ballot Number: 7
+Req Ballot Number 6
+Success condition
+Last Accepted Uncommitted Transaction: Transaction ( 2150 -> 1111 = 9 ) ; 
+Last Committed Transaction: Transaction ( 2770 -> 2799 = 1 ) ; 
+Prepare Request Accepted from S7
+Received Commit request from S7 with ballot number 7
+Commit Request Received from S7
+Commit Request Accepted from S7
+Received prepare request from S7 with ballot number 8
+Prepare Request Received from S7
+ballotNumber: 8
+processId: "S7"
+transaction {
+  sender: 1001
+  receiver: 2999
+  amount: 6
+  transactionNum: 21
+  isCrossShard: true
+}
+latestCommittedTransaction {
+  sender: 2150
+  receiver: 1111
+  amount: 9
+  transactionNum: 22
+  isCrossShard: true
+}
+latestCommittedBallotNumber: 7
+clusterId: 3
+
+-------------------
+DB -> Last Committed Ballot Number: 7
+Req -> getLatestCommittedBallotNumber7
+Ahead check
+Last Accepted Uncommitted Ballot Number: 7
+Req Ballot Number 8
+Success condition
+Last Accepted Uncommitted Transaction: Transaction ( 2150 -> 1111 = 9 ) ; 
+Last Committed Transaction: Transaction ( 2150 -> 1111 = 9 ) ; 
+Prepare Request Accepted from S7
+Received Commit request from S7 with ballot number 6
+Commit Request Received from S7
+Commit Request Accepted from S7
+Received prepare request from S7 with ballot number 9
+Prepare Request Received from S7
+ballotNumber: 9
+processId: "S7"
+transaction {
+  sender: 2001
+  receiver: 11
+  amount: 3
+  transactionNum: 23
+  isCrossShard: true
+}
+latestCommittedTransaction {
+  sender: 1001
+  receiver: 2999
+  amount: 6
+  transactionNum: 21
+  isCrossShard: true
+}
+latestCommittedBallotNumber: 6
+clusterId: 3
+
+-------------------
+DB -> Last Committed Ballot Number: 6
+Req -> getLatestCommittedBallotNumber6
+Ahead check
+Last Accepted Uncommitted Ballot Number: 8
+Req Ballot Number 9
+Success condition
+Last Accepted Uncommitted Transaction: Transaction ( 1001 -> 2999 = 6 ) ; 
+Last Committed Transaction: Transaction ( 1001 -> 2999 = 6 ) ; 
+Prepare Request Accepted from S7
+Received Commit request from S7 with ballot number 9
+Commit Request Received from S7
+Commit Request Accepted from S7
+Received Commit request from S7 with ballot number -1
+Abort Request Received from S7
+Received prepare request from S7 with ballot number 10
+Prepare Request Received from S7
+ballotNumber: 10
+processId: "S7"
+transaction {
+  sender: 2999
+  receiver: 1999
+  amount: 6
+  transactionNum: 25
+  isCrossShard: true
+}
+latestCommittedTransaction {
+  sender: 2001
+  receiver: 11
+  amount: 3
+  transactionNum: 23
+  isCrossShard: true
+}
+latestCommittedBallotNumber: 9
+clusterId: 3
+
+-------------------
+DB -> Last Committed Ballot Number: 9
+Req -> getLatestCommittedBallotNumber9
+Ahead check
+Last Accepted Uncommitted Ballot Number: 9
+Req Ballot Number 10
+Success condition
+Last Accepted Uncommitted Transaction: Transaction ( 2001 -> 11 = 3 ) ; 
+Last Committed Transaction: Transaction ( 2001 -> 11 = 3 ) ; 
+Prepare Request Accepted from S7
+Received Commit request from S7 with ballot number 10
+Commit Request Received from S7
+Commit Request Accepted from S7
+Received prepare request from S7 with ballot number 11
+Prepare Request Received from S7
+ballotNumber: 11
+processId: "S7"
+transaction {
+  sender: 121
+  receiver: 2525
+  amount: 8
+  transactionNum: 27
+  isCrossShard: true
+}
+latestCommittedTransaction {
+  sender: 2999
+  receiver: 1999
+  amount: 6
+  transactionNum: 25
+  isCrossShard: true
+}
+latestCommittedBallotNumber: 10
+clusterId: 3
+
+-------------------
+DB -> Last Committed Ballot Number: 10
+Req -> getLatestCommittedBallotNumber10
+Ahead check
+Last Accepted Uncommitted Ballot Number: 10
+Req Ballot Number 11
+Success condition
+Last Accepted Uncommitted Transaction: Transaction ( 2999 -> 1999 = 6 ) ; 
+Last Committed Transaction: Transaction ( 2999 -> 1999 = 6 ) ; 
+Prepare Request Accepted from S7
+Received Commit request from S7 with ballot number 11
+Abort Request Received from S7
+Received prepare request from S7 with ballot number 12
+Prepare Request Received from S7
+ballotNumber: 12
+processId: "S7"
+transaction {
+  sender: 2525
+  receiver: 1505
+  amount: 7
+  transactionNum: 28
+  isCrossShard: true
+}
+latestCommittedTransaction {
+  sender: 2999
+  receiver: 1999
+  amount: 6
+  transactionNum: 25
+  isCrossShard: true
+}
+latestCommittedBallotNumber: 10
+clusterId: 3
+
+-------------------
+DB -> Last Committed Ballot Number: 10
+Req -> getLatestCommittedBallotNumber10
+Ahead check
+Last Accepted Uncommitted Ballot Number: 11
+Req Ballot Number 12
+Success condition
+Last Accepted Uncommitted Transaction: Transaction ( 121 -> 2525 = 8 ) ; 
+Last Committed Transaction: Transaction ( 2999 -> 1999 = 6 ) ; 
+Prepare Request Accepted from S7
+Received Commit request from S7 with ballot number 12
+Commit Request Received from S7
+Commit Request Accepted from S7
+Received prepare request from S7 with ballot number 13
+Prepare Request Received from S7
+ballotNumber: 13
+processId: "S7"
+transaction {
+  sender: 2596
+  receiver: 2297
+  amount: 3
+  transactionNum: 29
+}
+latestCommittedTransaction {
+  sender: 2525
+  receiver: 1505
+  amount: 7
+  transactionNum: 28
+  isCrossShard: true
+}
+latestCommittedBallotNumber: 12
+clusterId: 3
+
+-------------------
+DB -> Last Committed Ballot Number: 12
+Req -> getLatestCommittedBallotNumber12
+Ahead check
+Last Accepted Uncommitted Ballot Number: 12
+Req Ballot Number 13
+Success condition
+Last Accepted Uncommitted Transaction: Transaction ( 2525 -> 1505 = 7 ) ; 
+Last Committed Transaction: Transaction ( 2525 -> 1505 = 7 ) ; 
+Prepare Request Accepted from S7
+Received Commit request from S7 with ballot number 13
+Commit Request Received from S7
+Commit Request Accepted from S7
+Received prepare request from S7 with ballot number 14
+Prepare Request Received from S7
+ballotNumber: 14
+processId: "S7"
+transaction {
+  sender: 2196
+  receiver: 2397
+  amount: 3
+  transactionNum: 31
+}
+latestCommittedTransaction {
+  sender: 2525
+  receiver: 1505
+  amount: 7
+  transactionNum: 28
+  isCrossShard: true
+}
+latestCommittedBallotNumber: 13
+clusterId: 3
+
+-------------------
+DB -> Last Committed Ballot Number: 13
+Req -> getLatestCommittedBallotNumber13
+Ahead check
+Last Accepted Uncommitted Ballot Number: -1
+Req Ballot Number 14
+Success condition
+Last Accepted Uncommitted Transaction: 
+Last Committed Transaction: Transaction ( 2596 -> 2297 = 3 ) ; 
+Prepare Request Accepted from S7
+Received Commit request from S7 with ballot number 14
+Commit Request Received from S7
+Commit Request Accepted from S7
+Received prepare request from S7 with ballot number 15
+Prepare Request Received from S7
+ballotNumber: 15
+processId: "S7"
+transaction {
+  sender: 1998
+  receiver: 2998
+  amount: 19
+  transactionNum: 33
+  isCrossShard: true
+}
+latestCommittedTransaction {
+  sender: 2525
+  receiver: 1505
+  amount: 7
+  transactionNum: 28
+  isCrossShard: true
+}
+latestCommittedBallotNumber: 14
+clusterId: 3
+
+-------------------
+DB -> Last Committed Ballot Number: 14
+Req -> getLatestCommittedBallotNumber14
+Ahead check
+Last Accepted Uncommitted Ballot Number: -1
+Req Ballot Number 15
+Success condition
+Last Accepted Uncommitted Transaction: 
+Last Committed Transaction: Transaction ( 2196 -> 2397 = 3 ) ; 
+Prepare Request Accepted from S7
+Received Commit request from S7 with ballot number 15
+Abort Request Received from S7

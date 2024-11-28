@@ -1,0 +1,394 @@
+ 
+Transaction Worker Thread Started
+Processing Transaction: 2
+Prepare response from 6 : true
+Prepare response from 5 : true
+Commit response from 6 : true
+Commit response from 5 : true
+Processing Transaction: 4
+Prepare response from 6 : true
+Prepare response from 5 : true
+Commit response from 6 : true
+Commit response from 5 : true
+Processing Transaction: 10
+Prepare response from 5 : false
+Prepare response from 6 : true
+Commit response from 5 : false
+Commit response from 6 : true
+Received prepare request from S5 with ballot number 3
+Processing Transaction: 16
+Prepare response from 5 : true
+Prepare response from 6 : true
+Commit response from 6 : true
+Commit response from 5 : true
+Processing Transaction: 18
+Prepare response from 5 : true
+Prepare response from 6 : true
+Commit response from 6 : true
+Commit response from 5 : true
+Received cross shard request Transaction ( 299 -> 1999 = 15 ) ; 
+Processing Cross Shard Transaction: 20
+Processing Cross Shard Transaction - Receiver : 20
+Locked Data Item: 1999
+Ballot Number: 6
+Prepare Request: ballotNumber: 6
+processId: "S4"
+transaction {
+  sender: 299
+  receiver: 1999
+  amount: 15
+  transactionNum: 20
+  isCrossShard: true
+}
+latestCommittedBallotNumber: 5
+clusterId: 2
+
+Prepare response from 6 : true
+Prepare response from 5 : true
+Consensus Reached for Cross Shard Prepare Phase
+Sending cross shard response 
+**************
+success: true
+serverName: "S4"
+ballotNumber: 6
+successPreparesCount: 3
+clusterId: 2
+
+**************
+Received cross shard request Transaction ( 1001 -> 2999 = 6 ) ; 
+Processing Cross Shard Transaction: 21
+Processing Cross Shard Transaction - Sender : 21
+Locked Data Item: 1001
+Ballot Number: 7
+Prepare Request: ballotNumber: 7
+processId: "S4"
+transaction {
+  sender: 1001
+  receiver: 2999
+  amount: 6
+  transactionNum: 21
+  isCrossShard: true
+}
+latestCommittedBallotNumber: 5
+clusterId: 2
+
+Prepare response from 6 : true
+Prepare response from 5 : true
+Consensus Reached for Cross Shard Prepare Phase
+Sending cross shard response 
+**************
+success: true
+serverName: "S4"
+ballotNumber: 7
+successPreparesCount: 3
+clusterId: 2
+
+**************
+Received cross shard request Transaction ( 2150 -> 1111 = 9 ) ; 
+Processing Cross Shard Transaction: 22
+Processing Cross Shard Transaction - Receiver : 22
+Locked Data Item: 1111
+Ballot Number: 8
+Prepare Request: ballotNumber: 8
+processId: "S4"
+transaction {
+  sender: 2150
+  receiver: 1111
+  amount: 9
+  transactionNum: 22
+  isCrossShard: true
+}
+latestCommittedBallotNumber: 5
+clusterId: 2
+
+Received Commit request from S4 with ballot number 6
+Commit Request Received from S4
+Commit Request Accepted from S4
+Prepare response from 6 : false
+Prepare response from 5 : false
+Consensus FAILED for Cross Shard Prepare Phase
+Sync Prepare Response: ballotNumber: 8
+processId: "S5"
+lastAcceptedUncommittedTransaction {
+  sender: 1001
+  receiver: 2999
+  amount: 6
+  transactionNum: 21
+  isCrossShard: true
+}
+lastAcceptedUncommittedBallotNumber: 7
+lastCommittedTransaction {
+  sender: 299
+  receiver: 1999
+  amount: 15
+  transactionNum: 20
+  isCrossShard: true
+}
+lastCommittedBallotNumber: 6
+syncTransactionsMap {
+  key: 6
+  value {
+    sender: 299
+    receiver: 1999
+    amount: 15
+    transactionNum: 20
+    isCrossShard: true
+  }
+}
+syncTransactionsMap {
+  key: 7
+  value {
+    sender: 1001
+    receiver: 2999
+    amount: 6
+    transactionNum: 21
+    isCrossShard: true
+  }
+}
+syncTransactionStatusMap {
+  key: 6
+  value: COMMITTED
+}
+syncTransactionStatusMap {
+  key: 7
+  value: PREPARED
+}
+needToSync: true
+latestBallotNumber: 7
+
+Data Post Sync -------------
+Synced data ... Now Retrying Prepare phase
+ballotNumber: 8
+processId: "S5"
+lastAcceptedUncommittedTransaction {
+  sender: 1001
+  receiver: 2999
+  amount: 6
+  transactionNum: 21
+  isCrossShard: true
+}
+lastAcceptedUncommittedBallotNumber: 7
+lastCommittedTransaction {
+  sender: 299
+  receiver: 1999
+  amount: 15
+  transactionNum: 20
+  isCrossShard: true
+}
+lastCommittedBallotNumber: 6
+syncTransactionsMap {
+  key: 6
+  value {
+    sender: 299
+    receiver: 1999
+    amount: 15
+    transactionNum: 20
+    isCrossShard: true
+  }
+}
+syncTransactionsMap {
+  key: 7
+  value {
+    sender: 1001
+    receiver: 2999
+    amount: 6
+    transactionNum: 21
+    isCrossShard: true
+  }
+}
+syncTransactionStatusMap {
+  key: 6
+  value: COMMITTED
+}
+syncTransactionStatusMap {
+  key: 7
+  value: PREPARED
+}
+needToSync: true
+latestBallotNumber: 7
+
+Prepare response from 5 : true
+Prepare response from 6 : true
+Sending cross shard response 
+**************
+success: true
+serverName: "S4"
+ballotNumber: 8
+successPreparesCount: 3
+clusterId: 2
+
+**************
+Received Commit request from S4 with ballot number 8
+Commit Request Received from S4
+Commit Request Accepted from S4
+Received Commit request from S4 with ballot number 7
+Commit Request Received from S4
+Commit Request Accepted from S4
+Received cross shard request Transaction ( 2999 -> 1999 = 6 ) ; 
+Processing Cross Shard Transaction: 25
+Processing Cross Shard Transaction - Receiver : 25
+Locked Data Item: 1999
+Ballot Number: 10
+Prepare Request: ballotNumber: 10
+processId: "S4"
+transaction {
+  sender: 2999
+  receiver: 1999
+  amount: 6
+  transactionNum: 25
+  isCrossShard: true
+}
+latestCommittedTransaction {
+  sender: 1001
+  receiver: 2999
+  amount: 6
+  transactionNum: 21
+  isCrossShard: true
+}
+latestCommittedBallotNumber: 7
+clusterId: 2
+
+Prepare response from 5 : true
+Prepare response from 6 : true
+Consensus Reached for Cross Shard Prepare Phase
+Sending cross shard response 
+**************
+success: true
+serverName: "S4"
+ballotNumber: 10
+successPreparesCount: 3
+clusterId: 2
+
+**************
+Received Commit request from S4 with ballot number 10
+Commit Request Received from S4
+Commit Request Accepted from S4
+Received cross shard request Transaction ( 2525 -> 1505 = 7 ) ; 
+Processing Cross Shard Transaction: 28
+Processing Cross Shard Transaction - Receiver : 28
+Locked Data Item: 1505
+Ballot Number: 11
+Prepare Request: ballotNumber: 11
+processId: "S4"
+transaction {
+  sender: 2525
+  receiver: 1505
+  amount: 7
+  transactionNum: 28
+  isCrossShard: true
+}
+latestCommittedTransaction {
+  sender: 2999
+  receiver: 1999
+  amount: 6
+  transactionNum: 25
+  isCrossShard: true
+}
+latestCommittedBallotNumber: 10
+clusterId: 2
+
+Prepare response from 5 : true
+Prepare response from 6 : true
+Consensus Reached for Cross Shard Prepare Phase
+Sending cross shard response 
+**************
+success: true
+serverName: "S4"
+ballotNumber: 11
+successPreparesCount: 3
+clusterId: 2
+
+**************
+Received Commit request from S4 with ballot number 11
+Commit Request Received from S4
+Commit Request Accepted from S4
+Received cross shard request Transaction ( 796 -> 1997 = 9 ) ; 
+Processing Cross Shard Transaction: 30
+Processing Cross Shard Transaction - Receiver : 30
+Locked Data Item: 1997
+Ballot Number: 12
+Prepare Request: ballotNumber: 12
+processId: "S4"
+transaction {
+  sender: 796
+  receiver: 1997
+  amount: 9
+  transactionNum: 30
+  isCrossShard: true
+}
+latestCommittedTransaction {
+  sender: 2525
+  receiver: 1505
+  amount: 7
+  transactionNum: 28
+  isCrossShard: true
+}
+latestCommittedBallotNumber: 11
+clusterId: 2
+
+Prepare response from 6 : true
+Prepare response from 5 : true
+Consensus Reached for Cross Shard Prepare Phase
+Sending cross shard response 
+**************
+success: true
+serverName: "S4"
+ballotNumber: 12
+successPreparesCount: 3
+clusterId: 2
+
+**************
+Received Commit request from S4 with ballot number 12
+Abort Request Received from S4
+Received cross shard request Transaction ( 796 -> 1997 = 7 ) ; 
+Processing Cross Shard Transaction: 32
+Processing Cross Shard Transaction - Receiver : 32
+Locked Data Item: 1997
+Ballot Number: 13
+Prepare Request: ballotNumber: 13
+processId: "S4"
+transaction {
+  sender: 796
+  receiver: 1997
+  amount: 7
+  transactionNum: 32
+  isCrossShard: true
+}
+latestCommittedTransaction {
+  sender: 2525
+  receiver: 1505
+  amount: 7
+  transactionNum: 28
+  isCrossShard: true
+}
+latestCommittedBallotNumber: 11
+clusterId: 2
+
+Prepare response from 6 : true
+Prepare response from 5 : true
+Consensus Reached for Cross Shard Prepare Phase
+Sending cross shard response 
+**************
+success: true
+serverName: "S4"
+ballotNumber: 13
+successPreparesCount: 3
+clusterId: 2
+
+**************
+Received Commit request from S4 with ballot number 13
+Commit Request Received from S4
+Commit Request Accepted from S4
+Received cross shard request Transaction ( 1998 -> 2998 = 19 ) ; 
+Processing Cross Shard Transaction: 33
+Processing Cross Shard Transaction - Sender : 33
+Sending cross shard response 
+**************
+serverName: "S4"
+ballotNumber: -1
+failureReason: "Insufficient Balance"
+clusterId: 2
+
+**************
+Received Commit request from S4 with ballot number -1
+Abort Request Received from S4

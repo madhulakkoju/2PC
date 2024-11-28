@@ -12,6 +12,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -74,6 +75,8 @@ public class DatabaseService {
 
         this.dataStore = new AtomicReference<>(new ArrayList<>());
         this.node = node;
+
+        this.lockedDataItemsWithTransactionNum = new ConcurrentHashMap<>();
 
         initializeSQLiteDatabase();
     }
@@ -225,6 +228,36 @@ public class DatabaseService {
 
     public synchronized void addToDataStore(CommitRequest entry){
         this.dataStore.get().add(Utils.toDataStoreString(entry));
+    }
+
+
+
+
+
+    public ConcurrentHashMap<Integer, Integer> lockedDataItemsWithTransactionNum;
+
+
+    public synchronized boolean lockDataItem(int dataItem, int transactionNum) {
+        this.node.walLogger.log(transactionNum+" - LOCK : " + dataItem + " : " + transactionNum);
+        lockedDataItemsWithTransactionNum.put(dataItem, transactionNum);
+        return true;
+    }
+
+    public synchronized boolean unlockDataItem(int dataItem, int transactionNum) {
+        this.node.walLogger.log(transactionNum+" - UNLOCK : " + dataItem + " : " + transactionNum);
+        lockedDataItemsWithTransactionNum.remove(dataItem);
+//        if(lockedDataItemsWithTransactionNum.containsKey(dataItem) && lockedDataItemsWithTransactionNum.get(dataItem) == transactionNum){
+//            return true;
+//        }
+        return false;
+    }
+
+    public synchronized boolean isDataItemLocked(int dataItem) {
+        return lockedDataItemsWithTransactionNum.containsKey(dataItem);
+    }
+
+    public synchronized boolean isDataItemLockedWithTnx(int dataItem, int transactionNum) {
+        return lockedDataItemsWithTransactionNum.containsKey(dataItem) && lockedDataItemsWithTransactionNum.get(dataItem) == transactionNum;
     }
 
 

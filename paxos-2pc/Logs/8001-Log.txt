@@ -1,0 +1,196 @@
+ 
+Transaction Worker Thread Started
+Processing Transaction: 1
+Prepare response from 3 : true
+Prepare response from 2 : true
+Commit response from 3 : true
+Commit response from 2 : true
+Processing Transaction: 5
+Prepare response from 3 : true
+Prepare response from 2 : true
+Commit response from 2 : true
+Commit response from 3 : true
+Processing Transaction: 6
+Prepare response from 3 : true
+Prepare response from 2 : true
+Commit response from 2 : true
+Commit response from 3 : true
+Processing Transaction: 7
+Prepare response from 3 : true
+Prepare response from 2 : true
+Commit response from 3 : true
+Commit response from 2 : true
+Processing Transaction: 9
+Prepare response from 3 : true
+Prepare response from 2 : true
+Commit response from 3 : true
+Commit response from 2 : true
+Processing Transaction: 13
+Prepare response from 3 : true
+Prepare response from 2 : true
+Commit response from 3 : true
+Commit response from 2 : true
+Processing Transaction: 15
+Prepare response from 3 : true
+Prepare response from 2 : true
+Commit response from 3 : true
+Commit response from 2 : true
+Processing Transaction: 17
+Prepare response from 2 : true
+Prepare response from 3 : true
+Commit response from 2 : true
+Commit response from 3 : true
+Received cross shard request Transaction ( 299 -> 1999 = 15 ) ; 
+Processing Cross Shard Transaction: 20
+Processing Cross Shard Transaction - Sender : 20
+Locked Data Item: 299
+Ballot Number: 9
+Prepare Request: ballotNumber: 9
+processId: "S1"
+transaction {
+  sender: 299
+  receiver: 1999
+  amount: 15
+  transactionNum: 20
+  isCrossShard: true
+}
+latestCommittedBallotNumber: 8
+clusterId: 1
+
+Prepare response from 2 : true
+Prepare response from 3 : true
+Consensus Reached for Cross Shard Prepare Phase
+Sending cross shard response 
+**************
+success: true
+serverName: "S1"
+ballotNumber: 9
+successPreparesCount: 3
+clusterId: 1
+
+**************
+Received Commit request from S1 with ballot number 9
+Commit Request Received from S1
+Commit Request Accepted from S1
+Received cross shard request Transaction ( 2001 -> 11 = 3 ) ; 
+Processing Cross Shard Transaction: 23
+Processing Cross Shard Transaction - Receiver : 23
+Locked Data Item: 11
+Ballot Number: 10
+Prepare Request: ballotNumber: 10
+processId: "S1"
+transaction {
+  sender: 2001
+  receiver: 11
+  amount: 3
+  transactionNum: 23
+  isCrossShard: true
+}
+latestCommittedTransaction {
+  sender: 299
+  receiver: 1999
+  amount: 15
+  transactionNum: 20
+  isCrossShard: true
+}
+latestCommittedBallotNumber: 9
+clusterId: 1
+
+Prepare response from 3 : true
+Prepare response from 2 : true
+Consensus Reached for Cross Shard Prepare Phase
+Sending cross shard response 
+**************
+success: true
+serverName: "S1"
+ballotNumber: 10
+successPreparesCount: 3
+clusterId: 1
+
+**************
+Received cross shard request Transaction ( 11 -> 2001 = 9 ) ; 
+Processing Cross Shard Transaction: 24
+Data Item Locked.... so rejecting the transaction
+Sending cross shard response 
+**************
+serverName: "S1"
+ballotNumber: -1
+failureReason: "Data Item Locked"
+clusterId: 1
+
+**************
+Received Commit request from S1 with ballot number 10
+Commit Request Received from S1
+Commit Request Accepted from S1
+Received Commit request from S1 with ballot number -1
+Abort Request Received from S1
+Processing Transaction: 26
+Received cross shard request Transaction ( 121 -> 2525 = 8 ) ; 
+Processing Cross Shard Transaction: 27
+Data Item Locked.... so rejecting the transaction
+Sending cross shard response 
+**************
+serverName: "S1"
+ballotNumber: -1
+failureReason: "Data Item Locked"
+clusterId: 1
+
+**************
+Prepare response from 2 : true
+Prepare response from 3 : true
+Received Commit request from S1 with ballot number -1
+Abort Request Received from S1
+Commit response from 3 : true
+Commit response from 2 : true
+Received cross shard request Transaction ( 796 -> 1997 = 9 ) ; 
+Processing Cross Shard Transaction: 30
+Processing Cross Shard Transaction - Sender : 30
+Sending cross shard response 
+**************
+serverName: "S1"
+ballotNumber: -1
+failureReason: "Insufficient Balance"
+clusterId: 1
+
+**************
+Received Commit request from S1 with ballot number -1
+Abort Request Received from S1
+Received cross shard request Transaction ( 796 -> 1997 = 7 ) ; 
+Processing Cross Shard Transaction: 32
+Processing Cross Shard Transaction - Sender : 32
+Locked Data Item: 796
+Ballot Number: 12
+Prepare Request: ballotNumber: 12
+processId: "S1"
+transaction {
+  sender: 796
+  receiver: 1997
+  amount: 7
+  transactionNum: 32
+  isCrossShard: true
+}
+latestCommittedTransaction {
+  sender: 2001
+  receiver: 11
+  amount: 3
+  transactionNum: 23
+  isCrossShard: true
+}
+latestCommittedBallotNumber: 11
+clusterId: 1
+
+Prepare response from 3 : true
+Prepare response from 2 : true
+Consensus Reached for Cross Shard Prepare Phase
+Sending cross shard response 
+**************
+success: true
+serverName: "S1"
+ballotNumber: 12
+successPreparesCount: 3
+clusterId: 1
+
+**************
+Received Commit request from S1 with ballot number 12
+Commit Request Received from S1
+Commit Request Accepted from S1

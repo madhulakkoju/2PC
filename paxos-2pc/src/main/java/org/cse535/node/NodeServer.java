@@ -19,38 +19,25 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class NodeServer {
 
-
-
     public int port;
     public LogUtils logger;
     public LogUtils commandLogger;
     public LogUtils walLogger;
 
-
-
-
     public AtomicBoolean isServerActive;
-
-
-
 
     public Integer serverNumber;
     public String serverName;
-
     public Integer clusterNumber;
-
-    public Server server;
 
     public DatabaseService database;
 
+    // GRPC Server Items
+    public Server server;
     public HashMap<Integer, ManagedChannel> serversToChannel;
-
     public HashMap<Integer, PaxosGrpc.PaxosBlockingStub> serversToPaxosStub;
-
     public HashMap<Integer, ActivateServersGrpc.ActivateServersBlockingStub> serversToActivateServersStub;
     public HashMap<Integer, CommandsGrpc.CommandsBlockingStub> serversToCommandsStub;
-
-
 
     public NodeServer(Integer serverNum, int port) {
         this.port = port;
@@ -75,7 +62,7 @@ public class NodeServer {
 
     }
 
-
+    //Setup Channels Stubs for GRPC
     public void initiateChannelsAndStubs() {
         serversToChannel = new HashMap<>();
 
@@ -103,16 +90,5 @@ public class NodeServer {
 
 
     }
-
-
-
-
-
-
-
-
-
-
-
 
 }

@@ -36,7 +36,47 @@ Like an Input Controller Client. This represents a Client that sends transaction
 | PrintPerformance | Prints Performance                                    |
 
 
+## During Execution
+After every Test Set, code automatically sends PrintDataStore, PrintStatus, PrintBalance and PrintPerformance commands to the servers.
+The Outputs will be logged to "Logs/8000-Commands.txt" file
+
+PrintBalance will be sent for all participating DataItems and will be logged.
+
+## Bonus 1 - Resharding - Shard Redistribution
+
+**Approach 1: ReDistribution with Frequent Items and Round Robin**
+
+Based on Highly used data items, the data items are redistributed to the servers. I've used round-robin method to make sure all clusters get equal number of data items.
+All Clusters would have highly used and unused data items.
+
+But this way, Data Items are getting redistributed so much. which is making the RPC calls very slow and ReShard/ Distribution is taking more time.
+
+**Approach 2: ReDistribution with Frequent Item Pairs and SWAPs**
+
+Similar to previous approach, but instead of redistributing all data items, only the highly used data item pairs are SWAPPED between the clusters.
+This way, the RPC call execution time is reduced and the distribution is faster.
+
+This is the Updated Config Output. I see some items got swapped across the clusters.
+
+![img.png](img.png) ![img_2.png](img_2.png) ![img_1.png](img_1.png)  
+
+
+Redistribution Logs are in "Logs/0-ReSharding.txt" file
+
+
+
 ## Bonus 2 - Configurable Clusters
 
 Edit the configuration definitions like TOTAL_SERVERS, CLUSTER_SIZE and TOTAL_DATA_ITEMS in run_java.bat file to configure the cluster size and data items. 
 Dynamically creates the Clustering schemes based on these values.
+
+
+### Persistent DataStore - SQLite3
+
+![img_3.png](img_3.png)
+
+
+## All Outputs will be logged to "Logs/8000-Commands.txt" folder
+
+![img_4.png](img_4.png)
+```

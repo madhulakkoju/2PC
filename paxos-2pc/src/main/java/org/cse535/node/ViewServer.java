@@ -376,7 +376,7 @@ public class ViewServer extends NodeServer {
                         viewServer.activeServersStatusMap.put( Integer.parseInt( server.replaceAll("S","") ) , true);
                     }
 
-                    Thread.sleep(10);
+                    Thread.sleep(20);
                     System.out.print("Press Enter to run Commands ");
                     System.console().readLine();
 
@@ -438,21 +438,16 @@ public class ViewServer extends NodeServer {
 
                     //Thread.sleep(100);
                 }
-
-
-
-
-
             }
 
             System.out.println("All Transactions Sent for final Test set. \nPress Enter to run all commands ");
             System.console().readLine();
+            Thread.sleep(30);
             viewServer.sendCommandToServers( Command.PrintDB );
             viewServer.sendCommandToServers( Command.PrintLog );
             viewServer.sendCommandToServers( Command.PrintDataStore );
             viewServer.sendCommandToServers( Command.PrintBalance );
             viewServer.sendCommandToServers( Command.Performance );
-
 
         }
         else {

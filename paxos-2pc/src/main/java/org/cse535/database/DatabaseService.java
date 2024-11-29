@@ -72,6 +72,8 @@ public class DatabaseService {
         this.node = node;
 
         this.lockedDataItemsWithTransactionNum = new ConcurrentHashMap<>();
+        this.writeAheadLog = new ConcurrentHashMap<>();
+
         this.transactionStatusMap = new HashMap<>();
 
         initializeSQLiteDatabase();
@@ -281,13 +283,100 @@ public class DatabaseService {
         return false;
     }
 
-    public synchronized boolean isDataItemLocked(int dataItem) {
+    public boolean isDataItemLocked(int dataItem) {
         return lockedDataItemsWithTransactionNum.containsKey(dataItem);
     }
 
     public synchronized boolean isDataItemLockedWithTnx(int dataItem, int transactionNum) {
         return lockedDataItemsWithTransactionNum.containsKey(dataItem) && lockedDataItemsWithTransactionNum.get(dataItem) == transactionNum;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+    public static class WALEntry{
+        public int transactionNum;
+        public int sender;
+        public int receiver;
+        public int senderOldBalance;
+        public int receiverOldBalance;
+
+        public WALEntry(int transactionNum, int sender, int receiver, int senderOldBalance, int receiverOldBalance){
+            this.transactionNum = transactionNum;
+            this.sender = sender;
+            this.receiver = receiver;
+            this.senderOldBalance = senderOldBalance;
+            this.receiverOldBalance = receiverOldBalance;
+
+        }
+
+    }
+
+
+    public ConcurrentHashMap<Integer, WALEntry> writeAheadLog;
+
+    public void writeToWAL(Transaction transaction) {
+        int sender = transaction.getSender();
+        int receiver = transaction.getReceiver();
+        int amount = transaction.getAmount();
+
+        int senderBalance = getBalance(sender);
+        int receiverBalance = getBalance(receiver);
+
+        if(Utils.FindClusterOfDataItem(sender) == this.node.clusterNumber ) {
+            updateBalance(sender, senderBalance - amount);
+            this.node.walLogger.log(transaction.getTransactionNum() + " - WRITE TO WAL: " + sender + " :  new :: " + (senderBalance - amount) + " : old :: " + senderBalance);
+        }
+
+
+        if(Utils.FindClusterOfDataItem(receiver) == this.node.clusterNumber ){
+            updateBalance(receiver, receiverBalance + amount);
+            this.node.walLogger.log( transaction.getTransactionNum() + " - WRITE TO WAL : " + receiver + " : " + (receiverBalance + amount));
+        }
+
+
+        writeAheadLog.put(transaction.getTransactionNum(), new WALEntry(transaction.getTransactionNum(), sender, receiver, senderBalance, receiverBalance));
+
+    }
+
+    public synchronized void rollbackWAL(int transactionNum) {
+
+        WALEntry entry = writeAheadLog.get(transactionNum);
+
+        if(entry == null){
+            return;
+        }
+
+        int sender = entry.sender;
+        int receiver = entry.receiver;
+        int senderOldBalance = entry.senderOldBalance;
+        int receiverOldBalance = entry.receiverOldBalance;
+
+        if(sender != -1){
+            updateBalance(sender, senderOldBalance);
+            this.node.walLogger.log(transactionNum + " - ROLLBACK : " + sender + " : " + senderOldBalance);
+        }
+
+        if(receiver != -1){
+            updateBalance(receiver, receiverOldBalance);
+            this.node.walLogger.log(transactionNum + " - ROLLBACK : " + receiver + " : " + receiverOldBalance);
+        }
+    }
+
+    public synchronized void commitbackWAL(int transactionNum) {
+        writeAheadLog.remove(transactionNum);
+    }
+
+
+
 
 
 

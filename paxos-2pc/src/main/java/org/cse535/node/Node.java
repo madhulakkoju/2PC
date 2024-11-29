@@ -294,6 +294,9 @@ public class Node extends NodeServer {
 
                 this.database.addToDataStore(prepareRequest);
 
+                // Write Log Ahead
+                this.database.writeToWAL(prepareRequest.getTransaction());
+
             }
             return crossTxnResponse.build();
         }
@@ -432,6 +435,8 @@ public class Node extends NodeServer {
                 this.logger.log("Abort Request Received from " + request.getProcessId() );
                 this.database.addTransactionStatus(request.getBallotNumber(), TransactionStatus.ABORTED);
 
+                this.database.rollbackWAL(request.getTransaction().getTransactionNum());
+
                 this.database.unlockDataItem(request.getTransaction().getSender(), request.getTransaction().getTransactionNum());
                 this.database.unlockDataItem(request.getTransaction().getReceiver(), request.getTransaction().getTransactionNum());
 
@@ -449,7 +454,8 @@ public class Node extends NodeServer {
                     this.database.addTransactionStatus(request.getBallotNumber(), TransactionStatus.COMMITTED);
                     this.logger.log("Commit Request Accepted from " + request.getProcessId());
 
-                    this.database.executeTransaction(request.getTransaction());
+//                    this.database.executeTransaction(request.getTransaction());
+                    this.database.commitbackWAL(request.getTransaction().getTransactionNum());
             }
 
         }

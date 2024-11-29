@@ -64,7 +64,7 @@ public class DatabaseService {
             }
         });
 
-        //this.transactionMap = new HashMap<>();
+        this.transactionMap = new HashMap<>();
         this.processedTransactionsSet = new HashSet<>();
 
 
@@ -102,7 +102,8 @@ public class DatabaseService {
             statement.executeUpdate(createTableSQL);
 
             int cluster = Utils.FindMyCluster(this.serverNumber);
-            for (int i = GlobalConfigs.clusterShardMap.get(cluster); i > GlobalConfigs.clusterShardMap.get(cluster - 1) ; i--) {
+
+            for( Integer i :  Utils.GetAllDataItemsInCluster(cluster)){
                 String insertSQL = "INSERT INTO accounts (id, amount) VALUES (" + i + ", "+GlobalConfigs.InitialBalance+");";
                 statement.executeUpdate(insertSQL);
             }
@@ -390,18 +391,43 @@ public class DatabaseService {
     public HashMap<Integer, Transaction> transactionMap;
 
     public synchronized void addTransaction( int ballotNumber, Transaction transaction ) {
-        try {
-            String insertSQL = "INSERT INTO transactions (ballot, transactionNum, sender, receiver, amount, isCrossShard ) VALUES ("
-                    + ballotNumber + ", " + transaction.getTransactionNum() + ", "
-                    + transaction.getSender() + ", " + transaction.getReceiver() + ", "
-                    + transaction.getAmount() + ", " + transaction.getIsCrossShard()
-                    + ");";
-            statement.executeUpdate(insertSQL);
+
+        //Transaction tnx = getTransaction(ballotNumber);
+
+        if( !this.transactionMap.containsKey(ballotNumber) ){
+
+            try {
+                String insertSQL = "INSERT INTO transactions (ballot, transactionNum, sender, receiver, amount, isCrossShard ) VALUES ("
+                        + ballotNumber + ", " + transaction.getTransactionNum() + ", "
+                        + transaction.getSender() + ", " + transaction.getReceiver() + ", "
+                        + transaction.getAmount() + ", " + transaction.getIsCrossShard()
+                        + ");";
+                statement.executeUpdate(insertSQL);
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
+
         }
-        catch (SQLException e) {
-            e.printStackTrace();
+        else{
+            try {
+                String insertSQL = "UPDATE transactions SET" +
+                        " transactionNum = " + transaction.getTransactionNum()
+                        + ", sender = " + transaction.getSender()
+                        + ", receiver = " + transaction.getReceiver()
+                        + ", amount = " + transaction.getAmount()
+                        + ", isCrossShard = " + transaction.getIsCrossShard()
+                        + " WHERE ballot = " + ballotNumber + ";";
+
+                statement.executeUpdate(insertSQL);
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return;
         }
 
+        this.transactionMap.put(ballotNumber, transaction);
     }
 
     public Transaction getTransaction(int ballotNumber) {

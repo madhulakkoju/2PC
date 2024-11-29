@@ -4,6 +4,9 @@ import org.cse535.proto.CommitRequest;
 import org.cse535.proto.PrepareRequest;
 import org.cse535.proto.Transaction;
 
+import java.util.HashSet;
+import java.util.Map;
+
 public class Utils {
 
     public static int FindMyCluster(int serverNum){
@@ -34,14 +37,23 @@ public class Utils {
     }
 
     public static int FindClusterOfDataItem(int dataItem){
-        for(int i = 1; i <= GlobalConfigs.numClusters; i++){
-            if( dataItem <= GlobalConfigs.clusterShardMap.get(i) && dataItem > GlobalConfigs.clusterShardMap.get(i-1) ){
-                return i;
-            }
+
+        if( GlobalConfigs.DataItemToClusterMap.containsKey(dataItem) ){
+            return GlobalConfigs.DataItemToClusterMap.get(dataItem);
         }
         return -1;
     }
 
+    public static HashSet<Integer> GetAllDataItemsInCluster(int clusterNum){
+        HashSet<Integer> dataItems = new HashSet<Integer>();
+
+        for (Map.Entry<Integer, Integer> entry : GlobalConfigs.DataItemToClusterMap.entrySet()) {
+            if(entry.getValue() == clusterNum){
+                dataItems.add(entry.getKey());
+            }
+        }
+        return dataItems;
+    }
 
     public static boolean CheckTransactionBelongToMyCluster(Transaction transaction, int serverNum){
 

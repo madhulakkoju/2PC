@@ -32,11 +32,20 @@ public class GlobalConfigs {
 
     public static HashMap<Integer, List<Integer>> clusterToServersMap;
 
+
+    public static HashMap<Integer, Integer> DataItemToClusterMap ;
+
+
+
+
     public static void LoadConfigs( ){
 
         numClusters = GlobalConfigs.TotalServers / GlobalConfigs.numServersPerCluster;
         clusterShardMap = new HashMap<Integer, Integer>();
         clusterToServersMap = new HashMap<Integer, List<Integer>>();
+
+        DataItemToClusterMap = new HashMap<Integer, Integer>();
+
         clusterShardMap.put(0, 0);
 
 
@@ -51,7 +60,14 @@ public class GlobalConfigs {
         int starter = 0;
         int counter = 1;
 
+        int a = 1;
+
         for (int i = 1; i <= numClusters; i++) {
+
+            for(int j = 1; j <= dataItemsPerCluster; j++){
+                DataItemToClusterMap.put(a++, i);
+            }
+
             starter += dataItemsPerCluster;
             clusterShardMap.put(i, starter);
             clusterToServersMap.put(i, new ArrayList<Integer>());
@@ -64,16 +80,10 @@ public class GlobalConfigs {
         }
         clusterShardMap.put(numClusters, TotalDataItems);
 
-
-
-
+        //DataItemToClusterMap.forEach((k,v) -> System.out.println( k + " " + v));
 
 
     }
-
-
-
-
 
 
 }

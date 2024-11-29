@@ -14,6 +14,11 @@ service Paxos {
   rpc Commit(CommitRequest) returns (CommitResponse) {}
   rpc Sync(PrepareRequest) returns (PrepareResponse) {}
   rpc ExecReply(ExecutionReply) returns (google.protobuf.Empty) {}
+
+
+
+
+
 }
 
 

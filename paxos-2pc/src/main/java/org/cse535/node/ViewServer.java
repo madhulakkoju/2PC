@@ -4,7 +4,9 @@ import org.cse535.Main;
 import org.cse535.configs.GlobalConfigs;
 import org.cse535.configs.Utils;
 
+import org.cse535.loggers.LogUtils;
 import org.cse535.proto.*;
+import org.cse535.reshard.Resharding;
 import org.cse535.threadimpls.CrossShardTnxProcessingThread;
 
 import java.io.BufferedReader;
@@ -448,6 +450,28 @@ public class ViewServer extends NodeServer {
             viewServer.sendCommandToServers( Command.PrintDataStore );
             viewServer.sendCommandToServers( Command.PrintBalance );
             viewServer.sendCommandToServers( Command.Performance );
+
+
+            LogUtils reshardingLogger = new LogUtils("ReSharding-test",viewServerNum);
+
+            System.out.println("Sending for Resharding... New Updated Reshard Config can be found in Logs/0-ReSharding.txt\n1. Resharding with HotKey and Round-Robin\n2. Resharding with Hotkey and swaps.. to reduce reshuffle of data across clusters");
+
+            List<Transaction> transactionList = new ArrayList<>(viewServer.transactions.values());
+
+            Resharding.reshardUsingHotKeyAndRoundRobin( transactionList , GlobalConfigs.DataItemToClusterMap, GlobalConfigs.numClusters, reshardingLogger);
+
+            HashMap<Integer, Integer> newConfig = Resharding.reshardWithSwapHotKey(transactionList, GlobalConfigs.DataItemToClusterMap, GlobalConfigs.numClusters, reshardingLogger);
+
+            GlobalConfigs.DataItemToClusterMap = newConfig;
+
+            System.out.println("Re-Sharding Completed. ");
+
+
+
+
+
+
+
 
         }
         else {

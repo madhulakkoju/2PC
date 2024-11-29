@@ -16,8 +16,8 @@ service Paxos {
   rpc ExecReply(ExecutionReply) returns (google.protobuf.Empty) {}
 
 
-
-
+  rpc ReShardingInitiation(google.protobuf.Empty) returns ( ReShardingInitData ) {}
+  rpc ReShardingProcess(ReShardingData) returns (CommandOutput) {}
 
 }
 
@@ -199,4 +199,13 @@ message CommandOutput{
 
 
 
+message ReShardingInitData{
+  int32 clusterId = 1;
+  map<int32, int32> accountBalances = 2;
+}
 
+message ReShardingData{
+  int32 clusterId = 1;
+  map<int32, int32> accountBalances = 2;
+  map<int32, int32> newDataItemClusterConfig = 3;
+}

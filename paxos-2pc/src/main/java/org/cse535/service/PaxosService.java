@@ -3,6 +3,7 @@ package org.cse535.service;
 import com.google.protobuf.Empty;
 import io.grpc.stub.StreamObserver;
 import org.cse535.Main;
+import org.cse535.configs.GlobalConfigs;
 import org.cse535.configs.Utils;
 import org.cse535.node.ViewServer;
 import org.cse535.proto.*;
@@ -109,5 +110,53 @@ public class PaxosService extends PaxosGrpc.PaxosImplBase {
 
         responseObserver.onNext(Empty.newBuilder().build());
         responseObserver.onCompleted();
+    }
+
+
+
+
+
+    @Override
+    public void reShardingInitiation(Empty request, StreamObserver<ReShardingInitData> responseObserver) {
+        if(ViewServer.viewServer != null){
+            return;
+        }
+        Main.node.isServerActive.set(false);
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        responseObserver.onNext( Main.node.database.getReshardingInitData() );
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void reShardingProcess(ReShardingData request, StreamObserver<CommandOutput> responseObserver) {
+        if(ViewServer.viewServer != null){
+            return;
+        }
+
+
+        Main.node.database.processReshardingData(request);
+
+        responseObserver.onNext( CommandOutput.newBuilder().setOutput("true").build() );
+        responseObserver.onCompleted();
+
+        System.out.println("ReSharding Process Completed");
+
+        Main.node.commandLogger.log("ReSharding Process Completed\nNew Config:");
+
+        int clusterNum = Main.node.clusterNumber;
+
+        GlobalConfigs.DataItemToClusterMap.forEach((k,v) -> {
+            if(v == clusterNum)
+                Main.node.commandLogger.log("DataItem: " + k + " Cluster: " + v);
+        });
+
+        Main.node.isServerActive.set(true);
+        return;
     }
 }

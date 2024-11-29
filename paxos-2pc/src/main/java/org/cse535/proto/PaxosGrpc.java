@@ -219,6 +219,70 @@ public final class PaxosGrpc {
      return getExecReplyMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.google.protobuf.Empty,
+      org.cse535.proto.ReShardingInitData> getReShardingInitiationMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "ReShardingInitiation",
+      requestType = com.google.protobuf.Empty.class,
+      responseType = org.cse535.proto.ReShardingInitData.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.google.protobuf.Empty,
+      org.cse535.proto.ReShardingInitData> getReShardingInitiationMethod() {
+    io.grpc.MethodDescriptor<com.google.protobuf.Empty, org.cse535.proto.ReShardingInitData> getReShardingInitiationMethod;
+    if ((getReShardingInitiationMethod = PaxosGrpc.getReShardingInitiationMethod) == null) {
+      synchronized (PaxosGrpc.class) {
+        if ((getReShardingInitiationMethod = PaxosGrpc.getReShardingInitiationMethod) == null) {
+          PaxosGrpc.getReShardingInitiationMethod = getReShardingInitiationMethod = 
+              io.grpc.MethodDescriptor.<com.google.protobuf.Empty, org.cse535.proto.ReShardingInitData>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "Paxos", "ReShardingInitiation"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.google.protobuf.Empty.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.cse535.proto.ReShardingInitData.getDefaultInstance()))
+                  .setSchemaDescriptor(new PaxosMethodDescriptorSupplier("ReShardingInitiation"))
+                  .build();
+          }
+        }
+     }
+     return getReShardingInitiationMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<org.cse535.proto.ReShardingData,
+      org.cse535.proto.CommandOutput> getReShardingProcessMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "ReShardingProcess",
+      requestType = org.cse535.proto.ReShardingData.class,
+      responseType = org.cse535.proto.CommandOutput.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<org.cse535.proto.ReShardingData,
+      org.cse535.proto.CommandOutput> getReShardingProcessMethod() {
+    io.grpc.MethodDescriptor<org.cse535.proto.ReShardingData, org.cse535.proto.CommandOutput> getReShardingProcessMethod;
+    if ((getReShardingProcessMethod = PaxosGrpc.getReShardingProcessMethod) == null) {
+      synchronized (PaxosGrpc.class) {
+        if ((getReShardingProcessMethod = PaxosGrpc.getReShardingProcessMethod) == null) {
+          PaxosGrpc.getReShardingProcessMethod = getReShardingProcessMethod = 
+              io.grpc.MethodDescriptor.<org.cse535.proto.ReShardingData, org.cse535.proto.CommandOutput>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "Paxos", "ReShardingProcess"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.cse535.proto.ReShardingData.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  org.cse535.proto.CommandOutput.getDefaultInstance()))
+                  .setSchemaDescriptor(new PaxosMethodDescriptorSupplier("ReShardingProcess"))
+                  .build();
+          }
+        }
+     }
+     return getReShardingProcessMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -288,6 +352,20 @@ public final class PaxosGrpc {
       asyncUnimplementedUnaryCall(getExecReplyMethod(), responseObserver);
     }
 
+    /**
+     */
+    public void reShardingInitiation(com.google.protobuf.Empty request,
+        io.grpc.stub.StreamObserver<org.cse535.proto.ReShardingInitData> responseObserver) {
+      asyncUnimplementedUnaryCall(getReShardingInitiationMethod(), responseObserver);
+    }
+
+    /**
+     */
+    public void reShardingProcess(org.cse535.proto.ReShardingData request,
+        io.grpc.stub.StreamObserver<org.cse535.proto.CommandOutput> responseObserver) {
+      asyncUnimplementedUnaryCall(getReShardingProcessMethod(), responseObserver);
+    }
+
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -332,6 +410,20 @@ public final class PaxosGrpc {
                 org.cse535.proto.ExecutionReply,
                 com.google.protobuf.Empty>(
                   this, METHODID_EXEC_REPLY)))
+          .addMethod(
+            getReShardingInitiationMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                com.google.protobuf.Empty,
+                org.cse535.proto.ReShardingInitData>(
+                  this, METHODID_RE_SHARDING_INITIATION)))
+          .addMethod(
+            getReShardingProcessMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                org.cse535.proto.ReShardingData,
+                org.cse535.proto.CommandOutput>(
+                  this, METHODID_RE_SHARDING_PROCESS)))
           .build();
     }
   }
@@ -401,6 +493,22 @@ public final class PaxosGrpc {
       asyncUnaryCall(
           getChannel().newCall(getExecReplyMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void reShardingInitiation(com.google.protobuf.Empty request,
+        io.grpc.stub.StreamObserver<org.cse535.proto.ReShardingInitData> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getReShardingInitiationMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void reShardingProcess(org.cse535.proto.ReShardingData request,
+        io.grpc.stub.StreamObserver<org.cse535.proto.CommandOutput> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getReShardingProcessMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -461,6 +569,20 @@ public final class PaxosGrpc {
     public com.google.protobuf.Empty execReply(org.cse535.proto.ExecutionReply request) {
       return blockingUnaryCall(
           getChannel(), getExecReplyMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public org.cse535.proto.ReShardingInitData reShardingInitiation(com.google.protobuf.Empty request) {
+      return blockingUnaryCall(
+          getChannel(), getReShardingInitiationMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public org.cse535.proto.CommandOutput reShardingProcess(org.cse535.proto.ReShardingData request) {
+      return blockingUnaryCall(
+          getChannel(), getReShardingProcessMethod(), getCallOptions(), request);
     }
   }
 
@@ -529,6 +651,22 @@ public final class PaxosGrpc {
       return futureUnaryCall(
           getChannel().newCall(getExecReplyMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<org.cse535.proto.ReShardingInitData> reShardingInitiation(
+        com.google.protobuf.Empty request) {
+      return futureUnaryCall(
+          getChannel().newCall(getReShardingInitiationMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<org.cse535.proto.CommandOutput> reShardingProcess(
+        org.cse535.proto.ReShardingData request) {
+      return futureUnaryCall(
+          getChannel().newCall(getReShardingProcessMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_REQUEST = 0;
@@ -537,6 +675,8 @@ public final class PaxosGrpc {
   private static final int METHODID_COMMIT = 3;
   private static final int METHODID_SYNC = 4;
   private static final int METHODID_EXEC_REPLY = 5;
+  private static final int METHODID_RE_SHARDING_INITIATION = 6;
+  private static final int METHODID_RE_SHARDING_PROCESS = 7;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -578,6 +718,14 @@ public final class PaxosGrpc {
         case METHODID_EXEC_REPLY:
           serviceImpl.execReply((org.cse535.proto.ExecutionReply) request,
               (io.grpc.stub.StreamObserver<com.google.protobuf.Empty>) responseObserver);
+          break;
+        case METHODID_RE_SHARDING_INITIATION:
+          serviceImpl.reShardingInitiation((com.google.protobuf.Empty) request,
+              (io.grpc.stub.StreamObserver<org.cse535.proto.ReShardingInitData>) responseObserver);
+          break;
+        case METHODID_RE_SHARDING_PROCESS:
+          serviceImpl.reShardingProcess((org.cse535.proto.ReShardingData) request,
+              (io.grpc.stub.StreamObserver<org.cse535.proto.CommandOutput>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -646,6 +794,8 @@ public final class PaxosGrpc {
               .addMethod(getCommitMethod())
               .addMethod(getSyncMethod())
               .addMethod(getExecReplyMethod())
+              .addMethod(getReShardingInitiationMethod())
+              .addMethod(getReShardingProcessMethod())
               .build();
         }
       }

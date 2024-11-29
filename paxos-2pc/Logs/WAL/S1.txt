@@ -118,7 +118,6 @@
 27 - LOCK : 121 : 27
 26 - UNLOCK : 121 : 26
 26 - UNLOCK : 601 : 26
-27 - WRITE TO WAL: 121 :  new :: 2 : old :: 10
 27 - UNLOCK : 121 : 27
 27 - UNLOCK : 2525 : 27
 30 - UNLOCK : 796 : 30

@@ -257,9 +257,8 @@ latestCommittedBallotNumber: 9
 clusterId: 1
 
 -------------------
-DB -> Last Committed Ballot Number: 9
-Req -> getLatestCommittedBallotNumber9
 Received prepare request from S1 with ballot number 10
+DB -> Last Committed Ballot Number: 9
 Prepare Request Received from S1
 ballotNumber: 10
 processId: "S1"
@@ -280,27 +279,28 @@ latestCommittedTransaction {
 latestCommittedBallotNumber: 9
 clusterId: 1
 
+Req -> getLatestCommittedBallotNumber9
 -------------------
 DB -> Last Committed Ballot Number: 9
 Req -> getLatestCommittedBallotNumber9
 Ahead check
-Ahead check
 Last Accepted Uncommitted Ballot Number: 9
-Req Ballot Number 11
-Last Accepted Uncommitted Ballot Number: 9
+Req Ballot Number 10
 Success condition
 Last Accepted Uncommitted Transaction: Transaction ( 299 -> 1999 = 15 ) ; 
 Last Committed Transaction: Transaction ( 299 -> 1999 = 15 ) ; 
-Req Ballot Number 10
+Prepare Request Accepted from S1
+Ahead check
+Last Accepted Uncommitted Ballot Number: 10
+Req Ballot Number 11
 Success condition
-Last Accepted Uncommitted Transaction: Transaction ( 2001 -> 11 = 3 ) ; 
+Last Accepted Uncommitted Transaction: Transaction ( 11 -> 2001 = 9 ) ; 
 Last Committed Transaction: Transaction ( 299 -> 1999 = 15 ) ; 
 Prepare Request Accepted from S1
-Prepare Request Accepted from S1
-Received Commit request from S1 with ballot number 11
+Received Commit request from S1 with ballot number 10
 Commit Request Received from S1
 Commit Request Accepted from S1
-Received Commit request from S1 with ballot number 10
+Received Commit request from S1 with ballot number 11
 Commit Request Received from S1
 Commit Request Accepted from S1
 Received prepare request from S1 with ballot number 13
@@ -325,23 +325,54 @@ latestCommittedBallotNumber: 10
 clusterId: 1
 
 -------------------
-DB -> Last Committed Ballot Number: 10
+DB -> Last Committed Ballot Number: 11
 Req -> getLatestCommittedBallotNumber10
 Ahead check
 Last Accepted Uncommitted Ballot Number: 11
 Req Ballot Number 13
 Success condition
 Last Accepted Uncommitted Transaction: Transaction ( 2001 -> 11 = 3 ) ; 
-Last Committed Transaction: Transaction ( 11 -> 2001 = 9 ) ; 
+Last Committed Transaction: Transaction ( 2001 -> 11 = 3 ) ; 
+Prepare Request Rejected from S1 Because Current Server is ahead of Leader 
+Received prepare request from S1 with ballot number 14
+Prepare Request Received from S1
+ballotNumber: 14
+processId: "S1"
+transaction {
+  sender: 121
+  receiver: 2525
+  amount: 8
+  transactionNum: 27
+  isCrossShard: true
+}
+latestCommittedTransaction {
+  sender: 2001
+  receiver: 11
+  amount: 3
+  transactionNum: 23
+  isCrossShard: true
+}
+latestCommittedBallotNumber: 11
+clusterId: 1
+
+-------------------
+DB -> Last Committed Ballot Number: 11
+Req -> getLatestCommittedBallotNumber11
+Ahead check
+Last Accepted Uncommitted Ballot Number: 11
+Req Ballot Number 14
+Success condition
+Last Accepted Uncommitted Transaction: Transaction ( 2001 -> 11 = 3 ) ; 
+Last Committed Transaction: Transaction ( 2001 -> 11 = 3 ) ; 
 Prepare Request Accepted from S1
 Received Commit request from S1 with ballot number 13
 Commit Request Received from S1
 Commit Request Accepted from S1
 Received Commit request from S1 with ballot number -1
 Abort Request Received from S1
-Received prepare request from S1 with ballot number 14
+Received prepare request from S1 with ballot number 15
 Prepare Request Received from S1
-ballotNumber: 14
+ballotNumber: 15
 processId: "S1"
 transaction {
   sender: 796
@@ -364,12 +395,12 @@ clusterId: 1
 DB -> Last Committed Ballot Number: 13
 Req -> getLatestCommittedBallotNumber13
 Ahead check
-Last Accepted Uncommitted Ballot Number: 13
-Req Ballot Number 14
+Last Accepted Uncommitted Ballot Number: 14
+Req Ballot Number 15
 Success condition
 Last Accepted Uncommitted Transaction: Transaction ( 121 -> 2525 = 8 ) ; 
 Last Committed Transaction: Transaction ( 121 -> 2525 = 8 ) ; 
 Prepare Request Accepted from S1
-Received Commit request from S1 with ballot number 14
+Received Commit request from S1 with ballot number 15
 Commit Request Received from S1
 Commit Request Accepted from S1

@@ -104,7 +104,8 @@ public class DatabaseService {
             int cluster = Utils.FindMyCluster(this.serverNumber);
 
             for( Integer i :  Utils.GetAllDataItemsInCluster(cluster)){
-                String insertSQL = "INSERT INTO accounts (id, amount) VALUES (" + i + ", "+GlobalConfigs.InitialBalance+");";
+                String insertSQL = "INSERT INTO accounts (id, amount) VALUES ("
+                        + i + ", "+GlobalConfigs.InitialBalance+");";
                 statement.executeUpdate(insertSQL);
             }
 
@@ -223,11 +224,13 @@ public class DatabaseService {
         HashMap<Integer, Integer> balances = new HashMap<>();
         try {
             String selectSQL = "SELECT * FROM accounts;";
-            while (statement.executeQuery(selectSQL).next()) {
+            ResultSet resultSet = statement.executeQuery(selectSQL);
+
+            while (resultSet.next()) {
 
                 balances.put(
-                        statement.executeQuery(selectSQL).getInt("id"),
-                        statement.executeQuery(selectSQL).getInt("amount")
+                        resultSet.getInt("id"),
+                        resultSet.getInt("amount")
                 );
 
             }
@@ -246,6 +249,26 @@ public class DatabaseService {
             for (Integer account : balances.keySet()) {
                 String updateSQL = "UPDATE accounts SET amount = " + balances.get(account) + " WHERE id = " + account + ";";
                 statement.executeUpdate(updateSQL);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public synchronized void deleteAllBalances(){
+        try {
+            String deleteSQL = "DELETE FROM accounts;";
+            statement.executeUpdate(deleteSQL);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public synchronized void insertBalances(Map<Integer, Integer> balances) {
+        try {
+            for (Integer account : balances.keySet()) {
+                String insertSQL = "INSERT INTO accounts (id, amount) VALUES (" + account + ", " + balances.get(account) + ");";
+                statement.executeUpdate(insertSQL);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -515,5 +538,31 @@ public class DatabaseService {
 //        }
 //        return TransactionStatus.PENDING;
     }
+
+
+
+
+
+
+
+    public ReShardingInitData getReshardingInitData() {
+        ReShardingInitData.Builder builder = ReShardingInitData.newBuilder();
+        builder.setClusterId(this.node.clusterNumber);
+        builder.putAllAccountBalances(getAllBalances());
+        return builder.build();
+    }
+
+
+    public void processReshardingData(ReShardingData data) {
+
+        GlobalConfigs.DataItemToClusterMap = new HashMap<>();
+
+        GlobalConfigs.DataItemToClusterMap.putAll(data.getNewDataItemClusterConfigMap());
+
+        deleteAllBalances();
+        insertBalances(data.getAccountBalancesMap());
+    }
+
+
 
 }

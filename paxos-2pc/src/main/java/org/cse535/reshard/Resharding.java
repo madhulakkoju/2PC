@@ -15,7 +15,7 @@ public class Resharding {
     public static HashMap<Integer, Integer> reshardUsingHotKeyAndRoundRobin(List<Transaction> transactionHistory, HashMap<Integer, Integer> config, int numShards, LogUtils logger) {
         if (transactionHistory == null || transactionHistory.isEmpty()) {
             System.out.println("Transaction history is empty. Resharding not performed.");
-            return;
+            return config;
         }
 
         if (numShards <= 0) {
@@ -172,7 +172,7 @@ public class Resharding {
             logger.log(entry.getKey() + " SWAP-C" + entry.getValue());
         });
 
-
+        return config;
     }
 
     private static int getLeastUsedItem(Map<Integer, Integer> clusterData) {
@@ -214,12 +214,6 @@ public class Resharding {
                 .map(Map.Entry::getKey)
                 .orElseThrow(() -> new IllegalStateException("No clusters available"));
     }
-
-
-
-
-
-
 
 
 

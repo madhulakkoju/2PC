@@ -1,5 +1,6 @@
 package org.cse535.node;
 
+import com.google.protobuf.Empty;
 import org.cse535.Main;
 import org.cse535.configs.GlobalConfigs;
 import org.cse535.configs.Utils;
@@ -8,6 +9,7 @@ import org.cse535.loggers.LogUtils;
 import org.cse535.proto.*;
 import org.cse535.reshard.Resharding;
 import org.cse535.threadimpls.CrossShardTnxProcessingThread;
+import org.cse535.threadimpls.ReShardThread;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -73,6 +75,7 @@ public class ViewServer extends NodeServer {
         }
     }
 
+    public TnxLine lastexecTnxLine;
 
     public static TnxLine parseTnxConfig(String line, int tnxCount) {
 
@@ -343,7 +346,7 @@ public class ViewServer extends NodeServer {
 
 
                 TnxLine tnxLine = parseTnxConfig(line, tnxCount++);
-
+                viewServer.lastexecTnxLine = tnxLine;
                 if(tnxLine == null) {
                     continue;
                 }
@@ -452,32 +455,94 @@ public class ViewServer extends NodeServer {
             viewServer.sendCommandToServers( Command.Performance );
 
 
-            LogUtils reshardingLogger = new LogUtils("ReSharding-test",viewServerNum);
+System.out.println("Press Enter to Initiate ReSharding");
+            System.console().readLine();
 
-            System.out.println("Sending for Resharding... New Updated Reshard Config can be found in Logs/0-ReSharding.txt\n1. Resharding with HotKey and Round-Robin\n2. Resharding with Hotkey and swaps.. to reduce reshuffle of data across clusters");
-
-            List<Transaction> transactionList = new ArrayList<>(viewServer.transactions.values());
-
-            Resharding.reshardUsingHotKeyAndRoundRobin( transactionList , GlobalConfigs.DataItemToClusterMap, GlobalConfigs.numClusters, reshardingLogger);
-
-            HashMap<Integer, Integer> newConfig = Resharding.reshardWithSwapHotKey(transactionList, GlobalConfigs.DataItemToClusterMap, GlobalConfigs.numClusters, reshardingLogger);
-
-            GlobalConfigs.DataItemToClusterMap = newConfig;
-
-            System.out.println("Re-Sharding Completed. ");
-
-
-
-
-
-
-
+            viewServer.InitiateReSharding();
 
         }
         else {
             System.out.println("File does not exist");
         }
 
+    }
+
+
+    public void InitiateReSharding() throws InterruptedException {
+
+        HashMap<Integer, ReShardingInitData> reshardingInitData = new HashMap<>();
+
+        this.database.deleteAllBalances();
+
+        for (String servers: this.lastexecTnxLine.clusterContactServermapping.values()) {
+            int server = Integer.parseInt(servers.replaceAll("S",""));
+            if(server == 0) continue;
+
+            ReShardingInitData initData = this.serversToPaxosStub.get(server).reShardingInitiation( Empty.newBuilder().build() );
+            reshardingInitData.put(initData.getClusterId(), initData);
+
+            this.database.insertBalances(initData.getAccountBalancesMap());
+        }
+
+
+        HashMap<Integer, Integer> allBalances = this.database.getAllBalances();
+
+
+
+
+
+        LogUtils reshardingLogger = new LogUtils("ReSharding",0);
+
+        System.out.println("Sending for Resharding... New Updated Reshard Config can be found in Logs/0-ReSharding.txt\n1. Resharding with HotKey and Round-Robin\n2. Resharding with Hotkey and swaps.. to reduce reshuffle of data across clusters");
+
+        List<Transaction> transactionList = new ArrayList<>(viewServer.transactions.values());
+
+        //Resharding.reshardUsingHotKeyAndRoundRobin( transactionList , GlobalConfigs.DataItemToClusterMap, GlobalConfigs.numClusters, reshardingLogger);
+
+        HashMap<Integer, Integer> newConfig = Resharding.reshardWithSwapHotKey(transactionList, GlobalConfigs.DataItemToClusterMap, GlobalConfigs.numClusters, reshardingLogger);
+
+        GlobalConfigs.DataItemToClusterMap = newConfig;
+
+        System.out.println("Re-Sharding Completed. Initiating Re-Sharding Process between Servers");
+
+
+        HashMap<Integer, HashMap<Integer, Integer>> clusterBalancesMap = new HashMap<>();
+
+        for(int cluster = 1; cluster <= GlobalConfigs.numClusters; cluster++){
+            clusterBalancesMap.put(cluster, new HashMap<>());
+        }
+
+        for(Map.Entry<Integer, Integer> entry : allBalances.entrySet()){
+            int cluster = Utils.FindClusterOfDataItem(entry.getKey());
+            clusterBalancesMap.get(cluster).put(entry.getKey(), entry.getValue());
+        }
+
+
+        ReShardThread[] threads = new ReShardThread[GlobalConfigs.TotalServers+1];
+
+        for (int server : GlobalConfigs.ServerToPortMap.keySet()){
+            if(server == 0) continue;
+
+            ReShardingData data = ReShardingData.newBuilder()
+                    .setClusterId(Utils.FindMyCluster(server))
+                    .putAllAccountBalances(clusterBalancesMap.get(Utils.FindMyCluster(server)))
+                    .putAllNewDataItemClusterConfig(GlobalConfigs.DataItemToClusterMap)
+                    .build();
+
+            threads[server] = new ReShardThread(this, server, data);
+        }
+
+        for (int server : GlobalConfigs.ServerToPortMap.keySet()){
+            if(threads[server] != null)
+                threads[server].start();
+        }
+
+        for (int server : GlobalConfigs.ServerToPortMap.keySet()){
+            if(threads[server] != null)
+                threads[server].join();
+        }
+
+        System.out.println("ReSharding Process Completed in all servers !!!");
     }
 
 }

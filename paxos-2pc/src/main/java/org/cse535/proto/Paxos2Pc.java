@@ -104,6 +104,31 @@ public final class Paxos2Pc {
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_CommandOutput_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_ReShardingInitData_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_ReShardingInitData_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_ReShardingInitData_AccountBalancesEntry_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_ReShardingInitData_AccountBalancesEntry_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_ReShardingData_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_ReShardingData_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_ReShardingData_AccountBalancesEntry_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_ReShardingData_AccountBalancesEntry_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_ReShardingData_NewDataItemClusterConfigEntry_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_ReShardingData_NewDataItemClusterConfigEntry_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -168,29 +193,44 @@ public final class Paxos2Pc {
       "\t\022\020\n\010testCase\030\002 \001(\005\"?\n\030DeactivateServerR" +
       "esponse\022\017\n\007success\030\001 \001(\010\022\022\n\nserverName\030\002" +
       " \001(\t\"\035\n\014CommandInput\022\r\n\005input\030\001 \001(\t\"\037\n\rC" +
-      "ommandOutput\022\016\n\006output\030\001 \001(\t*f\n\021Transact" +
-      "ionStatus\022\013\n\007PENDING\020\000\022\014\n\010PREPARED\020\001\022\014\n\010" +
-      "ACCEPTED\020\002\022\r\n\tCOMMITTED\020\003\022\014\n\010EXECUTED\020\004\022" +
-      "\013\n\007ABORTED\020\0052\300\002\n\005Paxos\0222\n\007Request\022\027.Tran" +
-      "sactionInputConfig\032\014.TxnResponse\"\000\022A\n\021Cr" +
-      "ossShardRequest\022\027.TransactionInputConfig" +
-      "\032\021.CrossTxnResponse\"\000\022.\n\007Prepare\022\017.Prepa" +
-      "reRequest\032\020.PrepareResponse\"\000\022+\n\006Commit\022" +
-      "\016.CommitRequest\032\017.CommitResponse\"\000\022+\n\004Sy" +
-      "nc\022\017.PrepareRequest\032\020.PrepareResponse\"\000\022" +
-      "6\n\tExecReply\022\017.ExecutionReply\032\026.google.p" +
-      "rotobuf.Empty\"\0002\241\001\n\017ActivateServers\022C\n\016a" +
-      "ctivateServer\022\026.ActivateServerRequest\032\027." +
-      "ActivateServerResponse\"\000\022I\n\020deactivateSe" +
-      "rver\022\030.DeactivateServerRequest\032\031.Deactiv" +
-      "ateServerResponse\"\0002\367\001\n\010Commands\022/\n\014prin" +
-      "tBalance\022\r.CommandInput\032\016.CommandOutput\"" +
-      "\000\022+\n\010printLog\022\r.CommandInput\032\016.CommandOu" +
-      "tput\"\000\022*\n\007printDB\022\r.CommandInput\032\016.Comma" +
-      "ndOutput\"\000\022.\n\013Performance\022\r.CommandInput" +
-      "\032\016.CommandOutput\"\000\0221\n\016printDatastore\022\r.C" +
-      "ommandInput\032\016.CommandOutput\"\000B\024\n\020org.cse" +
-      "535.protoP\001b\006proto3"
+      "ommandOutput\022\016\n\006output\030\001 \001(\t\"\242\001\n\022ReShard" +
+      "ingInitData\022\021\n\tclusterId\030\001 \001(\005\022A\n\017accoun" +
+      "tBalances\030\002 \003(\0132(.ReShardingInitData.Acc" +
+      "ountBalancesEntry\0326\n\024AccountBalancesEntr" +
+      "y\022\013\n\003key\030\001 \001(\005\022\r\n\005value\030\002 \001(\005:\0028\001\"\254\002\n\016Re" +
+      "ShardingData\022\021\n\tclusterId\030\001 \001(\005\022=\n\017accou" +
+      "ntBalances\030\002 \003(\0132$.ReShardingData.Accoun" +
+      "tBalancesEntry\022O\n\030newDataItemClusterConf" +
+      "ig\030\003 \003(\0132-.ReShardingData.NewDataItemClu" +
+      "sterConfigEntry\0326\n\024AccountBalancesEntry\022" +
+      "\013\n\003key\030\001 \001(\005\022\r\n\005value\030\002 \001(\005:\0028\001\032?\n\035NewDa" +
+      "taItemClusterConfigEntry\022\013\n\003key\030\001 \001(\005\022\r\n" +
+      "\005value\030\002 \001(\005:\0028\001*f\n\021TransactionStatus\022\013\n" +
+      "\007PENDING\020\000\022\014\n\010PREPARED\020\001\022\014\n\010ACCEPTED\020\002\022\r" +
+      "\n\tCOMMITTED\020\003\022\014\n\010EXECUTED\020\004\022\013\n\007ABORTED\020\005" +
+      "2\277\003\n\005Paxos\0222\n\007Request\022\027.TransactionInput" +
+      "Config\032\014.TxnResponse\"\000\022A\n\021CrossShardRequ" +
+      "est\022\027.TransactionInputConfig\032\021.CrossTxnR" +
+      "esponse\"\000\022.\n\007Prepare\022\017.PrepareRequest\032\020." +
+      "PrepareResponse\"\000\022+\n\006Commit\022\016.CommitRequ" +
+      "est\032\017.CommitResponse\"\000\022+\n\004Sync\022\017.Prepare" +
+      "Request\032\020.PrepareResponse\"\000\0226\n\tExecReply" +
+      "\022\017.ExecutionReply\032\026.google.protobuf.Empt" +
+      "y\"\000\022E\n\024ReShardingInitiation\022\026.google.pro" +
+      "tobuf.Empty\032\023.ReShardingInitData\"\000\0226\n\021Re" +
+      "ShardingProcess\022\017.ReShardingData\032\016.Comma" +
+      "ndOutput\"\0002\241\001\n\017ActivateServers\022C\n\016activa" +
+      "teServer\022\026.ActivateServerRequest\032\027.Activ" +
+      "ateServerResponse\"\000\022I\n\020deactivateServer\022" +
+      "\030.DeactivateServerRequest\032\031.DeactivateSe" +
+      "rverResponse\"\0002\367\001\n\010Commands\022/\n\014printBala" +
+      "nce\022\r.CommandInput\032\016.CommandOutput\"\000\022+\n\010" +
+      "printLog\022\r.CommandInput\032\016.CommandOutput\"" +
+      "\000\022*\n\007printDB\022\r.CommandInput\032\016.CommandOut" +
+      "put\"\000\022.\n\013Performance\022\r.CommandInput\032\016.Co" +
+      "mmandOutput\"\000\0221\n\016printDatastore\022\r.Comman" +
+      "dInput\032\016.CommandOutput\"\000B\024\n\020org.cse535.p" +
+      "rotoP\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -314,6 +354,36 @@ public final class Paxos2Pc {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_CommandOutput_descriptor,
         new java.lang.String[] { "Output", });
+    internal_static_ReShardingInitData_descriptor =
+      getDescriptor().getMessageTypes().get(15);
+    internal_static_ReShardingInitData_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ReShardingInitData_descriptor,
+        new java.lang.String[] { "ClusterId", "AccountBalances", });
+    internal_static_ReShardingInitData_AccountBalancesEntry_descriptor =
+      internal_static_ReShardingInitData_descriptor.getNestedTypes().get(0);
+    internal_static_ReShardingInitData_AccountBalancesEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ReShardingInitData_AccountBalancesEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
+    internal_static_ReShardingData_descriptor =
+      getDescriptor().getMessageTypes().get(16);
+    internal_static_ReShardingData_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ReShardingData_descriptor,
+        new java.lang.String[] { "ClusterId", "AccountBalances", "NewDataItemClusterConfig", });
+    internal_static_ReShardingData_AccountBalancesEntry_descriptor =
+      internal_static_ReShardingData_descriptor.getNestedTypes().get(0);
+    internal_static_ReShardingData_AccountBalancesEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ReShardingData_AccountBalancesEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
+    internal_static_ReShardingData_NewDataItemClusterConfigEntry_descriptor =
+      internal_static_ReShardingData_descriptor.getNestedTypes().get(1);
+    internal_static_ReShardingData_NewDataItemClusterConfigEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_ReShardingData_NewDataItemClusterConfigEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
     com.google.protobuf.TimestampProto.getDescriptor();
     com.google.protobuf.EmptyProto.getDescriptor();
   }
